@@ -85,17 +85,20 @@ To install the Expat library, copy the 'libexpat.so.0.0.1' and the
 necessary symbolic links to your VR3 directory '/usr/local/lib' using
 rsync:
 
-  rsync -l libexpat.so.* <VR3 IP>::root/usr/local/lib/
+  rsync -l libexpat.so* <VR3 IP>::root/usr/local/lib/
 
 To install VRFig itself, copy the 'vrfig' binary to VR3. You could put
 it in '/usr/local/bin', for example:
 
   rsync vrfig <VR3 IP>::root/usr/local/bin/
 
-To add the VRFig to startup menu, you can also copy the menu system
-link to the VR3:
+To add the VRFig to startup menu, you have to create a suitable
+symbolic link. You can do this by telnetting to the VR3:
 
-  rsync -l wmx_VRFig <VR3 IP>::default/.wmx/Applications/VRFig
+  telnet <VR3 IP>
+    (log in as 'default')
+  \w\$ cd /home/default/.wmx/Applications
+  \w\$ ln -s /usr/local/bin/vrfig VRFig
 
 Before you can actually execute the VRFig, you have to reset the VR3
 (or if you know what you are doing, just run '/sbin/ldconfig' and
