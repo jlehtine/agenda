@@ -1,3 +1,16 @@
+2001-05-25  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
+
+	* Added framework for textual elements and a text label which
+	  implements the interface. Also a new tool for creating and
+	  editing the labels (and other textual elements).
+
+2001-05-24  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
+
+	* Bug fix: Bogus XML parser error due to incorrect buffer
+	  allocation when loading files longer than 1024 bytes
+
+	* Increased the maximum select distance used by the tools
+
 2001-05-23  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
 
 	* Cleaned up the code and user interface for the initial beta
