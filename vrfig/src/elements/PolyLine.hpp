@@ -1,4 +1,4 @@
-// $Id: PolyLine.hpp,v 1.6 2001-05-22 18:03:59 jle Exp $
+// $Id: PolyLine.hpp,v 1.7 2001-05-22 19:49:44 jle Exp $
 
 #ifndef __Line_hpp_INCLUDED__
 #define __Line_hpp_INCLUDED__
@@ -8,6 +8,7 @@
 #include "Element.hpp"
 #include "Selectable.hpp"
 #include "Movable.hpp"
+#include "Controllable.hpp"
 #include "vrfig.hpp"
 #include "mathutil.hpp"
 #include "ElementFactory.hpp"
@@ -16,9 +17,10 @@
  * A polyline element which is the most generic element.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
-class PolyLine : public Element, public Selectable, public Movable {
+class PolyLine : public Element, public Selectable, public Movable,
+  public Controllable {
 
 protected:
 
@@ -57,6 +59,10 @@ public:
   virtual u_fp32 select_distance_sqr(fp16 x, fp16 y) const;
 
   virtual void move(fp16 xoff, fp16 yoff);
+
+  virtual const vector<fp16> *get_control_points() const;
+  
+  virtual void control(unsigned int i, fp16 x, fp16 y);
 
   /**
    * Returns the vertices of the polyline.

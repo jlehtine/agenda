@@ -1,4 +1,4 @@
-// $Id: PolyLine.cc,v 1.6 2001-05-22 18:03:59 jle Exp $
+// $Id: PolyLine.cc,v 1.7 2001-05-22 19:49:44 jle Exp $
 
 #include <vector.h>
 #include <stdio.h>
@@ -260,6 +260,19 @@ void PolyLine::move(fp16 xoff, fp16 yoff) {
   while (i < points.end()) {
     *(i++) += xoff;
     *(i++) += yoff;
+  }
+}
+
+const vector<fp16> *PolyLine::get_control_points() const {
+  return &points;
+}
+  
+void PolyLine::control(unsigned int i, fp16 x, fp16 y) {
+  if (i >= 0 && i < 2*points.size()) {
+    vector<fp16>::iterator iter = points.begin();
+    iter += i * 2;
+    *(iter++) = x;
+    *(iter++) = y;
   }
 }
 
