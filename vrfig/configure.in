@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 dnl
-dnl $Id: configure.in,v 1.5 2001-05-20 19:34:43 jle Exp $
+dnl $Id: configure.in,v 1.6 2001-05-23 12:31:54 jle Exp $
 
 dnl -----------------------
 dnl Autoconf initialization
@@ -20,6 +20,15 @@ dnl ------------
 AC_PROG_CXX
 AC_PROG_CXXCPP
 AC_PROG_RANLIB
+
+dnl -------------
+dnl Find programs
+dnl -------------
+AC_CHECK_PROG(CP, cp, cp, cp)
+AC_CHECK_PROG(MKDIR, mkdir, mkdir, mkdir)
+AC_CHECK_PROG(RM, rm, rm, rm)
+AC_CHECK_PROG(FIND, find, find, find)
+AC_PATH_PROG(DOCPLUSPLUS, doc++, doc++)
 
 dnl -----------------------------
 dnl Check for X headers/libraries
