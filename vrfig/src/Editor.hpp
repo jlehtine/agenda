@@ -1,4 +1,4 @@
-// $Id: Editor.hpp,v 1.1 2001-05-06 22:12:08 jle Exp $
+// $Id: Editor.hpp,v 1.2 2001-05-20 11:49:43 jle Exp $
 
 #ifndef __Editor_hpp_INCLUDED__
 #define __Editor_hpp_INCLUDED__
@@ -12,7 +12,7 @@
  * the tool specific drawing hooks.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 class Editor : public FigureView {
 
@@ -28,6 +28,8 @@ public:
    * figure or callback hooks are associated with the editor.
    */
   Editor(int x, int y, int w, int h);
+
+  virtual void set_figure(Figure *figure);
 
   /**
    * Sets the current tool.

@@ -1,4 +1,4 @@
-// $Id: FigureView.cc,v 1.2 2001-05-07 21:02:10 jle Exp $
+// $Id: FigureView.cc,v 1.3 2001-05-20 11:49:43 jle Exp $
 
 #include <vector.h>
 #include <FL/fl_draw.H>
@@ -8,7 +8,7 @@
 #include "Element.hpp"
 
 FigureView::FigureView(int x, int y, int w, int h): 
-  Fl_Widget(x, y, w, h), figure(0), used_cp_style(CP_NONE),
+  Fl_Widget(x, y, w, h), figure(0),
   origin_x(0), origin_y(0), scaling(0x10000) {}
 
 void FigureView::set_figure(Figure *_figure) {
@@ -16,6 +16,7 @@ void FigureView::set_figure(Figure *_figure) {
   origin_x = 0;
   origin_y = 0;
   scaling = 0x10000;
+  redraw();
 }
 
 void FigureView::set_scaling(unsigned int _scaling) {

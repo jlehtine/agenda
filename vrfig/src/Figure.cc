@@ -1,10 +1,17 @@
-// $Id: Figure.cc,v 1.2 2001-05-17 19:35:27 jle Exp $
+// $Id: Figure.cc,v 1.3 2001-05-20 11:49:43 jle Exp $
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <map.h>
 #include "Figure.hpp"
 #include "vrfig.hpp"
+
+Figure::~Figure() {
+  vector<Element *>::iterator i = elements.begin();
+  while (i < elements.end()) {
+    delete *(i++);
+  }
+}
 
 void Figure::serialize(ostream &os) {
 

@@ -1,4 +1,4 @@
-// $Id: MainView.cc,v 1.11 2001-05-20 11:18:33 jle Exp $
+// $Id: MainView.cc,v 1.12 2001-05-20 11:49:43 jle Exp $
 
 #include <stdlib.h>
 #include <string.h>
@@ -107,7 +107,9 @@ MainView::MainView(): current_file("") {
   Fl_Dockable_Window *toolbar = Widget_Factory::new_toolbar();
   Fl_Menu_Button *file_menu = Widget_Factory::new_menu_button("File");
   file_menu->menu(file_popup);
+  file_popup[0].callback(cb_new, this);
   file_popup[1].callback(cb_load, this);
+  file_popup[2].callback(cb_revert, this);
   file_popup[3].callback(cb_save, this);
   file_popup[4].callback(cb_save_as, this);
   file_popup[5].callback(cb_exit, this);
@@ -253,6 +255,14 @@ void MainView::cb_zoomin(Fl_Widget *widget, void *data) {
     view->editor->set_scaling(scaling);
     view->editor->set_origin(ox, oy);
   }
+}
+
+void MainView::cb_new(Fl_Widget *widget, void *data) {
+  MainView *view = reinterpret_cast<MainView *>(data);
+  Figure *fig = view->editor->get_figure();
+  view->editor->set_figure(new Figure());
+  if (fig)
+    delete fig;
 }
 
 void MainView::cb_load(Fl_Widget *widget, void *data) {

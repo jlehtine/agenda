@@ -1,4 +1,4 @@
-// $Id: Figure.hpp,v 1.3 2001-05-16 19:50:16 jle Exp $
+// $Id: Figure.hpp,v 1.4 2001-05-20 11:49:43 jle Exp $
 
 #ifndef __Figure_hpp_INCLUDED__
 #define __Figure_hpp_INCLUDED__
@@ -11,7 +11,7 @@
  * Represents the whole figure composed of elements.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 class Figure {
 
@@ -26,6 +26,8 @@ public:
    * Constructs a new empty figure.
    */
   Figure(): elements() {}
+
+  ~Figure();
 
   /**
    * Returns a vector of elements in this figure.

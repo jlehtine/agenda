@@ -1,4 +1,4 @@
-// $Id: MainView.hpp,v 1.6 2001-05-20 11:18:33 jle Exp $
+// $Id: MainView.hpp,v 1.7 2001-05-20 11:49:43 jle Exp $
 
 #ifndef __MainWindow_hpp_INCLUDED__
 #define __MainWindow_hpp_INCLUDED__
@@ -17,7 +17,7 @@ class ToolsButton;
  * a subclass of Fl_Window.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 class MainView {
 
@@ -57,6 +57,7 @@ protected:
   static void cb_undo(Fl_Widget *widget, void *data);
   static void cb_zoomout(Fl_Widget *widget, void *data);
   static void cb_zoomin(Fl_Widget *widget, void *data);
+  static void cb_new(Fl_Widget *widget, void *data);
   static void cb_load(Fl_Widget *widget, void *data);
   static void cb_revert(Fl_Widget *widget, void *data);
   static void cb_save(Fl_Widget *widget, void *data);
