@@ -1,8 +1,8 @@
-// $Id: ToolsChoice.cc,v 1.3 2001-05-19 06:18:08 jle Exp $
+// $Id: ToolsChoice.cc,v 1.4 2001-05-22 12:55:00 jle Exp $
 
 #include <FL/Fl.H>
 #include <FL/Enumerations.H>
-#include <FL/fl_draw.h>
+#include <FL/fl_draw.H>
 #include "ToolsChoice.hpp"
 
 #define CELL_SIZE 16
