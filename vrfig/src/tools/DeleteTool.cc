@@ -1,4 +1,4 @@
-// $Id: DeleteTool.cc,v 1.5 2001-05-24 19:49:58 jle Exp $
+// $Id: DeleteTool.cc,v 1.6 2001-05-26 14:26:17 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -23,10 +23,38 @@
 #include <FL/Fl_Bitmap.H>
 #include "DeleteTool.hpp"
 #include "Selectable.hpp"
+#include "Action.hpp"
 #include "icons/delete_icon.xbm"
 
 static Fl_Bitmap delete_bitmap
 (delete_icon_bits, delete_icon_width, delete_icon_height);
+
+/**
+ * An action for undoing delete operations.
+ */
+class DeleteAction : public Action {
+  
+protected:
+
+  /** The deleted element */
+  Element *element;
+
+  /** The figure view */
+  FigureView *view;
+
+public:
+
+  inline DeleteAction(Element *element, FigureView *view): 
+    element(element), view(view) {}
+
+  virtual void undo() {
+    view->add_element(element);
+  }
+
+  virtual void commit() {
+    delete element;
+  }
+};
 
 const char *DeleteTool::get_name() const {
   static const char *name = "delete";
@@ -85,8 +113,12 @@ int DeleteTool::handle(int event, FigureView *view) {
           mul_fp16_fp16_fp32(view->get_scaling(), view->get_scaling()));
         if (screen_dist_sqr <= VRF_DEFAULT_SELECT_DIST_SQR) {
           
+          // Create an action record
+          DeleteAction *action = new DeleteAction(*closest, view);
+
           // Delete the element
           elements->erase(closest);
+          view->get_action_buffer()->add_action(action);
           view->redraw();
         }
       }
