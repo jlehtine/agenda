@@ -1,4 +1,4 @@
-// $Id: DeleteTool.cc,v 1.1 2001-05-22 18:35:26 jle Exp $
+// $Id: DeleteTool.cc,v 1.2 2001-05-22 19:49:12 jle Exp $
 
 #include <FL/Fl.H>
 #include <FL/Fl_Bitmap.H>
@@ -20,6 +20,17 @@ void DeleteTool::draw_icon(int x, int y, int w, int h) const {
   delete_bitmap.draw(x, y, w, h,
                    (delete_bitmap.w - w) >> 1,
                    (delete_bitmap.h - h) >> 1);
+}
+
+void DeleteTool::draw(FigureView *view) {
+  const vector<Element *> *elements = view->get_figure()->get_elements();
+  vector<Element *>::const_iterator i = elements->begin();
+  while (i < elements->end()) {
+    Selectable *sel = dynamic_cast<Selectable *>(*(i++));
+    if (sel)
+      sel->draw_select_helpers(view->get_origin_x(), view->get_origin_y(),
+                               view->get_scaling(), true);
+  }
 }
 
 int DeleteTool::handle(int event, FigureView *view) {
