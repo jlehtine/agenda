@@ -1,4 +1,4 @@
-// $Id: Point.hpp,v 1.2 2001-06-10 19:26:56 jle Exp $
+// $Id: Point.hpp,v 1.3 2004-11-10 14:03:05 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -41,9 +41,9 @@ public:
   /** The y coordinate */
   fp16 y;
 
-  Point() {}
+  inline Point() {}
 
-  Point(fp16 x, fp16 y): x(x), y(y) {}
+  inline Point(fp16 x, fp16 y): x(x), y(y) {}
 
   inline bool operator<(Point &p) {
     return (y < p.y || (y == p.y && x < p.x));
