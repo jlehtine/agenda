@@ -10,11 +10,12 @@ class SettingsWindow {open
   decl {int cur_size;} {}
   decl {int cur_labels;} {}
   decl {int cur_moves;} {}
+  decl {void (*update_callback)();} {}
   Function {SettingsWindow()} {open
   } {
     Fl_Window win {
       label settings open
-      private xywh {1068 524 160 200} color 7 modal visible
+      private xywh {1074 553 160 200} color 7 modal visible
     } {
       Fl_Group {} {
         label settings open
@@ -69,8 +70,12 @@ class SettingsWindow {open
         callback {win->hide();
 cur_size = size_choice->value();
 cur_labels = labels_choice->value();
-cur_moves = moves_choice->value();}
+cur_moves = moves_choice->value();
+if (update_callback != NULL) {
+  update_callback();
+}}
         xywh {10 155 60 25}
+        code0 {\#include <stdio.h>}
       }
       Fl_Button {} {
         label cancel
@@ -82,11 +87,11 @@ moves_choice->value(cur_moves);}
       }
     }
     code {size_choice->value(1);
-moves_choice->value(1);} {selected
-    }
+moves_choice->value(1);} {}
     code {cur_size = size_choice->value();
 cur_labels = labels_choice->value();
 cur_moves = moves_choice->value();} {}
+    code {update_callback = NULL;} {}
   }
   Function {show()} {open return_type void
   } {
@@ -103,5 +108,9 @@ cur_moves = moves_choice->value();} {}
   Function {smooth_moves()} {open return_type bool
   } {
     code {return cur_moves == 0;} {}
+  }
+  Function {set_update_callback(void (*update_callback)())} {open selected return_type void
+  } {
+    code {this->update_callback = update_callback;} {}
   }
 } 
