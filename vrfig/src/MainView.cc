@@ -1,4 +1,4 @@
-// $Id: MainView.cc,v 1.13 2001-05-20 12:13:10 jle Exp $
+// $Id: MainView.cc,v 1.14 2001-05-21 00:46:52 jle Exp $
 
 #include <stdlib.h>
 #include <string.h>
@@ -24,6 +24,7 @@
 #include "espws/FileChooser.h"
 #include "icons/directory_icon.xbm"
 #include "icons/vfg_icon.xbm"
+#include "ElementFactory.hpp"
 
 static Fl_Bitmap vfg_bitmap
 (vfg_icon_bits, vfg_icon_width, vfg_icon_height);
@@ -169,12 +170,12 @@ MainView::MainView(): current_file("") {
     path.assign(home);
     path.append("/figures");
     struct stat stat_info;
-    if (stat(path.data(), &stat_info)) {
+    if (stat(path.c_str(), &stat_info)) {
 
       // Create $HOME/figures if user accepts
       if (fl_ask("$HOME/figures does not exist. Would you like to create it "
                  "for VRFig figure files?")) {
-        if (mkdir(path.data(), 0777)) {
+        if (mkdir(path.c_str(), 0777)) {
           fl_alert("Could not create $HOME/figures.");
           path.assign("");
         }
@@ -197,9 +198,9 @@ MainView::MainView(): current_file("") {
   
   // Create file choosers
   file_chooser_save = new FileChooser(
-    path.data(), "*.vfg", FileChooser::CREATE, "VRFig Save As");
+    path.c_str(), "*.vfg", FileChooser::CREATE, "VRFig Save As");
   file_chooser_load = new FileChooser(
-    path.data(), "*.vfg", FileChooser::SINGLE, "VRFig Load");
+    path.c_str(), "*.vfg", FileChooser::SINGLE, "VRFig Load");
 }
 
 void MainView::cb_exit(Fl_Widget *widget, void *data) {
@@ -284,7 +285,20 @@ void MainView::cb_revert(Fl_Widget *widget, void *data) {
     return;
   }
 
-  // XXX: Enter the actual loading code here
+  // Load figure from the specified file
+  ifstream ifs(view->current_file.c_str());
+  if (ifs.fail()) {
+    fl_alert("Could not open figure file.");
+    return;
+  }
+  Figure *fig = ElementFactory::deserialize(ifs);
+  ifs.close();
+  if (!fig)
+    return;
+  Figure *old_fig = view->editor->get_figure();
+  view->editor->set_figure(fig);
+  if (old_fig)
+    delete old_fig;
 }
 
 void MainView::cb_save(Fl_Widget *widget, void *data) {
@@ -295,7 +309,7 @@ void MainView::cb_save(Fl_Widget *widget, void *data) {
     cb_save_as(widget, data);
 
   // Save the figure to file
-  ofstream ofs(view->current_file.data(), ios::out, 0666);
+  ofstream ofs(view->current_file.c_str(), ios::out, 0666);
   if (ofs.fail()) {
     fl_alert("Error when creating the save file.");
     return;
