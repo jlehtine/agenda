@@ -1,4 +1,4 @@
-// $Id: PuzzleGame.cc,v 1.7 2000-10-29 17:21:38 jle Exp $
+// $Id: PuzzleGame.cc,v 1.8 2000-10-29 17:59:07 jle Exp $
 
 #include <stdlib.h>
 #include "PuzzleGame.hpp"
@@ -71,6 +71,7 @@ bool PuzzleGame::solved() {
       return false;
     }
   }
+  solved_time = time(NULL);
   return true;
 }
 
