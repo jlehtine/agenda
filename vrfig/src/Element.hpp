@@ -1,4 +1,4 @@
-// $Id: Element.hpp,v 1.9 2001-05-23 12:47:50 jle Exp $
+// $Id: Element.hpp,v 1.10 2001-05-24 18:24:27 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -84,11 +84,14 @@ public:
   /**
    * Returns the XML namespace for this element. The namespace is
    * used when serializing/deserializing data to/from XML document.
-   * This could be something like "http://xyz.zy/author/vrfig/myelements".
+   * The default implementation uses the namespace
+   * 'http://www.iki.fi/jle/agenda/vrfig/' but extensions not included
+   * in the standard distribution should use some other namespace. This
+   * will become more relevant if/when the plugins will become supported.
    *
    * @return the namespace for this element.
    */
-  virtual const char *get_namespace() const = 0;
+  virtual const char *get_namespace() const;
 
   /**
    * Returns the bounding box for the element.

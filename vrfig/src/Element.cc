@@ -1,4 +1,4 @@
-// $Id: Element.cc,v 1.4 2001-05-23 12:47:50 jle Exp $
+// $Id: Element.cc,v 1.5 2001-05-24 18:24:27 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -20,10 +20,15 @@
  *------------------------------------------------------------------------*/
 
 #include "Element.hpp"
+#include "vrfig.hpp"
 
 #if USE_EXPERIMENTAL_UI
 #include "PolyLine.hpp"
 #endif
+
+const char *Element::get_namespace() const {
+  return vrf_default_namespace;
+}
 
 #if USE_EXPERIMENTAL_UI
 Element *Element::fit_element(
