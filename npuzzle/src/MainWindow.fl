@@ -17,7 +17,7 @@ class MainWindow {open
   } {
     Fl_Window win {
       label npuzzle open
-      private xywh {1058 204 160 240} color 7 visible
+      private xywh {1064 233 160 240} color 7 visible
     } {
       Fl_Menu_Bar {} {open
         xywh {0 0 160 25}
@@ -73,7 +73,7 @@ delete old;}
           xywh {15 30 125 30} labelfont 1 labelsize 18
         }
       }
-      Fl_Group game_group {open
+      Fl_Group {} {open
         private xywh {0 60 160 180}
       } {
         Fl_Group {} {open
@@ -83,19 +83,23 @@ delete old;}
             label {clock.xbm}
             xywh {5 215 20 20} labeltype image
           }
-          Fl_Output {} {
-            xywh {30 215 45 20}
+          Fl_Output time_output {
+            private xywh {30 215 45 20} align 0
+            code0 {\#include "RightAlignedOutput.hpp"}
+            class RightAlignedOutput
           }
           Fl_Box {} {
             label {move.xbm}
             xywh {80 215 20 20} labeltype image
           }
-          Fl_Output {} {
-            xywh {105 215 45 20}
+          Fl_Output moves_output {
+            private xywh {105 215 45 20} align 0
+            code0 {\#include "RightAlignedOutput.hpp"}
+            class RightAlignedOutput
           }
         }
-        Fl_Box puzzle_box {
-          private xywh {10 60 140 140}
+        Fl_Box puzzle_box {selected
+          private xywh {10 60 140 140} color 7
           code0 {\#include "PuzzleBox.hpp"}
           class PuzzleBox
         }
@@ -106,11 +110,27 @@ about_win = new AboutWindow();
 settings_win = new SettingsWindow();} {}
     code {puzzle_box->set_settings(settings_win);
 game = new PuzzleGame(settings_win->get_size());
-puzzle_box->set_game(game);} {selected
-    }
+puzzle_box->set_game(game);} {}
   }
   Function {show()} {open return_type void
   } {
     code {win->show();} {}
+  }
+  Function {update_time()} {open return_type void
+  } {
+    code {int t = game->get_time();
+int m = t / 60;
+int s = t % 60;
+char str[10];
+sprintf(str, "%d:%02d", m, s);
+time_output->value(str);
+time_output->redraw();} {}
+  }
+  Function {update_moves()} {open return_type void
+  } {
+    code {char str[10];
+sprintf(str, "%d", game->get_moves());
+moves_output->value(str);
+moves_output->redraw();} {}
   }
 } 
