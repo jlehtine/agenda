@@ -1,4 +1,4 @@
-// $Id: Tool.hpp,v 1.6 2001-05-23 12:47:50 jle Exp $
+// $Id: Tool.hpp,v 1.7 2001-05-24 19:49:25 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -24,6 +24,9 @@
 
 #include "FigureView.hpp"
 
+/** The default maximum squared select distance for select operations */
+#define VRF_DEFAULT_SELECT_DIST_SQR 256
+
 /**
  * Tools are used for editing figures. They handle the tool specific
  * user interface issues and edit the figure according to user actions.
@@ -31,7 +34,7 @@
  * class for all tools.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 class Tool {
 
