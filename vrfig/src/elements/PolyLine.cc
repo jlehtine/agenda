@@ -1,12 +1,14 @@
-// $Id: PolyLine.cc,v 1.4 2001-05-20 18:51:40 jle Exp $
+// $Id: PolyLine.cc,v 1.5 2001-05-21 00:47:37 jle Exp $
 
 #include <vector.h>
 #include <stdio.h>
+#include <string.h>
 #include <FL/fl_draw.H>
 #include <FL/Enumerations.H>
 #include "PolyLine.hpp"
 #include "mathutil.hpp"
 #include "flext.hpp"
+#include "ElementFactory.hpp"
 
 #define CLOSED_MAX_GAP 16
 #define DEVIATION_MAX 25
@@ -24,17 +26,98 @@
 static bool check_line(int *points_begin, int *points_end, int *l1, int *l2);
 #endif
 
+/**
+ * Information needed when deserializing XML data to polyline.
+ */
+struct DeserializeInfo {
+  void *old_data;
+  ElementFactory *ef;
+  XML_Parser parser;
+  PolyLine *pl;
+  int depth;
+  bool parsing_points;
+};
+
+/**
+ * Element start handler for deserialization.
+ */
+static void start_handler(
+  void *data, const XML_Char *name, const XML_Char **atts) {
+  static char *points_name = VRF_DEFAULT_NAMESPACE "#points";
+  static char *point_name = VRF_DEFAULT_NAMESPACE "#point";
+  DeserializeInfo *info = reinterpret_cast<DeserializeInfo *>(data);
+  
+  // Check if points section found
+  if (info->depth == 0) {
+    if (!strcmp(name, points_name)) {
+      info->parsing_points = true;
+      while (*atts) {
+        if (!strcmp(*atts, "closed") && !strcmp(*(atts+1), "true"))
+          info->pl->set_closed(true);
+        atts += 2;
+      }
+    }
+  }
+
+  // Check if a new point found
+  else if (info->depth == 1 && info->parsing_points) {
+    if (!strcmp(name, point_name)) {
+      fp16 x=0, y=0;
+      while (*atts) {
+        if (!strcmp(*atts, "x"))
+          x = str_to_fp16(*(atts+1));
+        else if (!strcmp(*atts, "y"))
+          y = str_to_fp16(*(atts+1));
+        atts += 2;
+      }
+      vector<fp16> *vertices = info->pl->get_vertices();
+      vertices->insert(vertices->end(), x);
+      vertices->insert(vertices->end(), y);
+    }
+  }
+  
+  info->depth++;
+}
+
+/**
+ * Element end handler for deserialization.
+ */
+static void end_handler(void *data, const XML_Char *name) {
+  DeserializeInfo *info = reinterpret_cast<DeserializeInfo *>(data);
+  if (info->depth == 1)
+    info->parsing_points = false;
+  else if (info->depth == 0) {
+    XML_SetElementHandler(info->parser, 0, 0);
+    XML_SetUserData(info->parser, info->old_data);
+    info->ef->get_figure()->add_element(info->pl);
+    ElementFactory *ef = info->ef;
+    delete info;
+    ef->done();
+    return;
+  }
+  info->depth--;
+}
+
 PolyLine::~PolyLine() {
   points.clear();
 }
 
-const string *PolyLine::get_name() const {
-  static const string name("polyline");
-  return &name;
+static const char *polyline_name = "polyline";
+
+const char *PolyLine::get_name_static() {
+  return polyline_name;
 }
 
-const string *PolyLine::get_namespace() const {
-  return &vrf_default_namespace;
+const char *PolyLine::get_name() const {
+  return polyline_name;
+}
+
+const char *PolyLine::get_namespace_static() {
+  return vrf_default_namespace;
+}
+
+const char *PolyLine::get_namespace() const {
+  return vrf_default_namespace;
 }
 
 void PolyLine::draw(fp16 origin_x, fp16 origin_y, u_fp16 scaling,
@@ -94,26 +177,38 @@ void PolyLine::get_bounding_box(fp16 &x, fp16 &y, fp16 &w, fp16 &h) const {
   }
 }
 
-ostream &PolyLine::serialize(ostream &os, const string *ns, int indent) const {
-  static const string elem_points("points");
-  static const string elem_point("point");
+ostream &PolyLine::serialize(ostream &os, const char *ns, int indent) const {
+  static const char *elem_points = "points";
+  static const char *elem_point = "point";
 
   output_indent(os, indent);
-  output_ns_name(os << "<", ns, &elem_points) << 
+  output_ns_name(os << "<", ns, elem_points) << 
     " num=\"" << (points.size() >> 1) << 
     "\" closed=\"" << (closed ? "true" : "false") << "\">\n";
   vector<fp16>::const_iterator i = points.begin();
   while (i < points.end()) {
     output_indent(os, indent+2);
-    output_ns_name(os << "<", ns, &elem_point) <<
+    output_ns_name(os << "<", ns, elem_point) <<
       " x=\"";
     write_fp16(os, *i) << "\" y=\"";
     write_fp16(os, *(i+1)) << "\"/>\n";
     i += 2;
   }
   output_indent(os, indent);
-  output_ns_name(os << "</", ns, &elem_points) << ">\n";
+  output_ns_name(os << "</", ns, elem_points) << ">\n";
   return os;
+}
+
+void PolyLine::deserialize(XML_Parser *parser, ElementFactory *ef) {
+  DeserializeInfo *info = new DeserializeInfo();
+  info->old_data = XML_GetUserData(parser);
+  info->ef = ef;
+  info->parser = parser;
+  info->pl = new PolyLine();
+  info->depth = 0;
+  info->parsing_points = false;
+  XML_SetUserData(parser, info);
+  XML_SetElementHandler(parser, start_handler, end_handler);
 }
 
 void PolyLine::draw_select_helpers(

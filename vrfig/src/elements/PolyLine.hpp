@@ -1,20 +1,22 @@
-// $Id: PolyLine.hpp,v 1.4 2001-05-20 11:49:17 jle Exp $
+// $Id: PolyLine.hpp,v 1.5 2001-05-21 00:47:37 jle Exp $
 
 #ifndef __Line_hpp_INCLUDED__
 #define __Line_hpp_INCLUDED__
 
 #include <vector.h>
+#include <expat.h>
 #include "Element.hpp"
 #include "Selectable.hpp"
 #include "Movable.hpp"
 #include "vrfig.hpp"
 #include "mathutil.hpp"
+#include "ElementFactory.hpp"
 
 /**
  * A polyline element which is the most generic element.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 class PolyLine : public Element, public Selectable, public Movable {
 
@@ -32,16 +34,20 @@ public:
 
   ~PolyLine();
 
-  virtual const string *get_name() const;
+  static const char *get_name_static();
+  virtual const char *get_name() const;
 
-  virtual const string *get_namespace() const;
+  static const char *get_namespace_static();
+  virtual const char *get_namespace() const;
 
   virtual void get_bounding_box(fp16 &x, fp16 &y, fp16 &w, fp16 &h) const;
 
   virtual void draw(fp16 origin_x, fp16 origin_y, u_fp16 scaling, 
                     bool xorred=false) const;
 
-  virtual ostream &serialize(ostream &os, const string *ns, int indent) const;
+  virtual ostream &serialize(ostream &os, const char *ns, int indent) const;
+
+  static void deserialize(XML_Parser *parser, ElementFactory *ef);
 
   virtual void draw_select_helpers(
     int origin_x, int origin_y, unsigned int scaling, bool xorred=false) const;
