@@ -1,4 +1,4 @@
-// $Id: ElementFactory.cc,v 1.3 2001-05-22 21:38:54 jle Exp $
+// $Id: ElementFactory.cc,v 1.4 2001-05-23 07:54:16 jle Exp $
 
 #include <map.h>
 #include <string>
@@ -7,6 +7,7 @@
 #include "ElementFactory.hpp"
 #include "elements/PolyLine.hpp"
 #include "elements/Rectangle.hpp"
+#include "elements/Ellipse.hpp"
 
 #define PARSER_BUFFER_SIZE 1024
 
@@ -171,6 +172,9 @@ static void init_deserializers() {
   add_deserializer(Rectangle::get_namespace_static(),
                    Rectangle::get_name_static(),
                    Rectangle::deserialize);
+  add_deserializer(Ellipse::get_namespace_static(),
+                   Ellipse::get_name_static(),
+                   Ellipse::deserialize);
 }
 
 static void add_deserializer(const char *ns, const char *name, 
