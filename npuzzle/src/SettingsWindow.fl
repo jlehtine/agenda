@@ -1,0 +1,93 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0009 
+header_name {.hpp} 
+code_name {.cc} 
+gridx 5 
+gridy 5 
+snap 3
+class SettingsWindow {open
+} {
+  decl {int cur_size;} {}
+  decl {int cur_labels;} {}
+  decl {int cur_moves;} {}
+  Function {SettingsWindow()} {open
+  } {
+    Fl_Window win {
+      label settings open
+      private xywh {1063 453 160 200} color 7 modal visible
+    } {
+      Fl_Group {} {
+        label settings open
+        xywh {5 25 150 120} box BORDER_FRAME color 0
+      } {
+        Fl_Choice size_choice {
+          label {size:} open
+          private xywh {60 35 85 25}
+        } {
+          menuitem {} {
+            label 3x3
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label 4x4
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label 5x5
+            xywh {0 0 100 20}
+          }
+        }
+        Fl_Choice labels_choice {
+          label {labels:} open
+          private xywh {60 70 85 25}
+        } {
+          menuitem {} {
+            label numbers
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label letters
+            xywh {0 0 100 20} value 1
+          }
+        }
+        Fl_Choice moves_choice {
+          label {moves:} open
+          private xywh {60 105 85 25}
+        } {
+          menuitem {} {
+            label smooth
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label quick
+            xywh {0 0 100 20} value 1
+          }
+        }
+      }
+      Fl_Button {} {
+        label ok
+        callback {win->hide();
+cur_size = size_choice->value();
+cur_labels = labels_choice->value();
+cur_moves = moves_choice->value();} selected
+        xywh {10 155 60 25}
+      }
+      Fl_Button {} {
+        label cancel
+        callback {win->hide();
+size_choice->value(cur_size);
+labels_choice->value(cur_labels);
+moves_choice->value(cur_moves);}
+        xywh {85 155 65 25}
+      }
+    }
+    code {size_choice->value(1);} {}
+    code {cur_size = size_choice->value();
+cur_labels = labels_choice->value();
+cur_moves = moves_choice->value();} {}
+  }
+  Function {show()} {open return_type void
+  } {
+    code {win->show();} {}
+  }
+} 
