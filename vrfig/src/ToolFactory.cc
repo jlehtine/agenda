@@ -1,4 +1,4 @@
-// $Id: ToolFactory.cc,v 1.8 2001-05-23 12:47:51 jle Exp $
+// $Id: ToolFactory.cc,v 1.9 2001-05-25 22:32:30 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -28,6 +28,7 @@
 #include "tools/EditTool.hpp"
 #include "tools/RectangleTool.hpp"
 #include "tools/EllipseTool.hpp"
+#include "tools/LabelTool.hpp"
 
 vector<Tool *> *ToolFactory::create_tools() {
   vector<Tool *> *tools = new vector<Tool *>();
@@ -37,6 +38,7 @@ vector<Tool *> *ToolFactory::create_tools() {
   tools->insert(tools->end(), new PolyLineTool());
   tools->insert(tools->end(), new RectangleTool());
   tools->insert(tools->end(), new EllipseTool());
+  tools->insert(tools->end(), new LabelTool());
   tools->insert(tools->end(), new MoveTool());
   tools->insert(tools->end(), new EditTool());
   tools->insert(tools->end(), new DeleteTool());
