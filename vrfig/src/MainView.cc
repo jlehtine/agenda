@@ -1,4 +1,4 @@
-// $Id: MainView.cc,v 1.7 2001-05-16 19:50:16 jle Exp $
+// $Id: MainView.cc,v 1.8 2001-05-17 19:35:27 jle Exp $
 
 #include <stdlib.h>
 #include <flpda/Widget_Factory.h>
@@ -6,69 +6,43 @@
 #include <FL/Fl_Widget.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Bitmap.H>
-#include <FL/Fl_Choice.H>
+#include <FL/Fl_Button.H>
 #include <FL/Fl_Menu_Item.H>
 #include <FL/Fl_Menu_Button.H>
+#include <FL/fl_draw.H>
 #include "MainView.hpp"
-#include "Editor.hpp"
-#include "DrawingTool.hpp"
-#include "MoveFigTool.hpp"
+#include "ToolFactory.hpp"
 #include "mathutil.hpp"
-#include "icons/outline_icon.xbm"
-#include "icons/filled_icon.xbm"
-#include "icons/text_icon.xbm"
-#include "icons/delete_icon.xbm"
-#include "icons/move_icon.xbm"
-#include "icons/edit_icon.xbm"
-#include "icons/movefig_icon.xbm"
 
-static Fl_Bitmap outline_bitmap
-(outline_icon_bits, outline_icon_width, outline_icon_height);
-static Fl_Bitmap filled_bitmap
-(filled_icon_bits, filled_icon_width, filled_icon_height);
-static Fl_Bitmap text_bitmap
-(text_icon_bits, text_icon_width, text_icon_height);
-static Fl_Bitmap delete_bitmap
-(delete_icon_bits, delete_icon_width, delete_icon_height);
-static Fl_Bitmap move_bitmap
-(move_icon_bits, move_icon_width, move_icon_height);
-static Fl_Bitmap edit_bitmap
-(edit_icon_bits, edit_icon_width, edit_icon_height);
-static Fl_Bitmap movefig_bitmap
-(movefig_icon_bits, movefig_icon_width, movefig_icon_height);
+// Tool selection button. This is an ordinary button except that it
+// displays the icon of the selected tool.
+class ToolsButton : public Fl_Button {
 
-static Fl_Menu_Item tools_popup[] = {
-  { "Outline" },
-  { "Filled" },
-  { "Text", 0, 0, 0, FL_MENU_DIVIDER },
-  { "Delete" },
-  { "Move" },
-  { "Edit", 0, 0, 0, FL_MENU_DIVIDER },
-  { "Move Figure" },
-  { 0 }
+protected:
+  
+  // The active tool
+  Tool *active_tool;
+
+public:
+
+  inline ToolsButton(int x, int y, int w, int h, const char *n = 0):
+    Fl_Button(x, y, w, h, n), active_tool(0) {}
+
+  // Set the active tool
+  inline void set_active_tool(Tool *t) {
+    active_tool = t;
+    redraw();
+  }
+
+  // Draw the button (with tool icon)
+  void draw() {
+    Fl_Button::draw();
+    if (active_tool && w() > 4 && h() > 4) {
+      fl_color(labelcolor());
+      active_tool->draw_icon(x() + 2, y() + 2, w() - 4, h() - 4);
+    }
+  }
 };
-
-static Tool *tools[] = {
-#if EXPERIMENTAL_UI
-  new DrawingTool(),
-  new DrawingTool(), // For now
-  new DrawingTool(), // For now
-  new DrawingTool(), // For now
-  new DrawingTool(), // For now
-  new DrawingTool(), // For now
-#else
-  new MoveFigTool(),
-  new MoveFigTool(),
-  new MoveFigTool(),
-  new MoveFigTool(),
-  new MoveFigTool(),
-  new MoveFigTool(),
-#endif
-  new MoveFigTool()
-};
-
-enum tool_types { OUTLINE = 0, FILLED = 1, TEXT = 2, DELETE = 3, MOVE = 4,
-                  EDIT = 5, MOVEFIG = 6 };
 
 static Fl_Menu_Item file_popup[] = {
   { "New", 0, 0, 0, FL_MENU_DIVIDER },
@@ -91,25 +65,24 @@ static Fl_Menu_Item info_popup[] = {
 MainView::MainView() {
   win = Widget_Factory::new_window("VRFig");
 
+  // Create tool list
+  tools = ToolFactory::create_tools();
+
   // Create toolbar
   Fl_Dockable_Window *toolbar = Widget_Factory::new_toolbar();
   Fl_Menu_Button *file_menu = Widget_Factory::new_menu_button("File");
   file_menu->menu(file_popup);
   file_popup[5].callback(cb_exit, this);
 
-  // Create tool choice
-  Fl_Choice *tools_choice = Widget_Factory::new_choice(0, cb_tool, this);
-  tools_choice->resize(tools_choice->x(), tools_choice->y(),
-                       5 * Widget_Factory::buttonheight() / 2,
-                       tools_choice->h());
-  outline_bitmap.label(tools_popup);
-  filled_bitmap.label(tools_popup + 1);
-  text_bitmap.label(tools_popup + 2);
-  delete_bitmap.label(tools_popup + 3);
-  move_bitmap.label(tools_popup + 4);
-  edit_bitmap.label(tools_popup + 5);
-  movefig_bitmap.label(tools_popup + 6);
-  tools_choice->menu(tools_popup);
+  // Create tool selection button (taken from FLPDA)
+  ToolsButton *tools_button = new ToolsButton
+    (0, 0, Widget_Factory::buttonheight(), Widget_Factory::buttonheight());
+#ifdef FLTK_VR3
+  tools_button->box(VR_BUTTON_UP_BOX);
+  tools_button->down_box(VR_BUTTON_DOWN_BOX);
+  tools_button->selection_color(FL_BLACK);
+#endif
+  tools_button->callback(cb_tool, this);
 
   Widget_Factory::new_button("Undo", cb_undo, this);
   Fl_Button *zoomout_button = 
@@ -134,10 +107,17 @@ MainView::MainView() {
   win->contents()->add(editor);
   win->contents()->resizable(editor);
   editor->set_figure(new Figure());
-  editor->set_tool(tools[0]);
+
+  // Create the tools choice
+  tools_choice = new ToolsChoice(0, 0, tools);
 
   win->end();
   win->show();
+
+  // Select the default tool
+  active_tool = *tools->begin();
+  tools_button->set_active_tool(active_tool);
+  editor->set_tool(active_tool);
 }
 
 void MainView::cb_exit(Fl_Widget *widget, void *data) {
@@ -145,16 +125,29 @@ void MainView::cb_exit(Fl_Widget *widget, void *data) {
 }
 
 void MainView::cb_tool(Fl_Widget *widget, void *data) {
-  MainView *view = (MainView *)data;
-  Fl_Choice *tools_choice = (Fl_Choice *)widget;
-  view->editor->set_tool(tools[tools_choice->value()]);
+  MainView *view = reinterpret_cast<MainView *>(data);
+  ToolsChoice *tc = view->tools_choice;
+  Fl_App_Window *w = view->win;
+  tc->resize(w->x() + Widget_Factory::buttonwidth(),
+             w->y() + w->h() - Widget_Factory::buttonheight() - tc->h(),
+             tc->w(),
+             tc->h());
+  tc->show();
+}
+
+void MainView::cb_tool_select(Fl_Widget *widget, void *data) {
+  MainView *view = reinterpret_cast<MainView *>(data);
+  Tool *old_tool = view->active_tool;
+  view->active_tool = view->tools_choice->get_tool();
+  if (view->active_tool != old_tool)
+    view->editor->set_tool(view->active_tool);
 }
 
 void MainView::cb_undo(Fl_Widget *widget, void *data) {
 }
 
 void MainView::cb_zoomout(Fl_Widget *widget, void *data) {
-  MainView *view = (MainView *)data;
+  MainView *view = reinterpret_cast<MainView *>(data);
   int scaling = view->editor->get_scaling();
   int ox, oy;
   view->editor->get_origin(ox, oy);
@@ -168,7 +161,7 @@ void MainView::cb_zoomout(Fl_Widget *widget, void *data) {
 }
 
 void MainView::cb_zoomin(Fl_Widget *widget, void *data) {
-  MainView *view = (MainView *)data;
+  MainView *view = reinterpret_cast<MainView *>(data);
   int scaling = view->editor->get_scaling();
   scaling <<= 1;
   if (scaling) {

@@ -1,4 +1,4 @@
-// $Id: PolyLine.cc,v 1.3 2001-05-16 19:50:16 jle Exp $
+// $Id: PolyLine.cc,v 1.1 2001-05-17 19:35:28 jle Exp $
 
 #include <stdio.h>
 #include <FL/fl_draw.H>
@@ -22,6 +22,19 @@
  */
 static bool check_line(int *points_begin, int *points_end, int *l1, int *l2);
 #endif
+
+PolyLine::~PolyLine() {
+  points.clear();
+}
+
+const string *PolyLine::get_name() const {
+  static const string name("polyline");
+  return &name;
+}
+
+const string *PolyLine::get_namespace() const {
+  return &vrf_default_namespace;
+}
 
 void PolyLine::draw(int origin_x, int origin_y, unsigned int scaling,
                     bool xorred) const {

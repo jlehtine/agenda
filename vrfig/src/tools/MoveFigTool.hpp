@@ -1,4 +1,4 @@
-// $Id: MoveFigTool.hpp,v 1.1 2001-05-08 15:31:20 jle Exp $
+// $Id: MoveFigTool.hpp,v 1.1 2001-05-17 19:35:28 jle Exp $
 
 #ifndef __MoveFigTool_hpp_INCLUDED__
 #define __MoveFigTool_hpp_INCLUDED__
@@ -28,11 +28,12 @@ public:
 
   inline MoveFigTool(): moving(false) {}
 
-  inline void deactivated(FigureView *view) {
-    moving = false;
-  }
+  const string *get_name() const;
+  
+  void draw_icon(int x, int y, int w, int h) const;
 
-  // Doc inherited from Tool
+  void deactivated(FigureView *view);
+  
   int handle(int event, FigureView *view);
 };
 

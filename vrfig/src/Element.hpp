@@ -1,4 +1,4 @@
-// $Id: Element.hpp,v 1.4 2001-05-16 19:50:16 jle Exp $
+// $Id: Element.hpp,v 1.5 2001-05-17 19:35:27 jle Exp $
 
 #ifndef __Element_hpp_INCLUDED__
 #define __Element_hpp_INCLUDED__
@@ -51,6 +51,8 @@ protected:
   }
 
 public:
+
+  virtual ~Element() {}
 
   /**
    * Returns the name of this element (like "polyline" or "circle").

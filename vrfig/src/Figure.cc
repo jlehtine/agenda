@@ -1,4 +1,4 @@
-// $Id: Figure.cc,v 1.1 2001-05-16 19:50:16 jle Exp $
+// $Id: Figure.cc,v 1.2 2001-05-17 19:35:27 jle Exp $
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,14 +17,14 @@ void Figure::serialize(ostream &os) {
   // to the document element.
   int nscount = 0;
   map<string *, string *> ns_to_nsid;
-  ns_to_nsid[(string *)&vrf_default_namespace] = 0;
+  ns_to_nsid[const_cast<string *>(&vrf_default_namespace)] = 0;
   map<Element *, string *> element_to_nsid;
   vector<Element *>::const_iterator i = elements.begin();
   while (i < elements.end()) {
     const string *ns = (*i)->get_namespace();
     const string *nsid;
-    if (ns_to_nsid.count((string *)ns)) {
-      nsid = ns_to_nsid[(string *)ns];
+    if (ns_to_nsid.count(const_cast<string *>(ns))) {
+      nsid = ns_to_nsid[const_cast<string *>(ns)];
     } else {
       string *id = new string("ns", 5);
       char num[5];
@@ -34,7 +34,7 @@ void Figure::serialize(ostream &os) {
       nsid = id;
       os << "\n  xmlns:" << nsid << "=\"" << ns << "\"";
     }
-    element_to_nsid[*i] = (string *)nsid;
+    element_to_nsid[*i] = const_cast<string *>(nsid);
     i++;
   }
   os << ">\n";

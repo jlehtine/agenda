@@ -1,4 +1,4 @@
-// $Id: Tool.hpp,v 1.2 2001-05-08 15:31:20 jle Exp $
+// $Id: Tool.hpp,v 1.3 2001-05-17 19:35:28 jle Exp $
 
 #ifndef __Tool_hpp_INCLUDED__
 #define __Tool_hpp_INCLUDED__
@@ -12,11 +12,33 @@
  * class for all tools.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 class Tool {
 
+protected:
+
 public:
+
+  virtual ~Tool() {}
+
+  /**
+   * Returns the (human readable) name of this tool.
+   *
+   * @return the name of this tool
+   */
+  virtual const string *get_name() const = 0;
+
+  /**
+   * Draws the tool icon to the specified rectangle of the current widget.
+   * The icon area has already been cleared with the background color.
+   *
+   * @param x the x coordinate of the rectangle
+   * @param y the y coordinate of the rectangle
+   * @param w the width of the rectangle
+   * @param h the height of the rectangle
+   */
+  virtual void draw_icon(int x, int y, int w, int h) const {}
 
   /**
    * Tells that the tool has been activated.
@@ -33,8 +55,9 @@ public:
   virtual void deactivated(FigureView *view) {}
 
   /**
-   * Draws the current state of edit action to the current widget. The
-   * figure and possible control points have already been drawn.
+   * Draws the current state of edit action to the current widget. This
+   * method is called when redrawing the whole view. The figure has already
+   * been redrawn when this method is called.
    *
    * @param view the current state of the view
    */

@@ -1,4 +1,4 @@
-// $Id: DrawingTool.cc,v 1.4 2001-05-16 19:50:15 jle Exp $
+// $Id: DrawingTool.cc,v 1.1 2001-05-17 19:35:28 jle Exp $
 
 #if USE_EXPERIMENTAL_UI
 
@@ -9,6 +9,13 @@
 #include "DrawingTool.hpp"
 #include "Element.hpp"
 #include "flext.hpp"
+#include "icons/outline_icon.xbm"
+#include "icons/filled_icon.xbm"
+
+static Fl_Bitmap outline_bitmap
+(outline_icon_bits, outline_icon_width, outline_icon_height);
+static Fl_Bitmap filled_bitmap
+(filled_icon_bits, filled_icon_width, filled_icon_height);
 
 void DrawingTool::draw_current_line(FigureView *view) {
   fl_color(FL_WHITE);

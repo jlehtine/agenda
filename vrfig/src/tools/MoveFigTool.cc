@@ -1,9 +1,29 @@
-// $Id: MoveFigTool.cc,v 1.2 2001-05-08 21:20:01 jle Exp $
+// $Id: MoveFigTool.cc,v 1.1 2001-05-17 19:35:28 jle Exp $
 
 #include <FL/Fl.H>
 #include <FL/Enumerations.H>
+#include <FL/Fl_Bitmap.H>
 #include "MoveFigTool.hpp"
 #include "mathutil.hpp"
+#include "icons/movefig_icon.xbm"
+
+static Fl_Bitmap movefig_bitmap
+(movefig_icon_bits, movefig_icon_width, movefig_icon_height);
+
+const string *MoveFigTool::get_name() const {
+  static const string name("move figure");
+  return &name;
+}
+
+void MoveFigTool::draw_icon(int x, int y, int w, int h) const {
+  movefig_bitmap.draw(x, y, w, h,
+                      (movefig_bitmap.w - w) >> 1,
+                      (movefig_bitmap.h - h) >> 1);
+}
+
+void MoveFigTool::deactivated(FigureView *view) {
+  moving = false;
+}
 
 int MoveFigTool::handle(int event, FigureView *view) {
   switch (event) {

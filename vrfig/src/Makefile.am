@@ -1,8 +1,12 @@
 ## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.6 2001-05-16 19:50:16 jle Exp $
+## $Id: Makefile.am,v 1.7 2001-05-17 19:35:27 jle Exp $
 
 srcdir = @srcdir@
 VPATH = @srcdir@
+
+SUBDIRS = elements tools
+
+LDADD = elements/libelements.a tools/libtools.a
 
 bin_PROGRAMS = vrfig
 
@@ -12,8 +16,9 @@ vrfig_SOURCES = vrfig.hpp vrfig.cc \
 	Element.hpp Element.cc \
 	Figure.hpp Figure.cc \
 	FigureView.hpp FigureView.cc \
-	PolyLine.hpp PolyLine.cc \
-	Tool.hpp Editor.hpp Editor.cc \
-	DrawingTool.hpp DrawingTool.cc \
-	MoveFigTool.hpp MoveFigTool.cc \
-	MainView.hpp MainView.cc main.cc
+	Tool.hpp \
+	Editor.hpp Editor.cc \
+	ToolFactory.hpp ToolFactory.cc \
+	ToolsChoice.hpp ToolsChoice.cc \
+	MainView.hpp MainView.cc \
+	main.cc
