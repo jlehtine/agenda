@@ -1,4 +1,4 @@
-// $Id: PuzzleBox.cc,v 1.1 2000-10-28 11:23:03 jle Exp $
+// $Id: PuzzleBox.cc,v 1.2 2000-10-28 11:57:05 jle Exp $
 
 #include <stdio.h>
 #include <FL/fl_draw.H>
@@ -28,19 +28,38 @@ void PuzzleBox::draw() {
   int x, y;
   for (y = 0; y < size; y++) {
     for (x = 0; x < size; x++) {
-      fl_color(FL_BLACK);
-      fl_rect(offx + tile_size*x, offy + tile_size*y,
-              tile_size, tile_size);
       int t = game->get_tile(x, y);
       if (t != 0) {
 
-        // Color tile box
-        bool dark = (((x+y) & 1) != 0);
-        if (!dark) {
+        // Draw tile border
+        bool dark = ((((t-1)%size + (t-1)/size) & 1) != 0);
+        if (dark) {
+          fl_color(FL_GRAY);
+        } else {
+          fl_color(FL_WHITE);
+        }
+        fl_yxline(offx + tile_size*x, offy + tile_size*(y+1) - 1,
+                  offy + tile_size*y,
+                  offx + tile_size*(x+1) - 1);
+        fl_yxline(offx + tile_size*x + 1, offy + tile_size*(y+1) - 2,
+                  offy + tile_size*y + 1,
+                  offx + tile_size*(x+1) - 2);
+        fl_color(FL_BLACK);
+        fl_xyline(offx + tile_size*x, offy + tile_size*(y+1) - 1,
+                  offx + tile_size*(x+1) - 1,
+                  offy + tile_size*y);
+        fl_xyline(offx + tile_size*x + 1, offy + tile_size*(y+1) - 2,
+                  offx + tile_size*(x+1) - 2,
+                  offy + tile_size*y + 1);
+        
+        // Fill tile box
+        if (dark) {
+          fl_color(FL_BLACK);
+        } else {
           fl_color(FL_GRAY);
         }
-        fl_rectf(offx + tile_size*x + 1, offy + tile_size*y + 1,
-                 tile_size - 2, tile_size - 2);
+        fl_rectf(offx + tile_size*x + 2, offy + tile_size*y + 2,
+                 tile_size - 4, tile_size - 4);
 
         // Draw tile letter/number
         if (dark) {
@@ -57,6 +76,12 @@ void PuzzleBox::draw() {
         }
         fl_draw(str, offx + tile_size*x, offy + tile_size*y,
                 tile_size, tile_size, FL_ALIGN_CENTER);
+      } else {
+
+        // Clear box
+        fl_color(FL_WHITE);
+        fl_rectf(offx + tile_size*x, offy + tile_size*y,
+                 tile_size, tile_size);
       }
     }
   }
