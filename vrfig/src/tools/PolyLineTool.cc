@@ -1,4 +1,4 @@
-// $Id: PolyLineTool.cc,v 1.1 2001-05-19 16:56:59 jle Exp $
+// $Id: PolyLineTool.cc,v 1.2 2001-05-20 23:42:14 jle Exp $
 
 #include <FL/Fl.H>
 #include <FL/Enumerations.H>
@@ -15,9 +15,9 @@
 static Fl_Bitmap polyline_bitmap
 (polyline_icon_bits, polyline_icon_width, polyline_icon_height);
 
-const string *PolyLineTool::get_name() const {
-  static const string name("polyline");
-  return &name;
+const char *PolyLineTool::get_name() const {
+  static const char *name = "polyline";
+  return name;
 }
 
 void PolyLineTool::draw_icon(int x, int y, int w, int h) const {

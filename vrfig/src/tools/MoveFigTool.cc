@@ -1,4 +1,4 @@
-// $Id: MoveFigTool.cc,v 1.1 2001-05-17 19:35:28 jle Exp $
+// $Id: MoveFigTool.cc,v 1.2 2001-05-20 23:42:14 jle Exp $
 
 #include <FL/Fl.H>
 #include <FL/Enumerations.H>
@@ -10,9 +10,9 @@
 static Fl_Bitmap movefig_bitmap
 (movefig_icon_bits, movefig_icon_width, movefig_icon_height);
 
-const string *MoveFigTool::get_name() const {
-  static const string name("move figure");
-  return &name;
+const char *MoveFigTool::get_name() const {
+  static const char *name = "move figure";
+  return name;
 }
 
 void MoveFigTool::draw_icon(int x, int y, int w, int h) const {

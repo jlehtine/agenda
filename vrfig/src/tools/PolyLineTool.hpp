@@ -1,4 +1,4 @@
-// $Id: PolyLineTool.hpp,v 1.1 2001-05-19 16:56:59 jle Exp $
+// $Id: PolyLineTool.hpp,v 1.2 2001-05-20 23:42:14 jle Exp $
 
 #ifndef __PolyLineTool_hpp_INCLUDED__
 #define __PolyLineTool_hpp_INCLUDED__
@@ -10,7 +10,7 @@
  * Tool for drawing polylines and polygons.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 class PolyLineTool : public Tool {
 
@@ -38,7 +38,7 @@ public:
 
   PolyLineTool(): last_polyline(0), drawing_segment(false) {}
 
-  virtual const string *get_name() const;
+  virtual const char *get_name() const;
 
   virtual void draw_icon(int x, int y, int w, int h) const;
 

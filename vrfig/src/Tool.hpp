@@ -1,4 +1,4 @@
-// $Id: Tool.hpp,v 1.4 2001-05-19 06:18:21 jle Exp $
+// $Id: Tool.hpp,v 1.5 2001-05-20 23:42:08 jle Exp $
 
 #ifndef __Tool_hpp_INCLUDED__
 #define __Tool_hpp_INCLUDED__
@@ -12,7 +12,7 @@
  * class for all tools.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 class Tool {
 
@@ -27,8 +27,8 @@ public:
    *
    * @return the name of this tool
    */
-  virtual const string *get_name() const = 0;
-
+  virtual const char *get_name() const = 0;
+  
   /**
    * Draws the tool icon to the specified rectangle of the current widget.
    * The icon area has already been cleared with the background color.

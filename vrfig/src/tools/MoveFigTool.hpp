@@ -1,4 +1,4 @@
-// $Id: MoveFigTool.hpp,v 1.1 2001-05-17 19:35:28 jle Exp $
+// $Id: MoveFigTool.hpp,v 1.2 2001-05-20 23:42:14 jle Exp $
 
 #ifndef __MoveFigTool_hpp_INCLUDED__
 #define __MoveFigTool_hpp_INCLUDED__
@@ -9,7 +9,7 @@
  * The MoveFigTool is used to move the figure around the view.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 class MoveFigTool : public Tool {
 
@@ -28,7 +28,7 @@ public:
 
   inline MoveFigTool(): moving(false) {}
 
-  const string *get_name() const;
+  virtual const char *get_name() const;
   
   void draw_icon(int x, int y, int w, int h) const;
 
