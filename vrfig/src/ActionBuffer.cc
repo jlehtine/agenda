@@ -1,4 +1,4 @@
-// $Id: ActionBuffer.cc,v 1.2 2001-05-26 14:25:19 jle Exp $
+// $Id: ActionBuffer.cc,v 1.3 2001-05-26 16:07:41 jle Exp $
 
 
 /*--------------------------------------------------------------------------
@@ -30,6 +30,11 @@ void ActionBuffer::add_action(Action *action) {
     Action *old = buffer[buffer_tail];
     old->commit();
     delete old;
+
+    // Check if this was the last clean action
+    if (static_cast<int>(buffer_tail) == last_clean)
+      last_clean = -1;
+    
     buffer_tail++;
     buffer_tail &= ACTION_BUFFER_LENGTH - 1;
     buffer_count--;
@@ -57,12 +62,23 @@ bool ActionBuffer::can_undo() const {
 bool ActionBuffer::undo_action() {
   if (!can_undo())
     return false;
+
   unsigned int ai = (buffer_head - 1) & (ACTION_BUFFER_LENGTH - 1);
   buffer[ai]->undo();
   delete buffer[ai];
+
+  // Check if the buffer becomes dirty
+  if (static_cast<int>(buffer_head) == last_clean) {
+    last_clean = -1;
+    dirty = true;
+  }
+
+  // Check if the buffer becomes clean
+  else if (static_cast<int>(ai) == last_clean)
+    dirty = false;
+
   buffer_head = ai;
   buffer_count--;
-  dirty = true;
   if (callback)
     callback(this, cb_data);
   return true;
@@ -75,6 +91,8 @@ void ActionBuffer::clear() {
     buffer_tail &= ACTION_BUFFER_LENGTH - 1;
     buffer_count--;
   }
+  dirty = false;
+  last_clean = buffer_head;
   if (callback)
     callback(this, cb_data);
 }
@@ -82,6 +100,7 @@ void ActionBuffer::clear() {
 void ActionBuffer::clear_dirty() {
   if (dirty) {
     dirty = false;
+    last_clean = buffer_head;
     if (callback)
       callback(this, cb_data);
   }

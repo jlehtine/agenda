@@ -1,4 +1,4 @@
-// $Id: ActionBuffer.hpp,v 1.1 2001-05-26 13:02:31 jle Exp $
+// $Id: ActionBuffer.hpp,v 1.2 2001-05-26 16:07:41 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -41,7 +41,7 @@ typedef void (*action_buffer_callback)(ActionBuffer *buffer, void *data);
  * modifications as actions to the ActionBuffer.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 class ActionBuffer {
 
@@ -65,6 +65,12 @@ protected:
    */
   bool dirty;
 
+  /**
+   * Index of the last action that was done on a clean buffer. This can
+   * be -1 for none.
+   */
+  int last_clean;
+
   /** A callback which is called when ActionBuffer state changes */
   action_buffer_callback callback;
 
@@ -78,7 +84,7 @@ public:
    */
   ActionBuffer(): 
     buffer_head(0), buffer_tail(0), buffer_count(0), dirty(false),
-    callback(0) {}
+    last_clean(0), callback(0) {}
 
   /** Destructor */
   inline ~ActionBuffer() {
@@ -118,8 +124,8 @@ public:
   bool undo_action();
 
   /**
-   * Clears this undo buffer. This is typically done after loading a new
-   * figure.
+   * Clears this undo buffer including the dirty flag. This is typically
+   * done after loading a new figure.
    */
   void clear();
 
