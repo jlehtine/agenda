@@ -1,4 +1,4 @@
-// $Id: MainView.cc,v 1.20 2001-05-26 16:12:38 jle Exp $
+// $Id: MainView.cc,v 1.21 2001-05-26 19:52:35 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -273,7 +273,9 @@ void MainView::cb_tool_select(Fl_Widget *widget, void *data) {
 
 void MainView::cb_undo(Fl_Widget *widget, void *data) {
   MainView *view = reinterpret_cast<MainView *>(data);
+  view->editor->set_tool(0);
   view->editor->get_action_buffer()->undo_action();
+  view->editor->set_tool(view->active_tool);
 }
 
 void MainView::cb_zoomout(Fl_Widget *widget, void *data) {
