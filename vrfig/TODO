@@ -36,6 +36,8 @@ actual end users.
 	* Easier way to draw boxes with text (for example,
           automatically grouping a rectangle and a label)
 
+	* Free-hand drawing
+
 	* Good performance with realistical drawings
 
 
@@ -52,9 +54,7 @@ Requirements for the 0.x (x>4) release:
 To be done at some suitable moment:
 -----------------------------------
 
-	* Clean up the polyline code and make the vertex
-          representation more sensible
-
+	* Find out if SdVG could be used as storage format
 
 --
 Johannes Lehtinen <johannes.lehtinen@iki.fi>
