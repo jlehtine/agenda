@@ -1,5 +1,6 @@
-// $Id: PolyLine.cc,v 1.1 2001-05-17 19:35:28 jle Exp $
+// $Id: PolyLine.cc,v 1.2 2001-05-19 16:56:26 jle Exp $
 
+#include <vector.h>
 #include <stdio.h>
 #include <FL/fl_draw.H>
 #include <FL/Enumerations.H>
@@ -36,10 +37,10 @@ const string *PolyLine::get_namespace() const {
   return &vrf_default_namespace;
 }
 
-void PolyLine::draw(int origin_x, int origin_y, unsigned int scaling,
+void PolyLine::draw(fp16 origin_x, fp16 origin_y, u_fp16 scaling,
                     bool xorred) const {
   fl_color(FL_BLACK);
-  vector<int>::const_iterator i = points.begin();
+  vector<fp16>::const_iterator i = points.begin();
   i += 2;
   int old_func = 0;
   if (xorred)
@@ -54,11 +55,24 @@ void PolyLine::draw(int origin_x, int origin_y, unsigned int scaling,
     fl_line(x, y, x1, y1);
     i += 2;
   }
+  if (closed) {
+    vector<fp16>::const_iterator first = points.begin();
+    vector<fp16>::const_iterator last = points.end() - 2;
+    int x = coord_to_screen(*last, origin_x, scaling);
+    int y = coord_to_screen(*(last+1), origin_y, scaling);
+    int x1 = coord_to_screen(*first, origin_x, scaling);
+    int y1 = coord_to_screen(*(first+1), origin_y, scaling);
+    if (xorred) {
+      fl_point(x, y);
+      fl_point(x1, y1);
+    }
+    fl_line(x, y, x1, y1);
+  }
   if (xorred)
     fle_reset_mode(old_func);
 }
 
-void PolyLine::get_bounding_box(int &x, int &y, int &w, int &h) const {
+void PolyLine::get_bounding_box(fp16 &x, fp16 &y, fp16 &w, fp16 &h) const {
   vector<int>::const_iterator i = points.begin();
   x = *(i++);
   y = *(i++);
@@ -87,7 +101,7 @@ ostream &PolyLine::serialize(ostream &os, const string *ns, int indent) const {
   output_indent(os, indent);
   output_ns_name(os << "<", ns, &elem_points) << 
     " num=\"" << (points.size() >> 1) << "\">\n";
-  vector<int>::const_iterator i = points.begin();
+  vector<fp16>::const_iterator i = points.begin();
   while (i < points.end()) {
     output_indent(os, indent+2);
     output_ns_name(os << "<", ns, &elem_point) <<
@@ -99,9 +113,51 @@ ostream &PolyLine::serialize(ostream &os, const string *ns, int indent) const {
   return os;
 }
 
+void PolyLine::draw_select_helpers(
+  int origin_x, int origin_y, unsigned int scaling, bool xorred=false) const {
+  fl_color(FL_BLACK);
+  vector<fp16>::const_iterator i = points.begin();
+  while (i < points.end()) {
+    draw_select_helper(*i, *(i+1), origin_x, origin_y, scaling);
+    i += 2;
+  }
+}
+
+fp16 PolyLine::select_distance(fp16 x, fp16 y) const {
+  u_fp16 min_dist = 0xffffffff;
+  vector<fp16>::const_iterator i = points.begin();
+  i += 2;
+  while (i < points.end()) {
+    u_fp16 dist = distance_to_line(x, y, *(i-2), *(i-1),
+                                   *i - *(i-2),
+                                   *(i + 1) - *(i-1));
+    if (dist < min_dist)
+      min_dist = dist;
+    i += 2;
+  }
+  if (closed) {
+    vector<fp16>::const_iterator first = points.begin();
+    vector<fp16>::const_iterator last = points.end() - 2;
+    u_fp16 dist = distance_to_line(x, y, *first, *(first+1),
+                                   *last - *first,
+                                   *(last+1) - *(first+1));
+    if (dist < min_dist)
+      min_dist = dist;
+  }
+  return min_dist;
+}
+
+void PolyLine::move(fp16 xoff, fp16 yoff) {
+  vector<fp16>::iterator i = points.begin();
+  while (i < points.end()) {
+    *(i++) += xoff;
+    *(i++) += yoff;
+  }
+}
+
 #if USE_EXPERIMENTAL_UI
 PolyLine *PolyLine::fit_to_points(
-  vector<int> *_points, int origin_x, int origin_y, unsigned int scaling) {
+  vector<fp16> *_points, fp16 origin_x, fp16 origin_y, u_fp16 scaling) {
 
   // Check that we have enough points for a polyline
   if (_points->size() < 4)
@@ -110,8 +166,8 @@ PolyLine *PolyLine::fit_to_points(
   PolyLine *line = new PolyLine();
 
   // Check if the user would like to draw a polygon
-  int xdiff = (*(_points->begin())) - (*(_points->end() - 2));
-  int ydiff = (*(_points->begin() + 1)) - (*(_points->end() - 1));
+  fp16 xdiff = (*(_points->begin())) - (*(_points->end() - 2));
+  fp16 ydiff = (*(_points->begin() + 1)) - (*(_points->end() - 1));
   if (xdiff*xdiff + ydiff*ydiff <= CLOSED_MAX_GAP)
     line->closed = true;
   else
