@@ -1,4 +1,4 @@
-// $Id: MainView.hpp,v 1.9 2001-05-23 12:47:50 jle Exp $
+// $Id: MainView.hpp,v 1.10 2001-05-26 13:02:30 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -24,7 +24,9 @@
 
 #include <Flek/Fl_App_Window.H>
 #include <FL/Fl_Widget.H>
+#include <FL/Fl_Button.H>
 #include "Editor.hpp"
+#include "ActionBuffer.hpp"
 #include "ToolsChoice.hpp"
 #include "espws/FileChooser.h"
 
@@ -36,7 +38,7 @@ class ToolsButton;
  * a subclass of Fl_Window.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  */
 class MainView {
 
@@ -48,11 +50,17 @@ protected:
   /** The editor widget */
   Editor *editor;
 
+  /** The action buffer */
+  ActionBuffer *action_buffer;
+
   /** The tools available */
   vector<Tool *> *tools;
 
   /** The currently active tool */
   Tool *active_tool;
+
+  /** The undo button */
+  Fl_Button *undo_button;
 
   /** The tool selection button */
   ToolsButton *tools_button;
@@ -85,6 +93,15 @@ protected:
   static void cb_save(Fl_Widget *widget, void *data);
   static void cb_save_as(Fl_Widget *widget, void *data);
   static void cb_about(Fl_Widget *widget, void *data);
+  static void cb_action_buffer(ActionBuffer *buffer, void *data);
+
+  /**
+   * Checks if the user has modified the current figure and whether he/she
+   * is ready to discard the changes. Returns true if proceeding is ok.
+   *
+   * @return whether proceeding is ok
+   */
+  bool check_discard();
 
 public:
 

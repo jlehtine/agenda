@@ -1,4 +1,4 @@
-// $Id: MainView.cc,v 1.17 2001-05-23 12:47:50 jle Exp $
+// $Id: MainView.cc,v 1.18 2001-05-26 13:02:30 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -122,6 +122,9 @@ static Fl_Menu_Item info_popup[] = {
 
 MainView::MainView(): current_file("") {
 
+  // Create new action buffer
+  action_buffer = new ActionBuffer();
+
   win = Widget_Factory::new_window("VRFig");
 
   // Create tool list
@@ -151,8 +154,9 @@ MainView::MainView(): current_file("") {
 #endif
   tools_button->callback(cb_tool, this);
 
-  Fl_Button *undo_button = Widget_Factory::new_button("Undo", cb_undo, this);
+  undo_button = Widget_Factory::new_button("Undo", cb_undo, this);
   undo_button->deactivate();
+  action_buffer->set_callback(cb_action_buffer, this);
   Fl_Button *zoomout_button = 
     Widget_Factory::new_button("-", cb_zoomout, this);
   zoomout_button->resize(zoomout_button->x(), zoomout_button->y(),
@@ -231,7 +235,18 @@ MainView::MainView(): current_file("") {
     path.c_str(), "*.vfg", FileChooser::SINGLE, "VRFig Load");
 }
 
+bool MainView::check_discard() {
+  if (action_buffer->is_dirty())
+    return fl_ask("This will discard the changes made to the current "
+                  "figure. Do you want to continue?");
+  else
+    return true;
+}
+
 void MainView::cb_exit(Fl_Widget *widget, void *data) {
+  MainView *view = reinterpret_cast<MainView *>(data);
+  if (!view->check_discard())
+    return;
   exit(0);
 }
 
@@ -289,6 +304,9 @@ void MainView::cb_zoomin(Fl_Widget *widget, void *data) {
 
 void MainView::cb_new(Fl_Widget *widget, void *data) {
   MainView *view = reinterpret_cast<MainView *>(data);
+  if (!view->check_discard())
+    return;
+
   Figure *fig = view->editor->get_figure();
   view->editor->set_figure(new Figure());
   if (fig)
@@ -315,6 +333,8 @@ void MainView::cb_revert(Fl_Widget *widget, void *data) {
     fl_message("No file to revert from.");
     return;
   }
+  if (!view->check_discard())
+    return;
 
   // Load figure from the specified file
   ifstream ifs(view->current_file.c_str());
@@ -390,6 +410,14 @@ void MainView::cb_save_as(Fl_Widget *widget, void *data) {
 void MainView::cb_about(Fl_Widget *widget, void *data) {
   MainView *view = reinterpret_cast<MainView *>(data);
   view->about_win->show();
+}
+
+void MainView::cb_action_buffer(ActionBuffer *buffer, void *data) {
+  MainView *view = reinterpret_cast<MainView *>(data);
+  if (buffer->can_undo()) 
+    view->undo_button->activate();
+  else
+    view->undo_button->deactivate();
 }
 
 static Fl_App_Window *create_about_win() {
