@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.5 2001-05-22 18:35:27 jle Exp $
+## $Id: Makefile.am,v 1.6 2001-05-22 19:50:23 jle Exp $
 
 srcdir = @srcdir@
 VPATH = @srcdir@
@@ -12,4 +12,5 @@ libtools_a_SOURCES = DrawingTool.hpp DrawingTool.cc \
 	MoveFigTool.hpp MoveFigTool.cc \
 	PolyLineTool.hpp PolyLineTool.cc \
 	MoveTool.hpp MoveTool.cc \
-	DeleteTool.hpp DeleteTool.cc
+	DeleteTool.hpp DeleteTool.cc \
+	EditTool.hpp EditTool.cc
