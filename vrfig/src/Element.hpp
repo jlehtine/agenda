@@ -1,4 +1,4 @@
-// $Id: Element.hpp,v 1.10 2001-05-24 18:24:27 jle Exp $
+// $Id: Element.hpp,v 1.11 2001-06-10 19:13:10 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -130,21 +130,6 @@ public:
    */
   virtual ostream &serialize(ostream &os, const char *ns, int indent) 
     const = 0;
-
-#if USE_EXPERIMENTAL_UI
-  /**
-   * Fits some element to the specified point set or returns
-   * null if no element could be fitted.
-   *
-   * @param points a vector of point x/y coordinates
-   * @param origin_x the x coordinate for the origin 
-   * @param origin_y the y coordinate for the origin 
-   * @param scaling the scaling used 
-   * @return the fitted element
-   */
-  static Element *fit_element(
-    vector<int> *points, fp16 origin_x, fp16 origin_y, u_fp16 scaling);
-#endif
 };
 
 #endif

@@ -1,4 +1,4 @@
-// $Id: PolyLine.cc,v 1.13 2001-06-10 18:36:43 jle Exp $
+// $Id: PolyLine.cc,v 1.14 2001-06-10 19:13:10 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -31,19 +31,6 @@
 
 #define CLOSED_MAX_GAP 16
 #define DEVIATION_MAX 25
-
-#if USE_EXPERIMENTAL_UI
-/**
- * Checks if the specified set of points is no more than a maximum
- * distance away from the specified line.
- *
- * @param points_begin the beginning of points to check
- * @param points_end the end of points to check
- * @param l1 the line end point 1
- * @param l2 the line end point 2
- */
-static bool check_line(int *points_begin, int *points_end, int *l1, int *l2);
-#endif
 
 /**
  * Information needed when deserializing XML data to polyline.
@@ -297,93 +284,3 @@ void PolyLine::control(unsigned int i, fp16 x, fp16 y) {
     points[i].y = y;
   }
 }
-
-#if USE_EXPERIMENTAL_UI
-PolyLine *PolyLine::fit_to_points(
-  vector<fp16> *_points, fp16 origin_x, fp16 origin_y, u_fp16 scaling) {
-
-  // Check that we have enough points for a polyline
-  if (_points->size() < 4)
-    return 0;
-  
-  PolyLine *line = new PolyLine();
-
-  // Check if the user would like to draw a polygon
-  fp16 xdiff = (*(_points->begin())) - (*(_points->end() - 2));
-  fp16 ydiff = (*(_points->begin() + 1)) - (*(_points->end() - 1));
-  if (xdiff*xdiff + ydiff*ydiff <= CLOSED_MAX_GAP)
-    line->closed = true;
-  else
-    line->closed = false;
-  
-  // Find the longest possible segments
-  line->points.insert
-    (line->points.end(),
-     screen_to_coord(*(_points->begin()), origin_x, scaling));
-  line->points.insert
-    (line->points.end(),
-     screen_to_coord(*(_points->begin() + 1), origin_y, scaling));
-  vector<int>::iterator end = _points->end();
-  vector<int>::iterator i = _points->begin();
-  while (i < end - 2) {
-    int *seg_start = i;
-    i += 2;
-    while (i < end) {
-
-      // Check whether the poinds in the middle are close enough to the line
-      if (check_line(seg_start + 2, i - 2, seg_start, i))
-        i += 2;
-      else
-        break;
-    }
-
-    // Check the other direction as well, for first segment of a polygon
-    if (line->closed && seg_start == _points->begin()) {
-      while (end - 2 > seg_start) {
-        if (!check_line(seg_start, i, end - 2, i))
-          break;
-        if (!check_line(end, _points->end(), end - 2, i))
-          break;
-        end -= 2;
-      }
-
-      // Update the first coordinates
-      if (end < _points->end()) {
-        int *j = line->points.begin();
-        *j = screen_to_coord(*end, origin_x, scaling);
-        *(j+1) = screen_to_coord(*(end+1), origin_y, scaling);
-      }
-    }
-
-    // Add segment to points list
-    i -= 2;
-    line->points.insert(line->points.end(),
-                        screen_to_coord(*i, origin_x, scaling));
-    line->points.insert(line->points.end(),
-                        screen_to_coord(*(i+1), origin_y, scaling));
-  }
-
-  return line;
-}
-
-static bool check_line(int *points_begin, int *points_end, int *l1, int *l2) {
-  while (points_begin < points_end) {
-    printf("distance_from_line(%d, %d, %d, %d, %d, %d) = %d\n",
-           (*points_begin), (*(points_begin+1)),
-           (*l1), (*(l1+1)),
-           ((*l2) - (*l1)), ((*(l2+1)) - (*(l1+1))),
-           distance_from_line
-           ((*points_begin) << 16, (*(points_begin+1)) << 16,
-            (*l1) << 16, (*(l1+1)) << 16,
-            ((*l2) - (*l1)) << 16, ((*(l2+1)) - (*(l1+1))) << 16) >> 16);
-    if (distance_from_line
-        ((*points_begin) << 16, (*(points_begin+1)) << 16,
-         (*l1) << 16, (*(l1+1)) << 16,
-         ((*l2) - (*l1)) << 16, ((*(l2+1)) - (*(l1+1))) << 16)
-        > (DEVIATION_MAX << 16))
-      return false;
-    points_begin += 2;
-  }
-  return true;
-}
-#endif

@@ -1,4 +1,4 @@
-// $Id: Element.cc,v 1.5 2001-05-24 18:24:27 jle Exp $
+// $Id: Element.cc,v 1.6 2001-06-10 19:13:10 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -22,23 +22,6 @@
 #include "Element.hpp"
 #include "vrfig.hpp"
 
-#if USE_EXPERIMENTAL_UI
-#include "PolyLine.hpp"
-#endif
-
 const char *Element::get_namespace() const {
   return vrf_default_namespace;
 }
-
-#if USE_EXPERIMENTAL_UI
-Element *Element::fit_element(
-  vector<int> *points, fp16 origin_x, fp16 origin_y, u_fp16 scaling) {
-  
-  // Try more specific elements first
-  Element *element = PolyLine::fit_to_points
-    (points, origin_x, origin_y, scaling);
-  if (element != 0)
-    return element;
-  return 0;
-}
-#endif

@@ -1,4 +1,4 @@
-// $Id: PolyLine.hpp,v 1.10 2001-05-29 18:05:10 jle Exp $
+// $Id: PolyLine.hpp,v 1.11 2001-06-10 19:13:10 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -36,7 +36,7 @@
  * A polyline element which is the most generic element.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 class PolyLine : public Element, public Selectable, public Movable,
   public Controllable {
@@ -117,11 +117,6 @@ public:
   inline void set_closed(bool c) {
     closed = c;
   }
-  
-#if USE_EXPERIMENTAL_UI
-  static PolyLine *fit_to_points(
-    vector<int> *points, fp16 origin_x, fp16 origin_y, u_fp16 scaling);
-#endif
 };
 
 #endif
