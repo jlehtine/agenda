@@ -1,4 +1,6 @@
 #! /bin/sh
+#
+# $Id: vinstall,v 1.2 2001-04-28 07:57:57 jle Exp $
 
 if [ -n "$VRP_STRIPTOOL" ]; then
   $VRP_STRIPTOOL src/npuzzle
