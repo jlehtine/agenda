@@ -6,10 +6,12 @@
 static MainWindow *main_window;
 
 static void update_time(void *ptr);
+static void update_moves();
 
 int main(void) {
   srand(time(NULL));
   main_window = new MainWindow();
+  main_window->set_move_callback(update_moves);
   main_window->show();
   Fl::add_timeout(0, update_time);
   return Fl::run();
@@ -18,4 +20,8 @@ int main(void) {
 static void update_time(void *ptr) {
   Fl::repeat_timeout(1, update_time);
   main_window->update_time();
+}
+
+static void update_moves() {
+  main_window->update_moves();
 }
