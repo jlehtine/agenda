@@ -1,6 +1,82 @@
-// $Id: mathutil.cc,v 1.4 2001-05-19 16:55:22 jle Exp $
+// $Id: mathutil.cc,v 1.5 2001-05-20 18:51:23 jle Exp $
 
+#include <stdio.h>
+#include <string.h>
 #include "mathutil.hpp"
+
+size_t fp16_to_str(fp16 v, char *str, size_t n) {
+  size_t num_written = 0;
+  if (num_written >= n)
+    return num_written;
+  if (v < 0) {
+    *(str++) = '-';
+    num_written++;
+    if (num_written >= n)
+      return num_written;
+    v = -v;
+  }
+  num_written += snprintf(str, n - num_written, "%u", (unsigned int)(v >> 16));
+  if (num_written >= n)
+    return num_written;
+  
+  // Add the decimal part to the string if necessary
+  v &= 0xffff;
+  if (v) {
+    char *t = str + strlen(str);
+    *(t++) = '.';
+    num_written++;
+    if (num_written >= n)
+      return num_written;
+    int num_decimals = 0;
+    while (v && num_decimals++ < 6) {
+      v *= 10;
+      *(t++) = '0' + (v >> 16);
+      num_written++;
+      if (num_written >= n)
+        return num_written;
+      v &= 0xffff;
+    }
+    *t = '\0';
+  }
+  return num_written;
+}
+
+ostream &write_fp16(ostream &os, fp16 v) {
+  char str[20];
+  fp16_to_str(v, str, 20);
+  return os << str;
+}
+
+fp16 str_to_fp16(const char *str) {
+  fp16 v = 0;
+  bool minus_sign;
+  if (*str == '-') {
+    minus_sign = true;
+    str++;
+  } else
+    minus_sign = false;
+  while (*str >= '0' && *str <= '9') {
+    v *= 10;
+    v += *(str++) - '0';
+  }
+  v <<= 16;
+  if (*str == '\0')
+    return minus_sign ? -v : v;
+  if (*str != '.')
+    return 0;
+  str++;
+  u_fp16 dp = 0;
+  unsigned int divider = 1;
+  while (*str >= '0' && *str <= '9' && divider < 1000000000) {
+    dp *= 10;
+    dp += *(str++) - '0';
+    divider *= 10;
+  }
+  if (divider < 1000000000 && *str != '\0')
+    return 0;
+  v |= (u_fp16)((((unsigned long long)dp << 16) + (divider >> 1)) / divider);
+  return minus_sign ? -v : v;
+}
 
 fp16 div_int_fp16u_fp16(int dividend, u_fp16 divisor) {
   return ((dividend << 16) / (divisor >> 8)) << 8;

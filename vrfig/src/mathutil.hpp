@@ -1,7 +1,9 @@
-// $Id: mathutil.hpp,v 1.3 2001-05-19 16:55:22 jle Exp $
+// $Id: mathutil.hpp,v 1.4 2001-05-20 18:51:23 jle Exp $
 
 #ifndef __mathutil_hpp_INCLUDED__
 #define __mathutil_hpp_INCLUDED__
+
+#include <iostream.h>
 
 /** A signed 16.16 fixed point value */
 typedef int fp16;
@@ -30,6 +32,33 @@ inline fp32 fp16_to_fp32(fp16 i) {
 inline fp16 fp32_to_fp16(fp32 i) {
   return i >> 16;
 }
+
+/**
+ * Converts 16.16 fixed point number to decimal string.
+ *
+ * @param v the value to convert to string
+ * @param str the target string
+ * @param n the maximum length of the string
+ * @return the number of characters written to the string (excluding null)
+ */
+size_t fp16_to_str(fp16 v, char *str, size_t n);
+
+/**
+ * Writes 16.16 fixed point number to the specified output stream.
+ * The number is written in decimal format.
+ *
+ * @param os the output stream
+ * @param v the fixed point value to write
+ */
+ostream &write_fp16(ostream &os, fp16 v);
+
+/**
+ * Converts a decimal string to 16.16 fixed point number.
+ *
+ * @param str the string to convert
+ * @return the fixed point value
+ */
+fp16 str_to_fp16(const char *str);
 
 /**
  * Multiplies two 16.16 fixed point values returning the result as integer.
