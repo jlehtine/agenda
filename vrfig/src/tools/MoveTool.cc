@@ -1,4 +1,4 @@
-// $Id: MoveTool.cc,v 1.1 2001-05-22 18:04:28 jle Exp $
+// $Id: MoveTool.cc,v 1.2 2001-05-22 18:35:06 jle Exp $
 
 #include <vector.h>
 #include <FL/Fl.H>
@@ -70,10 +70,12 @@ int MoveTool::handle(int event, FigureView *view) {
           }
         }
       }
-      int screen_dist_sqr = mul_fp32_fp32_int(
-        min_dist, fp16_to_fp32(view->get_scaling()));
-      if (screen_dist_sqr > SELECT_DIST_SQR)
-        element = 0;
+      if (element) {
+        int screen_dist_sqr = mul_fp32_fp32_int(
+          min_dist, fp16_to_fp32(view->get_scaling()));
+        if (screen_dist_sqr > SELECT_DIST_SQR)
+          element = 0;
+      }
     } while (0);
     return 1;
 
@@ -105,6 +107,7 @@ int MoveTool::handle(int event, FigureView *view) {
     if (!element)
       return 0;
     element = 0;
+    view->redraw();
     return 1;
 
   default:
