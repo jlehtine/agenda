@@ -31,7 +31,8 @@ class MainWindow {open
             callback {PuzzleGame *old = game;
 game = new PuzzleGame(settings_win->get_size());
 puzzle_box->set_game(game);
-delete old;}
+delete old;
+update_moves();} selected
             xywh {0 0 100 20}
             code0 {\#include "PuzzleGame.hpp"}
           }
@@ -98,7 +99,7 @@ delete old;}
             class RightAlignedOutput
           }
         }
-        Fl_Box puzzle_box {selected
+        Fl_Box puzzle_box {
           private xywh {10 60 140 140} color 7
           code0 {\#include "PuzzleBox.hpp"}
           class PuzzleBox
@@ -111,6 +112,7 @@ settings_win = new SettingsWindow();} {}
     code {puzzle_box->set_settings(settings_win);
 game = new PuzzleGame(settings_win->get_size());
 puzzle_box->set_game(game);} {}
+    code {update_moves();} {}
   }
   Function {show()} {open return_type void
   } {
@@ -132,5 +134,9 @@ time_output->redraw();} {}
 sprintf(str, "%d", game->get_moves());
 moves_output->value(str);
 moves_output->redraw();} {}
+  }
+  Function {set_move_callback(void (*cb)())} {open return_type void
+  } {
+    code {puzzle_box->set_move_callback(cb);} {}
   }
 } 
