@@ -1,12 +1,12 @@
 ## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.4 2001-05-08 15:31:19 jle Exp $
+## $Id: Makefile.am,v 1.5 2001-05-08 21:20:01 jle Exp $
 
 srcdir = @srcdir@
 VPATH = @srcdir@
 
 bin_PROGRAMS = vrfig
 
-vrfig_SOURCES = transform.hpp transform.cc \
+vrfig_SOURCES = mathutil.hpp mathutil.cc \
 	Element.hpp Element.cc \
 	PolyLine.hpp PolyLine.cc \
 	Figure.hpp \

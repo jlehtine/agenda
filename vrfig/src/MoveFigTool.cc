@@ -1,9 +1,9 @@
-// $Id: MoveFigTool.cc,v 1.1 2001-05-08 15:31:20 jle Exp $
+// $Id: MoveFigTool.cc,v 1.2 2001-05-08 21:20:01 jle Exp $
 
 #include <FL/Fl.H>
 #include <FL/Enumerations.H>
 #include "MoveFigTool.hpp"
-#include "transform.hpp"
+#include "mathutil.hpp"
 
 int MoveFigTool::handle(int event, FigureView *view) {
   switch (event) {

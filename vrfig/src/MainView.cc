@@ -1,4 +1,4 @@
-// $Id: MainView.cc,v 1.5 2001-05-08 15:31:19 jle Exp $
+// $Id: MainView.cc,v 1.6 2001-05-08 21:20:01 jle Exp $
 
 #include <stdlib.h>
 #include <flpda/Widget_Factory.h>
@@ -13,7 +13,7 @@
 #include "Editor.hpp"
 #include "DrawingTool.hpp"
 #include "MoveFigTool.hpp"
-#include "transform.hpp"
+#include "mathutil.hpp"
 #include "icons/outline_icon.xbm"
 #include "icons/filled_icon.xbm"
 #include "icons/text_icon.xbm"
@@ -50,11 +50,11 @@ static Fl_Menu_Item tools_popup[] = {
 
 static Tool *tools[] = {
   new DrawingTool(),
-  0,
-  0,
-  0,
-  0,
-  0,
+  new DrawingTool(), // For now
+  new DrawingTool(), // For now
+  new DrawingTool(), // For now
+  new DrawingTool(), // For now
+  new DrawingTool(), // For now
   new MoveFigTool()
 };
 
