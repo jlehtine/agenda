@@ -1,12 +1,12 @@
 ## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.7 2001-05-17 19:35:27 jle Exp $
+## $Id: Makefile.am,v 1.8 2001-05-19 16:54:44 jle Exp $
 
 srcdir = @srcdir@
 VPATH = @srcdir@
 
 SUBDIRS = elements tools
 
-LDADD = elements/libelements.a tools/libtools.a
+LDADD = tools/libtools.a elements/libelements.a
 
 bin_PROGRAMS = vrfig
 
@@ -17,6 +17,8 @@ vrfig_SOURCES = vrfig.hpp vrfig.cc \
 	Figure.hpp Figure.cc \
 	FigureView.hpp FigureView.cc \
 	Tool.hpp \
+	Selectable.hpp Selectable.cc \
+	Movable.hpp \
 	Editor.hpp Editor.cc \
 	ToolFactory.hpp ToolFactory.cc \
 	ToolsChoice.hpp ToolsChoice.cc \
