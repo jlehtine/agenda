@@ -1,4 +1,4 @@
-// $Id: EditTool.cc,v 1.4 2001-05-24 19:49:58 jle Exp $
+// $Id: EditTool.cc,v 1.5 2001-05-26 15:02:04 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -27,6 +27,7 @@
 #include <FL/fl_draw.H>
 #include "EditTool.hpp"
 #include "Selectable.hpp"
+#include "Action.hpp"
 #include "icons/edit_icon.xbm"
 #include "flext.hpp"
 
@@ -34,6 +35,40 @@ static Fl_Bitmap edit_bitmap
 (edit_icon_bits, edit_icon_width, edit_icon_height);
 
 static void draw_control_points(Controllable *element, FigureView *view);
+
+/**
+ * An action for undoing edit operations.
+ */
+class EditAction : public Action {
+
+protected:
+
+  /** The view edited */
+  FigureView *view;
+
+  /** The element edited */
+  Controllable *element;
+
+  /** Index of the control point edited */
+  int index;
+  
+  /** Old x coordinate */
+  fp16 old_x;
+
+  /** Old y coordinate */
+  fp16 old_y;
+
+public:
+
+  inline EditAction(FigureView *view, Controllable *element, 
+                    int index, fp16 old_x, fp16 old_y):
+    view(view), element(element), index(index), old_x(old_x), old_y(old_y) {}
+
+  virtual void undo() {
+    element->control(index, old_x, old_y);
+    view->redraw();
+  }
+};
 
 const char *EditTool::get_name() const {
   static const char *name = "edit";
@@ -59,7 +94,8 @@ void EditTool::draw(FigureView *view) {
   int old_func = fle_xorred_mode();
   while (i < elements->end()) {
     Controllable *elem = dynamic_cast<Controllable *>(*(i++));
-    draw_control_points(elem, view);
+    if (elem)
+      draw_control_points(elem, view);
   }
   fle_reset_mode(old_func);
 }
@@ -154,6 +190,10 @@ int EditTool::handle(int event, FigureView *view) {
   case FL_RELEASE:
     if (!element)
       return 1;
+    
+    // Create the action record and update view
+    view->get_action_buffer()->add_action
+      (new EditAction(view, element, cp_index, org_x, org_y));
     element = 0;
     view->redraw();
     return 1;
