@@ -1,4 +1,4 @@
-// $Id: DeleteTool.cc,v 1.6 2001-05-26 14:26:17 jle Exp $
+// $Id: DeleteTool.cc,v 1.7 2001-05-26 16:13:59 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -117,9 +117,8 @@ int DeleteTool::handle(int event, FigureView *view) {
           DeleteAction *action = new DeleteAction(*closest, view);
 
           // Delete the element
-          elements->erase(closest);
+          view->remove_element(*closest);
           view->get_action_buffer()->add_action(action);
-          view->redraw();
         }
       }
     } while (0);
