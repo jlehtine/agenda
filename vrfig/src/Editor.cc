@@ -1,4 +1,4 @@
-// $Id: Editor.cc,v 1.5 2001-05-22 14:53:26 jle Exp $
+// $Id: Editor.cc,v 1.6 2001-05-22 18:01:44 jle Exp $
 
 #include "Editor.hpp"
 
@@ -33,7 +33,7 @@ void Editor::set_origin(fp16 x, fp16 y) {
 void Editor::set_scaling(u_fp16 _scaling) {
   if (tool)
     tool->deactivated(this);
-  FigureView::set_scaling(scaling);
+  FigureView::set_scaling(_scaling);
   if (tool)
     tool->activated(this);
 }
