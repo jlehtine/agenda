@@ -1,15 +1,24 @@
-// $Id: PuzzleGame.hpp,v 1.4 2000-10-28 11:56:48 jle Exp $
+// $Id: PuzzleGame.hpp,v 1.5 2000-10-29 15:57:57 jle Exp $
 
 #ifndef __PuzzleGame_hpp_INCLUDED__
 #define __PuzzleGame_hpp_INCLUDED__
 
 #ifdef __cplusplus
 
+/** Indicates that no move was possible */
+#define MOVE_NONE 4
+
+/** Get axel of move (0=x, 1=y) */
+#define MOVE_AXEL(x) ((x)&1)
+
+/** Get offset of move (-1, 1) */
+#define MOVE_OFFSET(x) (((x)&2) - 1)
+
 /**
  * 15(n)-puzzle game logic and wrapper for storing game situations.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 class PuzzleGame {
 
@@ -50,9 +59,9 @@ public:
    *
    * @param x the x coordinate of the block to move
    * @param y the y coordinate of the block to move
-   * @return whether move was possible or not
+   * @return direction of move or MOVE_NONE if not possible to move
    */
-  bool move(int x, int y);
+  int move(int x, int y);
 
   /**
    * Get number of the tile in the specified position. Returns 0

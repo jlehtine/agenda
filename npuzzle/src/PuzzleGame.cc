@@ -1,4 +1,4 @@
-// $Id: PuzzleGame.cc,v 1.5 2000-10-29 15:06:19 jle Exp $
+// $Id: PuzzleGame.cc,v 1.6 2000-10-29 15:57:57 jle Exp $
 
 #include <stdlib.h>
 #include "PuzzleGame.hpp"
@@ -69,12 +69,12 @@ bool PuzzleGame::solved() {
   return true;
 }
 
-bool PuzzleGame::move(int x, int y) {
+int PuzzleGame::move(int x, int y) {
   int bxy = state[y*size + x];
 
   // Check that we are not trying to move an empty block
   if (bxy == 0) {
-    return false;
+    return MOVE_NONE;
   }
   
   // Find the neighbouring empty block if any
@@ -92,11 +92,11 @@ bool PuzzleGame::move(int x, int y) {
     }
   }
   if (!found) {
-    return false;
+    return MOVE_NONE;
   }
 
   // Move the block
   state[(y+off[1])*size + x + off[0]] = bxy;
   state[y*size + x] = 0;
-  return true;
+  return i-1;
 }
