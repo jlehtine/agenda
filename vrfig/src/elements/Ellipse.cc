@@ -1,4 +1,4 @@
-// $Id: Ellipse.cc,v 1.4 2001-05-24 18:47:09 jle Exp $
+// $Id: Ellipse.cc,v 1.5 2001-05-29 18:05:10 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -87,11 +87,11 @@ static void end_handler(void *data, const XML_Char *name) {
   info->depth--;
 }
 
-Ellipse::Ellipse(fp16 x, fp16 y, fp16 x1, fp16 y1): controls(4) {
-  controls[0] = x;
-  controls[1] = y;
-  controls[2] = x1;
-  controls[3] = y1;
+Ellipse::Ellipse(fp16 x, fp16 y, fp16 x1, fp16 y1): controls(2) {
+  controls[0].x = x;
+  controls[0].y = y;
+  controls[1].x = x1;
+  controls[1].y = y1;
 }
 
 const char *Ellipse::get_name_static() {
@@ -108,10 +108,10 @@ const char *Ellipse::get_namespace_static() {
 }
 
 void Ellipse::get_bounding_box(fp16 &x, fp16 &y, fp16 &w, fp16 &h) const {
-  u_fp16 hw = abs(controls[0] - controls[2]);
-  u_fp16 hh = abs(controls[1] - controls[3]);
-  x = controls[0] - hw;
-  y = controls[1] - hh;
+  u_fp16 hw = abs(controls[0].x - controls[1].x);
+  u_fp16 hh = abs(controls[0].y - controls[1].y);
+  x = controls[0].x - hw;
+  y = controls[0].y - hh;
   w = (hw << 1) + 1;
   h = (hh << 1) + 1;
 }
@@ -142,13 +142,13 @@ ostream &Ellipse::serialize(ostream &os, const char *ns, int indent) const {
   output_indent(os, indent);
   output_ns_name(os << "<", ns, elem_position) <<
     " x=\"";
-  write_fp16(os, controls[0]) << "\" y=\"";
-  write_fp16(os, controls[1]) << "\"/>\n";
+  write_fp16(os, controls[0].x) << "\" y=\"";
+  write_fp16(os, controls[0].y) << "\"/>\n";
   output_indent(os, indent);
   output_ns_name(os << "<", ns, elem_radius) <<
     " xr=\"";
-  write_fp16(os, abs(controls[0] - controls[2])) << "\" yr=\"";
-  write_fp16(os, abs(controls[1] - controls[3])) << "\"/>\n";
+  write_fp16(os, abs(controls[0].x - controls[1].x)) << "\" yr=\"";
+  write_fp16(os, abs(controls[0].y - controls[1].y)) << "\"/>\n";
   return os;
 }
   
@@ -164,12 +164,12 @@ void Ellipse::deserialize(XML_Parser *parser, ElementFactory *ef) {
 
 u_fp32 Ellipse::select_distance_sqr(fp16 x, fp16 y) const {
 
-  fp16 hw = abs(controls[0] - controls[2]);
-  fp16 hh = abs(controls[1] - controls[3]);
+  fp16 hw = abs(controls[0].x - controls[1].x);
+  fp16 hh = abs(controls[0].y - controls[1].y);
 
   // Check if actually a point
   if (hw == 0 && hh == 0)
-    return vector_length_sqr_fp16_fp32(x - controls[0], y - controls[1]);
+    return vector_length_sqr_fp16_fp32(x - controls[0].x, y - controls[0].y);
 
   // Transform the coordinates to make comparison in circle space
   fp16 rad;
@@ -177,13 +177,13 @@ u_fp32 Ellipse::select_distance_sqr(fp16 x, fp16 y) const {
   if (hw > hh) {
     u_fp32 m = div_fp16(hh, hw);
     rad = hh;
-    cx = mul_fp16(m, x - controls[0]);
-    cy = y - controls[1];
+    cx = mul_fp16(m, x - controls[0].x);
+    cy = y - controls[0].y;
   } else {
     fp16 m = div_fp16(hw, hh);
     rad = hw;
-    cx = x - controls[0];
-    cy = mul_fp16(m, y - controls[1]);
+    cx = x - controls[0].x;
+    cy = mul_fp16(m, y - controls[0].y);
   }
 
   // Return comparison result
@@ -193,24 +193,24 @@ u_fp32 Ellipse::select_distance_sqr(fp16 x, fp16 y) const {
 }
   
 void Ellipse::move(fp16 xoff, fp16 yoff) {
-  controls[0] += xoff;
-  controls[1] += yoff;
-  controls[2] += xoff;
-  controls[3] += yoff;
+  controls[0].x += xoff;
+  controls[0].y += yoff;
+  controls[1].x += xoff;
+  controls[1].y += yoff;
 }
   
-const vector<fp16> *Ellipse::get_control_points() const {
+const vector<Point> *Ellipse::get_control_points() const {
   return &controls;
 }
 
 void Ellipse::control(unsigned int i, fp16 x, fp16 y) {
   if (i == 0) {
-    controls[2] += x - controls[0];
-    controls[3] += y - controls[1];
-    controls[0] = x;
-    controls[1] = y;
+    controls[1].x += x - controls[0].x;
+    controls[1].y += y - controls[0].y;
+    controls[0].x = x;
+    controls[0].y = y;
   } else if (i == 1) {
-    controls[2] = x;
-    controls[3] = y;
+    controls[1].x = x;
+    controls[1].y = y;
   }
 }

@@ -1,4 +1,4 @@
-// $Id: PolyLineTool.cc,v 1.7 2001-05-28 18:34:05 jle Exp $
+// $Id: PolyLineTool.cc,v 1.8 2001-05-29 18:05:11 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -60,7 +60,7 @@ protected:
   bool new_polyline;
 
   /** The old vertices of the primary polyline (for CONNECT) */
-  vector<fp16> old_vertices;
+  vector<Point> old_vertices;
 
   /** The other polyline (for CONNECT) */
   PolyLine *sec_polyline;
@@ -76,7 +76,7 @@ public:
     view(view), polyline(polyline), type(CLOSED), old_vertices() {}
 
   inline PolyLineAction(FigureView *view, PolyLine *polyline,
-                        vector<fp16> *_old_vertices, PolyLine *sec_polyline):
+                        vector<Point> *_old_vertices, PolyLine *sec_polyline):
     view(view), polyline(polyline), type(CONNECT), old_vertices(), 
     sec_polyline(sec_polyline) {
     old_vertices.resize(_old_vertices->size());
@@ -92,17 +92,12 @@ public:
           view->get_figure()->remove_element(polyline);
           delete polyline;
         } else {
-          vector<fp16> *vertices = polyline->get_vertices();
-          if (extend_first) {
-            vector<fp16>::iterator i = vertices->begin();
-            i++;
-            i++;
-            vertices->erase(vertices->begin(), i);
-          } else {
-            vector<fp16>::iterator i = vertices->end();
-            i--;
-            i--;
-            vertices->erase(i, vertices->end());
+          vector<Point> *vertices = polyline->get_vertices();
+          if (extend_first)
+            vertices->erase(vertices->begin());
+          else {
+            vector<Point>::iterator i = vertices->end();
+            vertices->erase(--i);
           }
         }
       } while (0);
@@ -114,7 +109,7 @@ public:
 
     case CONNECT:
       do {
-        vector<fp16> *vertices = polyline->get_vertices();
+        vector<Point> *vertices = polyline->get_vertices();
         vertices->resize(old_vertices.size());
         copy(old_vertices.begin(), old_vertices.end(), vertices->begin());
         view->get_figure()->add_element(sec_polyline);
@@ -169,15 +164,18 @@ void PolyLineTool::draw(FigureView *view) {
   while (i < elements->end()) {
     PolyLine *pl = dynamic_cast<PolyLine *>(*i);
     if (pl && !(pl->is_closed())) {
-      const vector<fp16> *vertices = pl->get_vertices();
+      vector<Point> *vertices = pl->get_vertices();
+      Point first_vertex = *(vertices->begin());
       Selectable::draw_select_helper
-        ((*vertices)[0], (*vertices)[1],
+        (first_vertex.x, first_vertex.y,
          view->get_origin_x(), view->get_origin_y(), view->get_scaling());
-      int s = vertices->size();
-      if (s > 2)
+      if (vertices->size() > 1) {
+        vector<Point>::const_iterator ii = vertices->end();
+        ii--;
         Selectable::draw_select_helper
-          ((*vertices)[s-2], (*vertices)[s-1],
+          ((*ii).x, (*ii).y,
            view->get_origin_x(), view->get_origin_y(), view->get_scaling());
+      }
     }
     i++;
   }
@@ -185,11 +183,15 @@ void PolyLineTool::draw(FigureView *view) {
   // Draw the line being drawn and remove the old selector
   if (polyline) {
     fl_line(start_x, start_y, last_x, last_y);
-    const vector<fp16> *vertices = polyline->get_vertices();
-    int s = vertices->size();
+    vector<Point>::const_iterator i;
+    if (extend_first)
+      i = polyline->get_vertices()->begin();
+    else {
+      i = polyline->get_vertices()->end();
+      i--;
+    }
     Selectable::draw_select_helper
-      ((*vertices)[extend_first ? 0 : s - 2],
-       (*vertices)[extend_first ? 1 : s - 1],
+      ((*i).x, (*i).y,
        view->get_origin_x(), view->get_origin_y(), view->get_scaling());
   }
   fle_reset_mode(old_func);
@@ -218,9 +220,8 @@ int PolyLineTool::handle(int event, FigureView *view) {
         start_x = Fl::event_x();
         start_y = Fl::event_y();
         PolyLine *pl = new PolyLine();
-        vector<fp16> *vertices = pl->get_vertices();
-        vertices->insert(vertices->end(), fx);
-        vertices->insert(vertices->end(), fy);
+        vector<Point> *vertices = pl->get_vertices();
+        vertices->insert(vertices->end(), Point(fx, fy));
         view->get_figure()->add_element(pl);
         polyline = pl;
         extend_first = false;
@@ -228,14 +229,17 @@ int PolyLineTool::handle(int event, FigureView *view) {
       } else {
 
         // Adjust start coordinates
-        vector<fp16> *vertices = polyline->get_vertices();
-        int s = vertices->size();
+        vector<Point>::const_iterator i;
+        if (extend_first)
+          i = polyline->get_vertices()->begin();
+        else {
+          i = polyline->get_vertices()->end();
+          i--;
+        }
         start_x = coord_to_screen
-          ((*vertices)[extend_first ? 0 : s - 2], 
-           view->get_origin_x(), view->get_scaling());
+          ((*i).x, view->get_origin_x(), view->get_scaling());
         start_y = coord_to_screen
-          ((*vertices)[extend_first ? 1 : s - 1], 
-           view->get_origin_y(), view->get_scaling());
+          ((*i).y, view->get_origin_y(), view->get_scaling());
 
         // Hide the extended select helper
         fl_color(FL_WHITE);
@@ -244,7 +248,7 @@ int PolyLineTool::handle(int event, FigureView *view) {
         fle_reset_mode(old_func);
         new_polyline = false;
       }
-
+      
       last_x = Fl::event_x();
       last_y = Fl::event_y();
       fle_xorred_line(start_x, start_y, last_x, last_y);
@@ -277,12 +281,17 @@ int PolyLineTool::handle(int event, FigureView *view) {
       PolyLine *pl = find_connect_point(view, fx, fy, fv);
       if (pl == polyline && fv != extend_first && !new_polyline) {
         polyline->set_closed(true);
-        const vector<fp16> *vertices = polyline->get_vertices();
-        int s = vertices->size();
-        int ox = coord_to_screen((*vertices)[fv ? 0 : s - 2],
-                                 view->get_origin_x(), view->get_scaling());
-        int oy = coord_to_screen((*vertices)[fv ? 1 : s - 1],
-                                 view->get_origin_x(), view->get_scaling());
+        vector<Point>::const_iterator i;
+        if (fv)
+          i = polyline->get_vertices()->begin();
+        else {
+          i = polyline->get_vertices()->end();
+          i--;
+        }
+        int ox = coord_to_screen(
+          (*i).x, view->get_origin_x(), view->get_scaling());
+        int oy = coord_to_screen(
+          (*i).y, view->get_origin_x(), view->get_scaling());
         int old_func = fle_xorred_mode();
         Selectable::draw_select_helper(ox, oy);
         fle_reset_mode(old_func);
@@ -297,62 +306,36 @@ int PolyLineTool::handle(int event, FigureView *view) {
       else if (pl && pl != polyline) {
 
         // Update view
-        const vector<fp16> *vertices2 = pl->get_vertices();
-        int s2 = vertices2->size();
+        const vector<Point> *vertices2 = pl->get_vertices();
+        vector<Point>::const_iterator i2;
+        if (fv)
+          i2 = vertices2->begin();
+        else {
+          i2 = vertices2->end();
+          i2--;
+        }
         last_x = coord_to_screen
-          ((*vertices2)[fv ? 0 : s2 - 2],
-           view->get_origin_x(), view->get_scaling());
+          ((*i2).x, view->get_origin_x(), view->get_scaling());
         last_y = coord_to_screen
-          ((*vertices2)[fv ? 1 : s2 - 1],
-           view->get_origin_x(), view->get_scaling());
+          ((*i2).y, view->get_origin_x(), view->get_scaling());
         int old_func = fle_xorred_mode();
         Selectable::draw_select_helper(last_x, last_y);
         fle_reset_mode(old_func);
         fl_color(FL_BLACK);
         fl_line(start_x, start_y, last_x, last_y);
 
-        vector<fp16> *vertices1 = polyline->get_vertices();
+        vector<Point> *vertices1 = polyline->get_vertices();
         view->get_action_buffer()->add_action(
           new PolyLineAction(view, polyline, vertices1, pl));
 
         // Combine the polylines
-        if (extend_first) {
-
-          // Reverse the list
-          //
-          // NOTE: An awfull hack due to stupid storage model for vertices.
-          //       I would be glad if someone wanted to fix that. -JL
+        if (extend_first)
           reverse(vertices1->begin(), vertices1->end());
-          vector<fp16>::iterator i1 = vertices1->begin();
-          vector<fp16>::iterator i2 = vertices1->begin();
-          while (i1 < vertices1->end()) {
-            iter_swap(i1++, ++i2);
-            i1++;
-            i2++;
-          }
-        }
-        back_insert_iterator<vector<fp16> > bii(*vertices1);
+        back_insert_iterator<vector<Point> > bii(*vertices1);
         if (fv)
           copy(vertices2->begin(), vertices2->end(), bii);
-        else {
-
-          // Make a temporary reversed list
-          //
-          // NOTE: Aargh, again hacking
-          vector<fp16> rvertices(vertices2->size());
-          rvertices.resize(vertices2->size());
-          copy(vertices2->begin(), vertices2->end(), rvertices.begin());
-          reverse(rvertices.begin(), rvertices.end());
-          vector<fp16>::iterator i1 = rvertices.begin();
-          vector<fp16>::iterator i2 = rvertices.begin();
-          while (i1 < rvertices.end()) {
-            iter_swap(i1++, ++i2);
-            i1++;
-            i2++;
-          }
-
-          copy(rvertices.begin(), rvertices.end(), bii);
-        }
+        else 
+          copy(vertices2->rbegin(), vertices2->rend(), bii);
         
         // Remove the unnecessary polyline
         view->get_figure()->remove_element(pl);
@@ -362,18 +345,16 @@ int PolyLineTool::handle(int event, FigureView *view) {
       else {
         fl_color(FL_BLACK);
         fl_line(start_x, start_y, last_x, last_y);
-        vector<fp16> *vertices = polyline->get_vertices();
-        vertices->insert
-          (extend_first ? vertices->begin() : vertices->end(), fx);
-        vertices->insert
-          (extend_first ? vertices->begin() + 1 : vertices->end(), fy);
+        vector<Point> *vertices = polyline->get_vertices();
+        vertices->insert(extend_first ? vertices->begin() : vertices->end(),
+                         Point(fx, fy));
         
         // Draw new select helpers
         fl_color(FL_WHITE);
         int old_func = fle_xorred_mode();
         if (new_polyline)
           Selectable::draw_select_helper
-            ((*vertices)[0], (*vertices)[1],
+            ((*vertices)[0].x, (*vertices)[0].y,
              view->get_origin_x(), view->get_origin_y(), view->get_scaling());
         Selectable::draw_select_helper(last_x, last_y);
         fle_reset_mode(old_func);
@@ -384,7 +365,7 @@ int PolyLineTool::handle(int event, FigureView *view) {
     } while (0);
     polyline = 0;
     return 1;
-
+    
   default:
     return 0;
   }
@@ -399,12 +380,12 @@ PolyLine *find_connect_point(FigureView *view, fp16 x, fp16 y,
   while (i < elements->end()) {
     PolyLine *pl = dynamic_cast<PolyLine *>(*i);
     if (pl) {
-      const vector<fp16> *vertices = pl->get_vertices();
+      const vector<Point> *vertices = pl->get_vertices();
       int s = vertices->size();
       u_fp32 dist;
-      if (s > 2) {
+      if (s > 1) {
         dist = vector_length_sqr_fp16_fp32
-          (x - (*vertices)[0], y - (*vertices)[1]);
+          (x - (*vertices)[0].x, y - (*vertices)[0].y);
         if (dist < min_dist) {
           polyline = pl;
           first_vertex = true;
@@ -412,7 +393,7 @@ PolyLine *find_connect_point(FigureView *view, fp16 x, fp16 y,
         }
       }
       dist = vector_length_sqr_fp16_fp32
-        (x - (*vertices)[s-2], y - (*vertices)[s-1]);
+        (x - (*vertices)[s-1].x, y - (*vertices)[s-1].y);
       if (dist < min_dist) {
         polyline = pl;
         first_vertex = false;

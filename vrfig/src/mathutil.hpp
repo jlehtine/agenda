@@ -1,4 +1,4 @@
-// $Id: mathutil.hpp,v 1.9 2001-05-27 11:29:52 jle Exp $
+// $Id: mathutil.hpp,v 1.10 2001-05-29 18:05:10 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -35,6 +35,28 @@ typedef unsigned int u_fp16;
 
 /** An unsigned 32.32 fixed point value */
 typedef unsigned long long u_fp32;
+
+/** Type for point coordinate info. */
+struct Point {
+
+  /** The x coordinate */
+  fp16 x;
+
+  /** The y coordinate */
+  fp16 y;
+
+  Point() {}
+
+  Point(fp16 x, fp16 y): x(x), y(y) {}
+
+  inline bool operator<(Point &p) {
+    return (y < p.y || (y == p.y && x < p.x));
+  }
+
+  inline bool operator==(Point &p) {
+    return (y == p.y && x == p.y);
+  }
+};
 
 inline fp16 int_to_fp16(int i) {
   return i << 16;

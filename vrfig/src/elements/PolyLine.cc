@@ -1,4 +1,4 @@
-// $Id: PolyLine.cc,v 1.11 2001-05-24 18:47:09 jle Exp $
+// $Id: PolyLine.cc,v 1.12 2001-05-29 18:05:10 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -89,9 +89,8 @@ static void start_handler(
           y = str_to_fp16(*(atts+1));
         atts += 2;
       }
-      vector<fp16> *vertices = info->pl->get_vertices();
-      vertices->insert(vertices->end(), x);
-      vertices->insert(vertices->end(), y);
+      vector<Point> *vertices = info->pl->get_vertices();
+      vertices->insert(vertices->end(), Point(x, y));
     }
   }
   
@@ -137,59 +136,63 @@ const char *PolyLine::get_namespace_static() {
 
 void PolyLine::draw(fp16 origin_x, fp16 origin_y, u_fp16 scaling,
                     bool xorred) const {
-  vector<fp16>::const_iterator i = points.begin();
-  i += 2;
+
+  // Find the starting point for the polyline
+  vector<Point>::const_iterator i = points.begin();
+  int last_x, last_y;
+  if (closed) {
+    vector<Point>::const_iterator last = points.end();
+    last_x = coord_to_screen((*last).x, origin_x, scaling);
+    last_y = coord_to_screen((*last).y, origin_y, scaling);
+  } else {
+    last_x = coord_to_screen((*i).x, origin_x, scaling);
+    last_y = coord_to_screen((*i).y, origin_y, scaling);
+    i++;
+  }
+
+  // Prepare for drawing
   int old_func = 0;
   if (xorred) {
     old_func = fle_xorred_mode();
     fl_color(FL_WHITE);
+    fl_point(last_x, last_y);
   } else
     fl_color(FL_BLACK);
+
+  // Draw the polyline
   while (i < points.end()) {
-    int x = coord_to_screen(*(i-2), origin_x, scaling);
-    int y = coord_to_screen(*(i-1), origin_y, scaling);
-    int x1 = coord_to_screen(*i, origin_x, scaling);
-    int y1 = coord_to_screen(*(i+1), origin_y, scaling);
-    if (xorred && i > points.begin() + 2)
-      fl_point(x, y);
-    fl_line(x, y, x1, y1);
-    i += 2;
+    int x = coord_to_screen((*i).x, origin_x, scaling);
+    int y = coord_to_screen((*i).y, origin_y, scaling);
+    fl_line(last_x, last_y, x, y);
+    last_x = x;
+    last_y = y;
+    i++;
   }
-  if (closed) {
-    vector<fp16>::const_iterator first = points.begin();
-    vector<fp16>::const_iterator last = points.end() - 2;
-    int x = coord_to_screen(*last, origin_x, scaling);
-    int y = coord_to_screen(*(last+1), origin_y, scaling);
-    int x1 = coord_to_screen(*first, origin_x, scaling);
-    int y1 = coord_to_screen(*(first+1), origin_y, scaling);
-    if (xorred) {
-      fl_point(x, y);
-      fl_point(x1, y1);
-    }
-    fl_line(x, y, x1, y1);
-  }
+
+  // Restore drawing mode
   if (xorred)
     fle_reset_mode(old_func);
 }
 
 void PolyLine::get_bounding_box(fp16 &x, fp16 &y, fp16 &w, fp16 &h) const {
-  vector<int>::const_iterator i = points.begin();
-  x = *(i++);
-  y = *(i++);
+  vector<Point>::const_iterator i = points.begin();
+  x = (*i).x;
+  y = (*i).y;
   w = 1;
   h = 1;
   while (i < points.end()) {
-    if (*i < x) {
-      w += x - *i;
-      x = *i;
-    } else if (*i >= x + w)
-      w += *i - (x + w) + 1;
-    i++;
-    if (*i < y) {
-      h += y - *i;
-      y = *i;
-    } else if (*i >= y + h)
-      h += *i - (y + h) + 1;
+    int px = (*i).x;
+    if (px < x) {
+      w += x - px;
+      x = px;
+    } else if (px >= x + w)
+      w += px - (x + w) + 1;
+    int py = (*i).y;
+    if (py < y) {
+      h += y - py;
+      y = py;
+    } else if (py >= y + h)
+      h += py - (y + h) + 1;
     i++;
   }
 }
@@ -202,14 +205,14 @@ ostream &PolyLine::serialize(ostream &os, const char *ns, int indent) const {
   output_ns_name(os << "<", ns, elem_points) << 
     " num=\"" << (points.size() >> 1) << 
     "\" closed=\"" << (closed ? "true" : "false") << "\">\n";
-  vector<fp16>::const_iterator i = points.begin();
+  vector<Point>::const_iterator i = points.begin();
   while (i < points.end()) {
     output_indent(os, indent+2);
     output_ns_name(os << "<", ns, elem_point) <<
       " x=\"";
-    write_fp16(os, *i) << "\" y=\"";
-    write_fp16(os, *(i+1)) << "\"/>\n";
-    i += 2;
+    write_fp16(os, (*i).x) << "\" y=\"";
+    write_fp16(os, (*i).y) << "\"/>\n";
+    i++;
   }
   output_indent(os, indent);
   output_ns_name(os << "</", ns, elem_points) << ">\n";
@@ -239,55 +242,60 @@ void PolyLine::draw_select_helpers(
     fl_color(FL_BLACK);
   vector<fp16>::const_iterator i = points.begin();
   while (i < points.end()) {
-    draw_select_helper(*i, *(i+1), origin_x, origin_y, scaling);
-    i += 2;
+    draw_select_helper((*i).x, (*i).y, origin_x, origin_y, scaling);
+    i++;
   }
   fle_reset_mode(old_func);
 }
 #endif
 
 u_fp32 PolyLine::select_distance_sqr(fp16 x, fp16 y) const {
-  u_fp32 min_dist = ~static_cast<u_fp32>(0);
-  vector<fp16>::const_iterator i = points.begin();
-  i += 2;
-  while (i < points.end()) {
-    u_fp32 dist = distance_to_line_sqr(x, y, *(i-2), *(i-1),
-                                       *i - *(i-2),
-                                       *(i + 1) - *(i-1));
-    if (dist < min_dist)
-      min_dist = dist;
-    i += 2;
-  }
+
+  // Find the starting point for checks
+  fp16 last_x, last_y;
+  vector<Point>::const_iterator i = points.begin();
   if (closed) {
-    vector<fp16>::const_iterator first = points.begin();
-    vector<fp16>::const_iterator last = points.end() - 2;
-    u_fp32 dist = distance_to_line_sqr(x, y, *first, *(first+1),
-                                       *last - *first,
-                                       *(last+1) - *(first+1));
+    vector<Point>::const_iterator last = points.end();
+    last--;
+    last_x = (*last).x;
+    last_y = (*last).y;
+  } else {
+    last_x = (*i).x;
+    last_y = (*i).y;
+    i++;
+  }
+
+  // Find the minimum distance
+  u_fp32 min_dist = ~static_cast<u_fp32>(0);
+  while (i < points.end()) {
+    u_fp32 dist = distance_to_line_sqr(
+      x, y, last_x, last_y, (*i).x - last_x, (*i).y - last_y);
     if (dist < min_dist)
       min_dist = dist;
+    last_x = (*i).x;
+    last_y = (*i).y;
+    i++;
   }
   return min_dist;
 }
 
 void PolyLine::move(fp16 xoff, fp16 yoff) {
-  vector<fp16>::iterator i = points.begin();
+  vector<Point>::iterator i = points.begin();
   while (i < points.end()) {
-    *(i++) += xoff;
-    *(i++) += yoff;
+    (*i).x += xoff;
+    (*i).y += yoff;
+    i++;
   }
 }
 
-const vector<fp16> *PolyLine::get_control_points() const {
+const vector<Point> *PolyLine::get_control_points() const {
   return &points;
 }
   
 void PolyLine::control(unsigned int i, fp16 x, fp16 y) {
-  if (i >= 0 && i < 2*points.size()) {
-    vector<fp16>::iterator iter = points.begin();
-    iter += i * 2;
-    *(iter++) = x;
-    *(iter++) = y;
+  if (i >= 0 && i < points.size()) {
+    points[i].x = x;
+    points[i].y = y;
   }
 }
 

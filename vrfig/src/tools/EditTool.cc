@@ -1,4 +1,4 @@
-// $Id: EditTool.cc,v 1.5 2001-05-26 15:02:04 jle Exp $
+// $Id: EditTool.cc,v 1.6 2001-05-29 18:05:11 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -123,12 +123,12 @@ int EditTool::handle(int event, FigureView *view) {
       while (i < elements->end()) {
         Controllable *elem = dynamic_cast<Controllable *>(*(i++));
         if (elem) {
-          const vector<fp16> *points = elem->get_control_points();
-          vector<fp16>::const_iterator ii = points->begin();
+          const vector<Point> *points = elem->get_control_points();
+          vector<Point>::const_iterator ii = points->begin();
           int index = 0;
           while (ii < points->end()) {
-            fp16 cx = *(ii++);
-            fp16 cy = *(ii++);
+            fp16 cx = (*ii).x;
+            fp16 cy = (*ii).y;
             u_fp32 d = vector_length_sqr_fp16_fp32(x - cx, y - cy);
             if (d < min_dist) {
               min_dist = d;
@@ -138,6 +138,7 @@ int EditTool::handle(int event, FigureView *view) {
               org_y = cy;
             }
             index++;
+            ii++;
           }
         }
       }
@@ -204,12 +205,12 @@ int EditTool::handle(int event, FigureView *view) {
 }
 
 static void draw_control_points(Controllable *element, FigureView *view) {
-  const vector<fp16> *points = element->get_control_points();
-  vector<fp16>::const_iterator i = points->begin();
+  const vector<Point> *points = element->get_control_points();
+  vector<Point>::const_iterator i = points->begin();
   while (i < points->end()) {
-    fp16 x = *(i++);
-    fp16 y = *(i++);
     Selectable::draw_select_helper(
-      x, y, view->get_origin_x(), view->get_origin_y(), view->get_scaling());
+      (*i).x, (*i).y, 
+      view->get_origin_x(), view->get_origin_y(), view->get_scaling());
+    i++;
   }
 }

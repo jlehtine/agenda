@@ -1,4 +1,4 @@
-// $Id: Rectangle.cc,v 1.6 2001-05-24 18:47:09 jle Exp $
+// $Id: Rectangle.cc,v 1.7 2001-05-29 18:05:10 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -152,18 +152,18 @@ void Rectangle::deserialize(XML_Parser *parser, ElementFactory *ef) {
 
 u_fp32 Rectangle::select_distance_sqr(fp16 x, fp16 y) const {
   u_fp32 min_dist = ~static_cast<u_fp32>(0);
-  fp16 xs = controls[6];
-  fp16 ys = controls[7];
-  vector<fp16>::const_iterator i = controls.begin();
+  fp16 xs = controls[3].x;
+  fp16 ys = controls[3].y;
+  vector<Point>::const_iterator i = controls.begin();
   while (i < controls.end()) {
-    fp16 xn = *i;
-    fp16 yn = *(i+1);
+    fp16 xn = (*i).x;
+    fp16 yn = (*i).y;
     u_fp32 dist = distance_to_line_sqr(x, y, xs, ys, xn - xs, yn - ys);
     if (dist < min_dist)
       min_dist = dist;
     xs = xn;
     ys = yn;
-    i += 2;
+    i++;
   }
   return min_dist;
 }
@@ -174,7 +174,7 @@ void Rectangle::move(fp16 xoff, fp16 yoff) {
   update_controls();
 }
   
-const vector<fp16> *Rectangle::get_control_points() const {
+const vector<Point> *Rectangle::get_control_points() const {
   return &controls;
 }
 
@@ -232,12 +232,12 @@ void Rectangle::control(unsigned int i, fp16 _x, fp16 _y) {
 }
 
 void Rectangle::update_controls() {
-  controls[0] = x;
-  controls[1] = y;
-  controls[2] = x + w - 1;
-  controls[3] = y;
-  controls[4] = x + w - 1;
-  controls[5] = y + h - 1;
-  controls[6] = x;
-  controls[7] = y + h - 1;
+  controls[0].x = x;
+  controls[0].y = y;
+  controls[1].x = x + w - 1;
+  controls[1].y = y;
+  controls[2].x = x + w - 1;
+  controls[2].y = y + h - 1;
+  controls[3].x = x;
+  controls[3].y = y + h - 1;
 }

@@ -1,4 +1,4 @@
-// $Id: Rectangle.hpp,v 1.4 2001-05-24 18:25:52 jle Exp $
+// $Id: Rectangle.hpp,v 1.5 2001-05-29 18:05:11 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -47,7 +47,7 @@ protected:
   fp16 h;
   
   /** The control points (redundant information updated based on x, y, w, h) */
-  vector<fp16> controls;
+  vector<Point> controls;
 
   /**
    * Updates the control points based on the current x, y, w, h values.
@@ -65,7 +65,7 @@ public:
    * @param h the height of the rectangle
    */
   inline Rectangle(fp16 x, fp16 y, fp16 w, fp16 h): 
-    x(x), y(y), w(w), h(h), controls(8) {
+    x(x), y(y), w(w), h(h), controls(4) {
     update_controls();
   }
 
@@ -89,7 +89,7 @@ public:
   
   virtual void move(fp16 xoff, fp16 yoff);
   
-  virtual const vector<fp16> *get_control_points() const;
+  virtual const vector<Point> *get_control_points() const;
 
   virtual void control(unsigned int i, fp16 x, fp16 y);
   

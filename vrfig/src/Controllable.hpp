@@ -1,4 +1,4 @@
-// $Id: Controllable.hpp,v 1.2 2001-05-23 12:47:49 jle Exp $
+// $Id: Controllable.hpp,v 1.3 2001-05-29 18:05:10 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -30,18 +30,18 @@
  * An interface for elements that can be controlled by control points.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 class Controllable {
 
 public:
 
   /**
-   * Returns a list of control points as x/y pairs.
+   * Returns a list of control points.
    *
    * @return a list of control points
    */
-  virtual const vector<fp16> *get_control_points() const = 0;
+  virtual const vector<Point> *get_control_points() const = 0;
 
   /**
    * Moves the specified control point to the specified location.

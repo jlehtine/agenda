@@ -1,4 +1,4 @@
-// $Id: Ellipse.hpp,v 1.3 2001-05-24 18:25:52 jle Exp $
+// $Id: Ellipse.hpp,v 1.4 2001-05-29 18:05:10 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -33,7 +33,7 @@
  * An ellipse element.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 class Ellipse : public Element, public Selectable, public Movable,
                 public Controllable {
@@ -41,7 +41,7 @@ class Ellipse : public Element, public Selectable, public Movable,
 protected:
 
   /** The control points, including first the center and the width and height*/
-  vector<fp16> controls;
+  vector<Point> controls;
 
 public:
 
@@ -70,7 +70,7 @@ public:
   
   virtual void move(fp16 xoff, fp16 yoff);
   
-  virtual const vector<fp16> *get_control_points() const;
+  virtual const vector<Point> *get_control_points() const;
 
   virtual void control(unsigned int i, fp16 x, fp16 y);
   
