@@ -1,4 +1,4 @@
-// $Id: EllipseTool.cc,v 1.2 2001-05-23 12:47:52 jle Exp $
+// $Id: EllipseTool.cc,v 1.3 2001-05-26 16:13:42 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -25,10 +25,35 @@
 #include <FL/Fl_Window.H>
 #include <FL/fl_draw.H>
 #include "EllipseTool.hpp"
+#include "Action.hpp"
 #include "icons/ellipse_icon.xbm"
 
 static Fl_Bitmap ellipse_bitmap
 (ellipse_icon_bits, ellipse_icon_width, ellipse_icon_height);
+
+/**
+ * An action for undoing ellipses.
+ */
+class EllipseAction : public Action {
+
+protected:
+
+  /** The view */
+  FigureView *view;
+
+  /** The ellipse added */
+  Ellipse *element;
+
+public:
+
+  inline EllipseAction(FigureView *view, Ellipse *element):
+    view(view), element(element) {}
+
+  void undo() {
+    view->remove_element(element);
+    delete element;
+  }
+};
 
 const char *EllipseTool::get_name() const {
   static const char *name = "ellipse";
@@ -86,6 +111,7 @@ int EllipseTool::handle(int event, FigureView *view) {
   case FL_RELEASE:
     if (!ellipse)
       return 1;
+    view->get_action_buffer()->add_action(new EllipseAction(view, ellipse));
     view->add_element(ellipse);
     ellipse = 0;
     return 1;
