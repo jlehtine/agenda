@@ -1,12 +1,12 @@
 ## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.8 2001-05-19 16:54:44 jle Exp $
+## $Id: Makefile.am,v 1.9 2001-05-19 21:15:16 jle Exp $
 
 srcdir = @srcdir@
 VPATH = @srcdir@
 
-SUBDIRS = elements tools
+SUBDIRS = elements tools espws
 
-LDADD = tools/libtools.a elements/libelements.a
+LDADD = tools/libtools.a elements/libelements.a espws/libespws-fc.a
 
 bin_PROGRAMS = vrfig
 
