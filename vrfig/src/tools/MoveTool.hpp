@@ -1,4 +1,4 @@
-// $Id: MoveTool.hpp,v 1.2 2001-05-23 12:47:52 jle Exp $
+// $Id: MoveTool.hpp,v 1.3 2001-05-27 11:31:30 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -32,7 +32,7 @@
  * interfaces.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 class MoveTool : public Tool {
   
@@ -46,6 +46,12 @@ protected:
 
   /** The last y coordinate for the mouse */
   int last_y;
+
+  /** The cumulative x movement */
+  fp16 cum_x;
+
+  /** The cumulative y movement */
+  fp16 cum_y;
 
 public:
 

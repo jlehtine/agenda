@@ -1,4 +1,4 @@
-// $Id: MoveTool.cc,v 1.6 2001-05-24 19:49:58 jle Exp $
+// $Id: MoveTool.cc,v 1.7 2001-05-27 11:31:30 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -25,10 +25,42 @@
 #include <FL/Fl_Bitmap.H>
 #include <FL/Fl_Window.H>
 #include "MoveTool.hpp"
+#include "Action.hpp"
 #include "icons/move_icon.xbm"
 
 static Fl_Bitmap move_bitmap
 (move_icon_bits, move_icon_width, move_icon_height);
+
+/**
+ * An action for undoing movements.
+ */
+class MoveAction : public Action {
+
+protected:
+
+  /** The view */
+  FigureView *view;
+
+  /** The element moved */
+  Movable *element;
+
+  /** The x movement */
+  fp16 move_x;
+
+  /** The y movement */
+  fp16 move_y;
+
+public:
+
+  inline MoveAction(FigureView *view, Movable *element, 
+                    fp16 move_x, fp16 move_y):
+    view(view), element(element), move_x(move_x), move_y(move_y) {}
+
+  virtual void undo() {
+    element->move(-move_x, -move_y);
+    view->redraw();
+  }
+};
 
 const char *MoveTool::get_name() const {
   static const char *name = "move";
@@ -94,6 +126,10 @@ int MoveTool::handle(int event, FigureView *view) {
           mul_fp16_fp16_fp32(view->get_scaling(), view->get_scaling()));
         if (screen_dist_sqr > VRF_DEFAULT_SELECT_DIST_SQR)
           element = 0;
+        else {
+          cum_x = 0;
+          cum_y = 0;
+        }
       }
     } while (0);
     return 1;
@@ -111,8 +147,11 @@ int MoveTool::handle(int event, FigureView *view) {
                  view->get_scaling(), true);
       sel->draw_select_helpers(view->get_origin_x(), view->get_origin_y(),
                                view->get_scaling(), true);
-      element->move(screen_to_coord(x - last_x, 0, view->get_scaling()),
-                    screen_to_coord(y - last_y, 0, view->get_scaling()));
+      fp16 move_x = screen_to_coord(x - last_x, view->get_scaling());
+      fp16 move_y = screen_to_coord(y - last_y, view->get_scaling());
+      element->move(move_x, move_y);
+      cum_x += move_x;
+      cum_y += move_y;
       elem->draw(view->get_origin_x(), view->get_origin_y(),
                  view->get_scaling(), true);
       sel->draw_select_helpers(view->get_origin_x(), view->get_origin_y(),
@@ -125,6 +164,8 @@ int MoveTool::handle(int event, FigureView *view) {
   case FL_RELEASE:
     if (!element)
       return 0;
+    view->get_action_buffer()->add_action
+      (new MoveAction(view, element, cum_x, cum_y));
     element = 0;
     view->redraw();
     return 1;
