@@ -14,7 +14,7 @@ class SettingsWindow {open
   } {
     Fl_Window win {
       label settings open
-      private xywh {1063 453 160 200} color 7 modal visible
+      private xywh {1075 511 160 200} color 7 modal visible
     } {
       Fl_Group {} {
         label settings open
@@ -69,7 +69,7 @@ class SettingsWindow {open
         callback {win->hide();
 cur_size = size_choice->value();
 cur_labels = labels_choice->value();
-cur_moves = moves_choice->value();} selected
+cur_moves = moves_choice->value();}
         xywh {10 155 60 25}
       }
       Fl_Button {} {
@@ -89,5 +89,14 @@ cur_moves = moves_choice->value();} {}
   Function {show()} {open return_type void
   } {
     code {win->show();} {}
+  }
+  Function {get_size()} {open return_type int
+  } {
+    code {return cur_size + 3;} {}
+  }
+  Function {use_numbers()} {open return_type bool
+  } {
+    code {return cur_labels == 0;} {selected
+    }
   }
 } 
