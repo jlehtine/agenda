@@ -1,4 +1,16 @@
-// $Id: PuzzleGame.hpp,v 1.6 2000-10-29 17:21:38 jle Exp $
+// $Id: PuzzleGame.hpp,v 1.7 2000-10-31 19:52:42 jle Exp $
+
+/*
+* NPuzzle
+* Copyright (C) 2000 Johannes Lehtinen
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* The license can be found in the package directory in file COPYING.
+*/
 
 #ifndef __PuzzleGame_hpp_INCLUDED__
 #define __PuzzleGame_hpp_INCLUDED__
@@ -20,7 +32,7 @@
  * 15(n)-puzzle game logic and wrapper for storing game situations.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 class PuzzleGame {
 

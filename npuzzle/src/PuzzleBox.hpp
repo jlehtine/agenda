@@ -1,4 +1,16 @@
-// $Id: PuzzleBox.hpp,v 1.3 2000-10-29 17:59:41 jle Exp $
+// $Id: PuzzleBox.hpp,v 1.4 2000-10-31 19:52:42 jle Exp $
+
+/*
+* NPuzzle
+* Copyright (C) 2000 Johannes Lehtinen
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* The license can be found in the package directory in file COPYING.
+*/
 
 #ifndef __PuzzleBox_hpp_INCLUDED__
 #define __PuzzleBox_hpp_INCLUDED__
@@ -31,7 +43,7 @@ struct TileLayout {
  * Box to render n-puzzle board.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 class PuzzleBox : public Fl_Box {
   

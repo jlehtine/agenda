@@ -1,4 +1,16 @@
-// $Id: PuzzleGame.cc,v 1.8 2000-10-29 17:59:07 jle Exp $
+// $Id: PuzzleGame.cc,v 1.9 2000-10-31 19:52:42 jle Exp $
+
+/*
+* NPuzzle
+* Copyright (C) 2000 Johannes Lehtinen
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* The license can be found in the package directory in file COPYING.
+*/
 
 #include <stdlib.h>
 #include "PuzzleGame.hpp"
