@@ -1,4 +1,4 @@
-// $Id: PolyLine.hpp,v 1.1 2001-05-07 21:02:10 jle Exp $
+// $Id: PolyLine.hpp,v 1.2 2001-05-08 15:31:20 jle Exp $
 
 #ifndef __Line_hpp_INCLUDED__
 #define __Line_hpp_INCLUDED__
@@ -10,7 +10,7 @@
  * A polyline element which is the most generic element.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 class PolyLine : public Element {
 
@@ -21,6 +21,10 @@ protected:
   inline PolyLine(): points() {}
 
 public:
+
+  virtual ~PolyLine() {
+    points.clear();
+  }
 
   // Doc inherited from Element
   void draw(int origin_x, int origin_y, unsigned int scaling);

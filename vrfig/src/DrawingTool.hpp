@@ -1,4 +1,4 @@
-// $Id: DrawingTool.hpp,v 1.2 2001-05-07 21:02:10 jle Exp $
+// $Id: DrawingTool.hpp,v 1.3 2001-05-08 15:31:19 jle Exp $
 
 #ifndef __DrawingTool_hpp_INCLUDED__
 #define __DrawingTool_hpp_INCLUDED__
@@ -10,7 +10,7 @@
  * A common base class for tools that draw new elements.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 class DrawingTool : public Tool {
 
@@ -34,7 +34,9 @@ public:
   /**
    * Constructs a new tool.
    */
-  inline DrawingTool(): drawing(false), points() {}
+  inline DrawingTool(): points(), drawing(false) {}
+
+  virtual ~DrawingTool() {}
 
   // Doc inherited from Tool
   void deactivated(FigureView *view);

@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.3 2001-05-07 21:02:10 jle Exp $
+## $Id: Makefile.am,v 1.4 2001-05-08 15:31:19 jle Exp $
 
 srcdir = @srcdir@
 VPATH = @srcdir@
@@ -13,4 +13,5 @@ vrfig_SOURCES = transform.hpp transform.cc \
 	FigureView.hpp FigureView.cc \
 	Tool.hpp Editor.hpp Editor.cc \
 	DrawingTool.hpp DrawingTool.cc \
+	MoveFigTool.hpp MoveFigTool.cc \
 	MainView.hpp MainView.cc main.cc

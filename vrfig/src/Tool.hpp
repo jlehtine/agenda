@@ -1,4 +1,4 @@
-// $Id: Tool.hpp,v 1.1 2001-05-06 22:12:08 jle Exp $
+// $Id: Tool.hpp,v 1.2 2001-05-08 15:31:20 jle Exp $
 
 #ifndef __Tool_hpp_INCLUDED__
 #define __Tool_hpp_INCLUDED__
@@ -6,12 +6,13 @@
 #include "FigureView.hpp"
 
 /**
- * Tools are used for editing figures. They also take care of
- * visualizing the edit actions. This is the common base class for all
- * tools.
+ * Tools are used for editing figures. They handle the tool specific
+ * user interface issues and edit the figure according to user actions.
+ * Tools are typically single instance classes. This is the common base
+ * class for all tools.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 class Tool {
 
@@ -37,7 +38,7 @@ public:
    *
    * @param view the current state of the view
    */
-  virtual void draw(FigureView *view) = 0;
+  virtual void draw(FigureView *view) {};
 
   /**
    * Handles the specified event.

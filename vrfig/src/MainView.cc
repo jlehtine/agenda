@@ -1,4 +1,4 @@
-// $Id: MainView.cc,v 1.4 2001-05-07 21:02:10 jle Exp $
+// $Id: MainView.cc,v 1.5 2001-05-08 15:31:19 jle Exp $
 
 #include <stdlib.h>
 #include <flpda/Widget_Factory.h>
@@ -12,6 +12,7 @@
 #include "MainView.hpp"
 #include "Editor.hpp"
 #include "DrawingTool.hpp"
+#include "MoveFigTool.hpp"
 #include "transform.hpp"
 #include "icons/outline_icon.xbm"
 #include "icons/filled_icon.xbm"
@@ -47,6 +48,16 @@ static Fl_Menu_Item tools_popup[] = {
   { 0 }
 };
 
+static Tool *tools[] = {
+  new DrawingTool(),
+  0,
+  0,
+  0,
+  0,
+  0,
+  new MoveFigTool()
+};
+
 enum tool_types { OUTLINE = 0, FILLED = 1, TEXT = 2, DELETE = 3, MOVE = 4,
                   EDIT = 5, MOVEFIG = 6 };
 
@@ -78,7 +89,7 @@ MainView::MainView() {
   file_popup[5].callback(cb_exit, this);
 
   // Create tool choice
-  Fl_Choice *tools_choice = Widget_Factory::new_choice(0, cb_tool);
+  Fl_Choice *tools_choice = Widget_Factory::new_choice(0, cb_tool, this);
   tools_choice->resize(tools_choice->x(), tools_choice->y(),
                        5 * Widget_Factory::buttonheight() / 2,
                        tools_choice->h());
@@ -91,7 +102,7 @@ MainView::MainView() {
   movefig_bitmap.label(tools_popup + 6);
   tools_choice->menu(tools_popup);
 
-  Widget_Factory::new_button("Undo", cb_undo);
+  Widget_Factory::new_button("Undo", cb_undo, this);
   Fl_Button *zoomout_button = 
     Widget_Factory::new_button("-", cb_zoomout, this);
   zoomout_button->resize(zoomout_button->x(), zoomout_button->y(),
@@ -114,7 +125,7 @@ MainView::MainView() {
   win->contents()->add(editor);
   win->contents()->resizable(editor);
   editor->set_figure(new Figure());
-  editor->set_tool(new DrawingTool());
+  editor->set_tool(tools[0]);
 
   win->end();
   win->show();
@@ -125,6 +136,9 @@ void MainView::cb_exit(Fl_Widget *widget, void *data) {
 }
 
 void MainView::cb_tool(Fl_Widget *widget, void *data) {
+  MainView *view = (MainView *)data;
+  Fl_Choice *tools_choice = (Fl_Choice *)widget;
+  view->editor->set_tool(tools[tools_choice->value()]);
 }
 
 void MainView::cb_undo(Fl_Widget *widget, void *data) {

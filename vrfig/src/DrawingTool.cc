@@ -1,4 +1,4 @@
-// $Id: DrawingTool.cc,v 1.2 2001-05-07 21:02:10 jle Exp $
+// $Id: DrawingTool.cc,v 1.3 2001-05-08 15:31:19 jle Exp $
 
 #include <X11/Xlib.h>
 #include <FL/Fl.H>
@@ -83,7 +83,11 @@ int DrawingTool::handle(int event, FigureView *view) {
     }
     break;
 
+  default:
+    return 0;
+
   }
+  return 1;
 }
 
 static void draw_xor_line(int x1, int y1, int x2, int y2) {

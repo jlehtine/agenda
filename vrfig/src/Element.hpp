@@ -1,4 +1,4 @@
-// $Id: Element.hpp,v 1.2 2001-05-07 21:02:10 jle Exp $
+// $Id: Element.hpp,v 1.3 2001-05-08 15:31:19 jle Exp $
 
 #ifndef __Element_hpp_INCLUDED__
 #define __Element_hpp_INCLUDED__
@@ -6,9 +6,11 @@
 #include <vector.h>
 
 /**
- * Each figure is composed of elements such as lines or circles. The elements
- * can be created and edited using the editor view. This is the common
- * base class for all elements.
+ * Figure is composed of elements such as lines or circles. The elements
+ * can be created and edited using the tools. Elements take care of
+ * rendering themselves and each element also includes static code to
+ * determine if a specific set of points could be matched by the
+ * element. This is the common base class for all elements.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
  */
