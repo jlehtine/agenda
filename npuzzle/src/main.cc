@@ -1,4 +1,4 @@
-// $Id: main.cc,v 1.8 2001-01-28 15:49:20 jle Exp $
+// $Id: main.cc,v 1.9 2001-04-28 16:00:18 jle Exp $
 
 /*
 * NPuzzle
@@ -27,12 +27,20 @@ int main(void) {
   main_window = new MainWindow();
   main_window->set_move_callback(update_moves);
   main_window->show();
+#ifdef HAVE_AGENDA_FLTK
+  Fl::add_timeout((unsigned int)0, update_time, 0);
+#else
   Fl::add_timeout(0, update_time);
+#endif
   return Fl::run();
 }
 
 static void update_time(void *ptr) {
+#ifdef HAVE_AGENDA_FLTK
+  Fl::repeat_timeout((unsigned int)1000, update_time);
+#else
   Fl::repeat_timeout(1, update_time);
+#endif
   main_window->update_time();
 }
 
