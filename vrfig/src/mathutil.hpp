@@ -1,4 +1,4 @@
-// $Id: mathutil.hpp,v 1.2 2001-05-19 08:42:17 jle Exp $
+// $Id: mathutil.hpp,v 1.3 2001-05-19 16:55:22 jle Exp $
 
 #ifndef __mathutil_hpp_INCLUDED__
 #define __mathutil_hpp_INCLUDED__
@@ -145,7 +145,7 @@ u_fp16 sqrt_fp32_fp16(u_fp32 s);
  * @param y the y component of the vector 
  * @return the squared length of the vector 
  */
-inline fp32 vector_length_sqr_fp16_fp32(fp16 x, fp16 y) {
+inline u_fp32 vector_length_sqr_fp16_fp32(fp16 x, fp16 y) {
   return mul_fp16_fp16_fp32(x, x) + mul_fp16_fp16_fp32(y, y);
 }
 
@@ -156,8 +156,19 @@ inline fp32 vector_length_sqr_fp16_fp32(fp16 x, fp16 y) {
  * @param y the y component of the vector 
  * @return the length of the vector 
  */
-inline fp16 vector_length_fp16(fp16 x, fp16 y) {
+inline u_fp16 vector_length_fp16(fp16 x, fp16 y) {
   return sqrt_fp32_fp16(vector_length_sqr_fp16_fp32(x, y));
+}
+
+/**
+ * Calculates the squared length of the specified integer vector.
+ *
+ * @param x the x component of the vector
+ * @param y the y component of the vector
+ * @return the squared length of the vector
+ */
+inline unsigned int vector_length_sqr_int(int x, int y) {
+  return x*x + y*y;
 }
 
 /**
@@ -179,7 +190,7 @@ void intersect_straights(fp16 xs1, fp16 ys1, fp16 xd1, fp16 yd1,
                          fp16 &xi, fp16 &yi);
 
 /**
- * Calculates how far the specified point is from the specified
+ * Calculates how close the specified point is to the specified
  * line segment.
  *
  * @param x the x coordinate of the point 
@@ -188,9 +199,9 @@ void intersect_straights(fp16 xs1, fp16 ys1, fp16 xd1, fp16 yd1,
  * @param ys the y coordinate of the line end point 
  * @param xd the x component of the line vector 
  * @param yd the y component of the line vector 
- * @return the minimum distance squared 
+ * @return the minimum distance
  */
-int distance_from_line(fp16 x, fp16 y, fp16 xs, fp16 ys, fp16 xd, fp16 yd);
+u_fp16 distance_to_line(fp16 x, fp16 y, fp16 xs, fp16 ys, fp16 xd, fp16 yd);
 
 inline int coord_to_screen(fp16 c, fp16 origin, u_fp16 scaling) {
   return mul_fp16_fp16_int(c - origin, scaling);

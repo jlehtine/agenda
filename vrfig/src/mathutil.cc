@@ -1,4 +1,4 @@
-// $Id: mathutil.cc,v 1.3 2001-05-19 08:42:17 jle Exp $
+// $Id: mathutil.cc,v 1.4 2001-05-19 16:55:22 jle Exp $
 
 #include "mathutil.hpp"
 
@@ -58,7 +58,7 @@ void intersect_straights(fp16 xs1, fp16 ys1, fp16 xd1, fp16 yd1,
     mul_fp16_fp16_fp32(yd2, xd1) - mul_fp16_fp16_fp32(yd1, xd2));
 }
 
-int distance_from_line(fp16 x, fp16 y, fp16 xs, fp16 ys, fp16 xd, fp16 yd) {
+u_fp16 distance_to_line(fp16 x, fp16 y, fp16 xs, fp16 ys, fp16 xd, fp16 yd) {
 
   // Check if actually a point
   if (xd == 0 && yd == 0)
