@@ -1,4 +1,4 @@
-// $Id: PuzzleGame.cc,v 1.1.1.1 2000-10-16 17:36:22 jle Exp $
+// $Id: PuzzleGame.cc,v 1.2 2000-10-16 18:48:05 jle Exp $
 
 #include <stdlib.h>
 #include "PuzzleGame.hpp"
@@ -102,4 +102,8 @@ bool PuzzleGame::move(int x, int y) {
   state[(y+offy)*size + x + offx] = bxy;
   state[y*size + x] = 0;
   return true;
+}
+
+inline int PuzzleGame::getBlock(int x, int y) {
+  return state[y*size + x];
 }

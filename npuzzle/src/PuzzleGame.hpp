@@ -1,4 +1,4 @@
-// $Id: PuzzleGame.hpp,v 1.1.1.1 2000-10-16 17:36:22 jle Exp $
+// $Id: PuzzleGame.hpp,v 1.2 2000-10-16 18:48:05 jle Exp $
 
 #ifndef __PuzzleGame_h_INCLUDED__
 #define __PuzzleGame_h_INCLUDED__
@@ -9,7 +9,7 @@
  * 15(n)-puzzle game logic and wrapper for storing game situations.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.1.1.1 $
+ * @version $Revision: 1.2 $
  */
 class PuzzleGame {
 
@@ -60,9 +60,7 @@ public:
    * @param y the y coordinate of the position
    * @return number of the block or 0 if currently free
    */
-  inline int getBlock(int x, int y) {
-    return state[y*size + x];
-  }
+  inline int getBlock(int x, int y);
 };
 
 #endif
