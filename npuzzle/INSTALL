@@ -1,3 +1,17 @@
+Prerequirements
+===============
+
+   You must have the following packages installed to compile NPuzzle.
+
+   * C++ compiler (GNU C++ recommended, tested with g++ 2.95.2)
+     http://gcc.gnu.org/
+
+   * X11 development environment (tested with XFree86 3.3.6)
+     http://www.x.org/, http://www.xfree86.org/
+
+   * FLTK UI toolkit (tested with FLTK 1.0.9)
+     http://www.fltk.org/
+
 Basic Installation
 ==================
 
