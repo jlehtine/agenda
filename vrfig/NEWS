@@ -1,0 +1,15 @@
+NEWS
+====
+
+
+2001-05-23, development release 0.1
+-----------------------------------
+
+This is the first public release of VRFig. It is mostly targeted to
+other developers who might be interested in participating the
+development work or reusing the source code. I am trying to come up
+with another release quite soon, adding some of the missing elements
+(such as text labels).
+
+--
+Johannes Lehtinen <johannes.lehtinen@iki.fi>
