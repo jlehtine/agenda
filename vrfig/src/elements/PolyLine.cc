@@ -1,4 +1,4 @@
-// $Id: PolyLine.cc,v 1.5 2001-05-21 00:47:37 jle Exp $
+// $Id: PolyLine.cc,v 1.6 2001-05-22 18:03:59 jle Exp $
 
 #include <vector.h>
 #include <stdio.h>
@@ -122,12 +122,14 @@ const char *PolyLine::get_namespace() const {
 
 void PolyLine::draw(fp16 origin_x, fp16 origin_y, u_fp16 scaling,
                     bool xorred) const {
-  fl_color(FL_BLACK);
   vector<fp16>::const_iterator i = points.begin();
   i += 2;
   int old_func = 0;
-  if (xorred)
+  if (xorred) {
     old_func = fle_xorred_mode();
+    fl_color(FL_WHITE);
+  } else
+    fl_color(FL_BLACK);
   while (i < points.end()) {
     int x = coord_to_screen(*(i-2), origin_x, scaling);
     int y = coord_to_screen(*(i-1), origin_y, scaling);
@@ -211,24 +213,32 @@ void PolyLine::deserialize(XML_Parser *parser, ElementFactory *ef) {
   XML_SetElementHandler(parser, start_handler, end_handler);
 }
 
+#if 0
 void PolyLine::draw_select_helpers(
   int origin_x, int origin_y, unsigned int scaling, bool xorred=false) const {
-  fl_color(FL_BLACK);
+  int old_func;
+  if (xorred) {
+    old_func = fle_xorred_mode();
+    fl_color(FL_WHITE);
+  } else
+    fl_color(FL_BLACK);
   vector<fp16>::const_iterator i = points.begin();
   while (i < points.end()) {
     draw_select_helper(*i, *(i+1), origin_x, origin_y, scaling);
     i += 2;
   }
+  fle_reset_mode(old_func);
 }
+#endif
 
-fp16 PolyLine::select_distance(fp16 x, fp16 y) const {
-  u_fp16 min_dist = 0xffffffff;
+u_fp32 PolyLine::select_distance_sqr(fp16 x, fp16 y) const {
+  u_fp32 min_dist = ~static_cast<u_fp32>(0);
   vector<fp16>::const_iterator i = points.begin();
   i += 2;
   while (i < points.end()) {
-    u_fp16 dist = distance_to_line(x, y, *(i-2), *(i-1),
-                                   *i - *(i-2),
-                                   *(i + 1) - *(i-1));
+    u_fp32 dist = distance_to_line_sqr(x, y, *(i-2), *(i-1),
+                                       *i - *(i-2),
+                                       *(i + 1) - *(i-1));
     if (dist < min_dist)
       min_dist = dist;
     i += 2;
@@ -236,9 +246,9 @@ fp16 PolyLine::select_distance(fp16 x, fp16 y) const {
   if (closed) {
     vector<fp16>::const_iterator first = points.begin();
     vector<fp16>::const_iterator last = points.end() - 2;
-    u_fp16 dist = distance_to_line(x, y, *first, *(first+1),
-                                   *last - *first,
-                                   *(last+1) - *(first+1));
+    u_fp32 dist = distance_to_line_sqr(x, y, *first, *(first+1),
+                                       *last - *first,
+                                       *(last+1) - *(first+1));
     if (dist < min_dist)
       min_dist = dist;
   }

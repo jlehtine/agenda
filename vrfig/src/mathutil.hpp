@@ -1,4 +1,4 @@
-// $Id: mathutil.hpp,v 1.4 2001-05-20 18:51:23 jle Exp $
+// $Id: mathutil.hpp,v 1.5 2001-05-22 18:03:59 jle Exp $
 
 #ifndef __mathutil_hpp_INCLUDED__
 #define __mathutil_hpp_INCLUDED__
@@ -21,8 +21,16 @@ inline fp16 int_to_fp16(int i) {
   return i << 16;
 }
 
+inline int fp16_to_int(fp16 i) {
+  return i >> 16;
+}
+
 inline fp32 int_to_fp32(int i) {
   return static_cast<fp32>(i) << 32;
+}
+
+inline int fp32_to_int(fp32 i) {
+  return i >> 32;
 }
 
 inline fp32 fp16_to_fp32(fp16 i) {
@@ -30,6 +38,10 @@ inline fp32 fp16_to_fp32(fp16 i) {
 }
 
 inline fp16 fp32_to_fp16(fp32 i) {
+  return i >> 16;
+}
+
+inline u_fp16 u_fp32_to_u_fp16(u_fp32 i) {
   return i >> 16;
 }
 
@@ -85,6 +97,10 @@ inline int mul_fp16_fp16_int(fp16 a, fp16 b) {
 
 #endif
 
+}
+
+inline int mul_fp32_fp32_int(fp32 a, fp32 b) {
+  return ((a >> 16) * (b >> 16)) >> 32;
 }
 
 /**
@@ -200,23 +216,16 @@ inline unsigned int vector_length_sqr_int(int x, int y) {
   return x*x + y*y;
 }
 
-/**
- * Calculates the intersection point of the two straights.
+/** Calculates the dot product for the specified vectors.
  *
- * @param xs1 the x coordinate of the starting point 1 
- * @param ys1 the y coordinate of the starting point 1 
- * @param xd1 the x component of the direction 1 
- * @param yd1 the y component of the direction 1 
- * @param xs2 the x coordinate of the starting point 2 
- * @param ys2 the y coordinate of the starting point 2 
- * @param xd2 the x component of the direction 2 
- * @param yd2 the y component of the direction 2 
- * @param xi the x coordinate of the intersection point 
- * @param yi the y coordinate of the intersectino point 
+ * @param x1 the x component of the first vector
+ * @param y1 the y component of the first vector
+ * @param x2 the x component of the second vector
+ * @param y2 the y component of the second vector
  */
-void intersect_straights(fp16 xs1, fp16 ys1, fp16 xd1, fp16 yd1,
-                         fp16 xs2, fp16 ys2, fp16 xd2, fp16 yd2,
-                         fp16 &xi, fp16 &yi);
+inline fp32 dot_product(fp16 x1, fp16 y1, fp16 x2, fp16 y2) {
+  return mul_fp16_fp16_fp32(x1, x2) + mul_fp16_fp16_fp32(y1, y2);
+}
 
 /**
  * Calculates how close the specified point is to the specified
@@ -228,14 +237,42 @@ void intersect_straights(fp16 xs1, fp16 ys1, fp16 xd1, fp16 yd1,
  * @param ys the y coordinate of the line end point 
  * @param xd the x component of the line vector 
  * @param yd the y component of the line vector 
- * @return the minimum distance
+ * @return the minimum distance squared
  */
-u_fp16 distance_to_line(fp16 x, fp16 y, fp16 xs, fp16 ys, fp16 xd, fp16 yd);
+u_fp32 distance_to_line_sqr(
+  fp16 x, fp16 y, fp16 xs, fp16 ys, fp16 xd, fp16 yd);
 
+/**
+ * Projects the specified point to the specified origin based vector.
+ * Returns the scalar multiplier for the projection point.
+ *
+ * @param x the x coordinate of the point
+ * @param y the y coordinate of the point
+ * @param xv the x component of the vector
+ * @param xy the y component of the vector
+ */
+fp16 project_point_to_vector(fp16 x, fp16 y, fp16 xv, fp16 yv);
+
+/**
+ * Transforms the specified figure coordinate to screen coordinate.
+ *
+ * @param c the figure coordinate
+ * @param origin the origin for the current view
+ * @param scaling the scaling factor for the current view
+ * @return the screen coordinate
+ */
 inline int coord_to_screen(fp16 c, fp16 origin, u_fp16 scaling) {
   return mul_fp16_fp16_int(c - origin, scaling);
 }
 
+/**
+ * Transforms the specified screen coordinate to figure coordinate.
+ *
+ * @param sc the screen coordinate
+ * @param origin the origin for the current view
+ * @param scaling the scaling factor for the current view
+ * @return the figure coordinate
+ */
 inline fp16 screen_to_coord(int sc, fp16 origin, u_fp16 scaling) {
   return div_int_fp16u_fp16(sc, scaling) + origin;
 }

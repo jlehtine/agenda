@@ -1,4 +1,4 @@
-// $Id: Selectable.hpp,v 1.2 2001-05-19 16:54:22 jle Exp $
+// $Id: Selectable.hpp,v 1.3 2001-05-22 18:03:59 jle Exp $
 
 #ifndef __Selectable_hpp_INCLUDED__
 #define __Selectable_hpp_INCLUDED__
@@ -11,7 +11,7 @@
  * interface is required by many tools including delete, move and copy.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 class Selectable {
 
@@ -58,9 +58,9 @@ public:
    *
    * @param x the x coordinate of selection point
    * @param y the y coordinate of selection point
-   * @return the distance to the point
+   * @return the squared distance to the point
    */
-  virtual fp16 select_distance(fp16 x, fp16 y) const = 0;
+  virtual u_fp32 select_distance_sqr(fp16 x, fp16 y) const = 0;
   
 };
 

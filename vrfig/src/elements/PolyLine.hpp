@@ -1,4 +1,4 @@
-// $Id: PolyLine.hpp,v 1.5 2001-05-21 00:47:37 jle Exp $
+// $Id: PolyLine.hpp,v 1.6 2001-05-22 18:03:59 jle Exp $
 
 #ifndef __Line_hpp_INCLUDED__
 #define __Line_hpp_INCLUDED__
@@ -16,7 +16,7 @@
  * A polyline element which is the most generic element.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 class PolyLine : public Element, public Selectable, public Movable {
 
@@ -49,10 +49,12 @@ public:
 
   static void deserialize(XML_Parser *parser, ElementFactory *ef);
 
+#if 0
   virtual void draw_select_helpers(
     int origin_x, int origin_y, unsigned int scaling, bool xorred=false) const;
+#endif
 
-  virtual fp16 select_distance(fp16 x, fp16 y) const;
+  virtual u_fp32 select_distance_sqr(fp16 x, fp16 y) const;
 
   virtual void move(fp16 xoff, fp16 yoff);
 

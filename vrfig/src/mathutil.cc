@@ -1,4 +1,4 @@
-// $Id: mathutil.cc,v 1.5 2001-05-20 18:51:23 jle Exp $
+// $Id: mathutil.cc,v 1.6 2001-05-22 18:03:59 jle Exp $
 
 #include <stdio.h>
 #include <string.h>
@@ -113,57 +113,34 @@ u_fp16 sqrt_fp32_fp16(u_fp32 square) {
   return root << 8;
 }
 
-void intersect_straights(fp16 xs1, fp16 ys1, fp16 xd1, fp16 yd1,
-                         fp16 xs2, fp16 ys2, fp16 xd2, fp16 yd2,
-                         fp16 &xi, fp16 &yi) {
-
-  //      xd1 * (xd2 * ys2 + xs2 * yd2) - xd2 * (xd1 * ys1 + xs1 * yd1)
-  // xi = -------------------------------------------------------------
-  //                        xd2 * yd1 + xd1 * yd2
-  xi = div_fp32_fp32_fp16(
-    mul_fp16_fp16_fp32(xd1, mul_fp16(xd2, ys2) + mul_fp16(xs2, yd2))
-    - mul_fp16_fp16_fp32(xd2, mul_fp16(xd1, ys1) + mul_fp16(xs1, yd1)),
-    mul_fp16_fp16_fp32(xd2, yd1) - mul_fp16_fp16_fp32(xd1, yd2));
-  
-  //      yd1 * (yd2 * xs2 + ys2 * xd2) - yd2 * (yd1 * xs1 + ys1 * xd1)
-  // yi = -------------------------------------------------------------
-  //                        yd2 * xd1 + yd1 * xd2
-  yi = div_fp32_fp32_fp16(
-    mul_fp16_fp16_fp32(yd1, mul_fp16(yd2, xs2) + mul_fp16(ys2, xd2))
-    - mul_fp16_fp16_fp32(yd2, mul_fp16(yd1, xs1) + mul_fp16(ys1, xd1)),
-    mul_fp16_fp16_fp32(yd2, xd1) - mul_fp16_fp16_fp32(yd1, xd2));
-}
-
-u_fp16 distance_to_line(fp16 x, fp16 y, fp16 xs, fp16 ys, fp16 xd, fp16 yd) {
+u_fp32 distance_to_line_sqr(
+  fp16 x, fp16 y, fp16 xs, fp16 ys, fp16 xd, fp16 yd) {
 
   // Check if actually a point
   if (xd == 0 && yd == 0)
-    return vector_length_fp16(x - xs, y - ys);
+    return vector_length_sqr_fp16_fp32(x - xs, y - ys);
 
-  // Direction for a line making 90 degree angle with the specified line
-  fp16 xdc = -yd;
-  fp16 ydc = xd;
+  // Calculate the multiplier
+  fp16 projection = project_point_to_vector(x - xs, y - ys, xd, yd);
   
-  // Calculate the intersection point
-  fp16 xi, yi;
-  intersect_straights(x, y, xdc, ydc, xs, ys, xd, yd, xi, yi);
-  
-  // Check if the intersection point is on the line segment
-  if (mul_fp16_fp16_fp32(xi - xs, xd) + mul_fp16_fp16_fp32(yi - ys, yd) < 0) {
+  // If the starting point is the closest...
+  if (projection <= 0)
+    return vector_length_sqr_fp16_fp32(x - xs, y - ys);
 
-    // Closest to start point
-    return vector_length_fp16(x - xs, y - ys);
+  // ...else if the ending point is the closest...
+  else if (projection >= 0x10000)
+    return vector_length_sqr_fp16_fp32(x - (xs + xd), y - (ys + yd));
 
-  } else if (vector_length_fp16(xi - xs, yi - ys) > 
-             vector_length_fp16(xd, yd)) {
-    
-    // Closest to end point
-    return vector_length_fp16(x - (x + xd), y - (y + yd));
-
-  } else {
-    
-    // Closest to intersection point
-    return vector_length_fp16(x - xi, y - yi);
-
+  // ...else the closest point is somewhere along the line
+  else {
+    fp16 xi = xs + mul_fp16(projection, xd);
+    fp16 yi = ys + mul_fp16(projection, yd);
+    return vector_length_sqr_fp16_fp32(x - xi, y - yi);
   }
+}
+
+fp16 project_point_to_vector(fp16 x, fp16 y, fp16 xv, fp16 yv) {
+  fp32 dp = dot_product(x, y, xv, yv);
+  u_fp32 len = vector_length_sqr_fp16_fp32(xv, yv);
+  return div_fp32_fp32_fp16(dp, len);
 }
