@@ -1,0 +1,10 @@
+#! /bin/sh
+
+if [ -n "$VRP_STRIPTOOL" ]; then
+  $VRP_STRIPTOOL src/npuzzle
+fi
+mkdir ${VRP_FAKE_ROOT_DIR}/usr || true
+mkdir ${VRP_FAKE_ROOT_DIR}/usr/local || true
+mkdir ${VRP_FAKE_ROOT_DIR}/usr/local/bin || true
+cp src/npuzzle ${VRP_FAKE_ROOT_DIR}/usr/local/bin/ && \
+  chmod a+rx ${VRP_FAKE_ROOT_DIR}/usr/local/bin/npuzzle
