@@ -1,4 +1,4 @@
-// $Id: MainView.cc,v 1.19 2001-05-26 14:25:19 jle Exp $
+// $Id: MainView.cc,v 1.20 2001-05-26 16:12:38 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -194,20 +194,21 @@ MainView::MainView(): current_file("") {
   tools_button->set_active_tool(active_tool);
   editor->set_tool(active_tool);
 
-  // Check if $HOME/figures exists and if not, whether it should be created
+  // Check if $HOME/vrfig exists and if not, whether it should be created
   string path("");
   char *home = getenv("HOME");
   if (home) {
     path.assign(home);
-    path.append("/figures");
+    path.append("/vrfig");
     struct stat stat_info;
     if (stat(path.c_str(), &stat_info)) {
 
       // Create $HOME/figures if user accepts
-      if (fl_ask("Subdirectory 'figures' does not exist in your home "
-                 "directory. Would you like to create it for VRFig files?")) {
+      if (fl_ask("Subdirectory 'vrfig' does not exist in your home "
+                 "directory. Would you like to create it for VRFig "
+                 "drawings?")) {
         if (mkdir(path.c_str(), 0777)) {
-          fl_alert("Could not create subdirectory 'figures'.");
+          fl_alert("Could not create subdirectory 'vrfig'.");
           path.assign("");
         }
       } else
@@ -236,8 +237,8 @@ MainView::MainView(): current_file("") {
 
 bool MainView::check_discard() {
   if (editor->get_action_buffer()->is_dirty())
-    return fl_ask("This will discard the changes made to the current "
-                  "figure. Do you want to continue?");
+    return fl_ask("Changes made to the current drawing will be discarded. "
+                  "Do you want to proceed?");
   else
     return true;
 }
@@ -317,6 +318,8 @@ void MainView::cb_new(Fl_Widget *widget, void *data) {
 
 void MainView::cb_load(Fl_Widget *widget, void *data) {
   MainView *view = reinterpret_cast<MainView *>(data);
+  if (!view->check_discard())
+    return;
   view->file_chooser_load->show();
   view->file_chooser_load->rescan();
   while (view->file_chooser_load->visible())
@@ -334,13 +337,11 @@ void MainView::cb_revert(Fl_Widget *widget, void *data) {
     fl_message("No file to revert from.");
     return;
   }
-  if (!view->check_discard())
-    return;
 
   // Load figure from the specified file
   ifstream ifs(view->current_file.c_str());
   if (ifs.bad()) {
-    fl_alert("Could not open figure file.");
+    fl_alert("Could not open input file.");
     return;
   }
   Figure *fig = ElementFactory::deserialize(ifs);
@@ -371,7 +372,9 @@ void MainView::cb_save(Fl_Widget *widget, void *data) {
   view->editor->get_figure()->serialize(ofs);
   ofs.close();
   if (ofs.bad())
-    fl_alert("Error when saving the figure.");
+    fl_alert("Error when saving the drawing.");
+  else
+    view->editor->get_action_buffer()->clear_dirty();
 }
 
 void MainView::cb_save_as(Fl_Widget *widget, void *data) {
