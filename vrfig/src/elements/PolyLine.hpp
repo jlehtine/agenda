@@ -1,4 +1,4 @@
-// $Id: PolyLine.hpp,v 1.3 2001-05-19 16:56:26 jle Exp $
+// $Id: PolyLine.hpp,v 1.4 2001-05-20 11:49:17 jle Exp $
 
 #ifndef __Line_hpp_INCLUDED__
 #define __Line_hpp_INCLUDED__
@@ -14,7 +14,7 @@
  * A polyline element which is the most generic element.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 class PolyLine : public Element, public Selectable, public Movable {
 
@@ -28,7 +28,7 @@ protected:
 
 public:
 
-  inline PolyLine(): points() {}
+  inline PolyLine(): points(), closed(false) {}
 
   ~PolyLine();
 
