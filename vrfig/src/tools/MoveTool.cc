@@ -1,4 +1,4 @@
-// $Id: MoveTool.cc,v 1.2 2001-05-22 18:35:06 jle Exp $
+// $Id: MoveTool.cc,v 1.3 2001-05-22 19:48:52 jle Exp $
 
 #include <vector.h>
 #include <FL/Fl.H>
@@ -32,8 +32,9 @@ void MoveTool::draw(FigureView *view) {
   const vector<Element *> *elements = view->get_figure()->get_elements();
   vector<Element *>::const_iterator i = elements->begin();
   while (i < elements->end()) {
-    Selectable *sel = dynamic_cast<Selectable *>(*(i++));
-    if (sel)
+    Selectable *sel = dynamic_cast<Selectable *>(*i);
+    Movable *mov = dynamic_cast<Movable *>(*(i++));
+    if (sel && mov)
       sel->draw_select_helpers(view->get_origin_x(), view->get_origin_y(),
                                view->get_scaling(), true);
   }
