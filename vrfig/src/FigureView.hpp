@@ -1,10 +1,11 @@
-// $Id: FigureView.hpp,v 1.2 2001-05-07 21:02:10 jle Exp $
+// $Id: FigureView.hpp,v 1.3 2001-05-19 08:42:52 jle Exp $
 
 #ifndef __FigureView_hpp_INCLUDED__
 #define __FigureView_hpp_INCLUDED__
 
 #include <FL/Fl_Widget.H>
 #include "Figure.hpp"
+#include "mathutil.hpp"
 
 /** Enumeration for control point drawing style */
 enum cp_drawing_style { CP_NONE, CP_NORMAL, CP_SELECTED };
@@ -13,7 +14,7 @@ enum cp_drawing_style { CP_NONE, CP_NORMAL, CP_SELECTED };
  * A widget which draws the associated figure.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 class FigureView : public Fl_Widget {
 
@@ -26,13 +27,13 @@ protected:
   cp_drawing_style used_cp_style;
 
   /** The x coordinate associated with the origin (16.16 fixed) */
-  int origin_x;
+  fp16 origin_x;
   
   /** The y coordinate associated with the origin (16.16 fixed) */
-  int origin_y;
+  fp16 origin_y;
 
   /** The scaling (16.16 fixed) */
-  unsigned int scaling;
+  u_fp16 scaling;
 
 public:
 
@@ -65,7 +66,7 @@ public:
    * @param x returns the x coordinate (16.16 fixed)
    * @param y returns the y coordinate (16.16 fixed)
    */
-  inline void get_origin(int &x, int &y) { 
+  inline void get_origin(fp16 &x, fp16 &y) { 
     x = origin_x; 
     y = origin_y; 
   }
@@ -75,7 +76,7 @@ public:
    *
    * @return the x coordinate (16.16 fixed)
    */
-  inline int get_origin_x() {
+  inline fp16 get_origin_x() {
     return origin_x;
   }
 
@@ -84,7 +85,7 @@ public:
    *
    * @return the x coordinate (16.16 fixed)
    */
-  inline int get_origin_y() {
+  inline fp16 get_origin_y() {
     return origin_y;
   }
 
@@ -94,21 +95,21 @@ public:
    * @param x the x coordinate (16.16 fixed)
    * @param y the y coordinate (16.16 fixed)
    */
-  void set_origin(int x, int y);
+  void set_origin(fp16 x, fp16 y);
 
   /**
    * Returns the currently used scaling.
    *
    * @return the scaling (16.16 fixed)
    */
-  inline unsigned int get_scaling() { return scaling; }
+  inline u_fp16 get_scaling() { return scaling; }
 
   /**
    * Sets the new scaling value to be used and refreshes the view.
    *
    * @param _scaling the new scaling
    */
-  void set_scaling(unsigned int _scaling);
+  void set_scaling(u_fp16 _scaling);
 
   /**
    * Sets how the control points are drawn.

@@ -1,4 +1,4 @@
-// $Id: Element.hpp,v 1.6 2001-05-19 06:17:43 jle Exp $
+// $Id: Element.hpp,v 1.7 2001-05-19 08:42:38 jle Exp $
 
 #ifndef __Element_hpp_INCLUDED__
 #define __Element_hpp_INCLUDED__
@@ -6,6 +6,7 @@
 #include <string>
 #include <vector.h>
 #include <ostream.h>
+#include "mathutil.hpp"
 
 /**
  * Figure is composed of elements such as lines or circles. The elements
@@ -73,24 +74,24 @@ public:
   /**
    * Returns the bounding box for the element.
    *
-   * @param x the coordinate of the left edge of the box (16.16 fixed)
-   * @param y the coordinate of the bottom edge of the box (16.16 fixed)
-   * @param w the width of the box (16.16 fixed)
-   * @param h the height of the box (16.16 fixed)
+   * @param x the coordinate of the left edge of the box 
+   * @param y the coordinate of the bottom edge of the box 
+   * @param w the width of the box 
+   * @param h the height of the box 
    */
-  virtual void get_bounding_box(int &x, int &y, int &w, int &h) 
+  virtual void get_bounding_box(fp16 &x, fp16 &y, fp16 &w, fp16 &h) 
     const = 0;
 
   /**
    * Draws the element to the current widget using the specified scaling
    * and origin.
    *
-   * @param origin_x the x coordinate for the origin (16.16 fixed)
-   * @param origin_y the y coordinate for the origin (16.16 fixed)
-   * @param scaling the scaling used (16.16 fixed)
+   * @param origin_x the x coordinate for the origin 
+   * @param origin_y the y coordinate for the origin 
+   * @param scaling the scaling used 
    * @param xor whether the element should be drawn xorred
    */
-  virtual void draw(int origin_x, int origin_y, unsigned int scaling,
+  virtual void draw(fp16 origin_x, fp16 origin_y, u_fp16 scaling,
                     bool xorred=false) const = 0;
   
   /**
@@ -114,13 +115,13 @@ public:
    * null if no element could be fitted.
    *
    * @param points a vector of point x/y coordinates
-   * @param origin_x the x coordinate for the origin (16.16 fixed)
-   * @param origin_y the y coordinate for the origin (16.16 fixed)
-   * @param scaling the scaling used (16.16 fixed)
+   * @param origin_x the x coordinate for the origin 
+   * @param origin_y the y coordinate for the origin 
+   * @param scaling the scaling used 
    * @return the fitted element
    */
   static Element *fit_element(
-    vector<int> *points, int origin_x, int origin_y, unsigned int scaling);
+    vector<int> *points, fp16 origin_x, fp16 origin_y, u_fp16 scaling);
 #endif
 };
 
