@@ -1,4 +1,4 @@
-// $Id: vrfig.hpp,v 1.3 2001-05-23 12:47:51 jle Exp $
+// $Id: vrfig.hpp,v 1.4 2001-05-28 20:07:57 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -22,6 +22,7 @@
 #ifndef __vrfig_hpp_INCLUDED__
 #define __vrfig_hpp_INCLUDED__
 
+/** The default namespace for VRFig internal elements */
 #define VRF_DEFAULT_NAMESPACE "http://www.iki.fi/jle/agenda/vrfig/"
 
 extern const char *vrf_default_namespace;
