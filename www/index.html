@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+                      "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<title>My Agenda VR3 Projects</title>
+<style type="text/css">
+<!--
+BODY { margin-left: 10%; margin-right: 5%; background: white; }
+H1 { margin-top: 20px; }
+H2 { margin-top: 20px; margin-bottom: 10px; }
+H3 { margin-top: 10px; }
+-->
+</style>
+</head>
+<body bgcolor="#ffffff" text="#000000" link="#660066" vlink="#660066" alink="#660066">
+
+<h1>My Agenda VR3 Projects</h1>
+
+<p>By <a href="http://www.iki.fi/jle/">Johannes Lehtinen</a>
+&lt;&nbsp;<a href="mailto:johannes.lehtinen@iki.fi">johannes.lehtinen@iki.fi</a>&nbsp;&gt;</p>
+
+<hr>
+
+<p>This page includes information about my spare time software
+projects targeted to <a href="http://www.agendacomputing.com/">Agenda
+VR3</a> platform. Although I am currently working alone on these
+projects, all kind of contributions (ideas, suggestions, bug reports,
+new source code, hardware... ;) are welcome.</p>
+
+<p>Projects described here include:
+<a href="#npuzzle">NPuzzle</a>,
+<a href="#reversi">Reversi</a>,
+<a href="#sketchpad">SketchPad</a>
+</p>
+
+<hr>
+
+<h2><a name="npuzzle">NPuzzle</a></h2>
+
+<p><img src="npuzzle.png" alt="NPuzzle" width="172" height="275"
+align="right"><em>NPuzzle</em> is a simple implementation of 15-puzzle
+(or 8-puzzle or 24-puzzle) and I wrote it mostly to learn how to work
+with FLTK user interface library. NPuzzle has been tested on Agenda
+VR3 and I tried to give it the VR3 look and feel. The development was
+done in an ordinary Linux/X environment and the VR3 port was done
+simply by cross compiling the program for MIPS. NPuzzle is distributed
+under the GNU General Public License.</p>
+
+<p>To compile the source code distribution on standard Linux box, you
+must have the following installed. For help on compiling the native
+VR3 binary, see the end of INSTALL file in the source package.</p>
+
+<ul>
+  <li>C++ compiler (tested with <a href="http://gcc.gnu.org/">g++</a> 2.95.2)</li>
+  <li><a href="http://www.fltk.org/">FLTK</a> UI toolkit (tested with FLTK 1.0.9)</li>
+</ul>
+
+<p>Use one of the links below to download a source code or binary
+distribution.</p>
+
+<p>
+<a href="npuzzle-0.2.1.tar.gz">npuzzle-0.2.1.tar.gz</a> (46.2 kB)<br>
+<a href="npuzzle-0.2.1.vrp">npuzzle-0.2.1.vrp</a> (20.0 kB)<br>
+<a href="npuzzle-0.2.1">npuzzle-0.2.1</a> for Agenda VR3 (29.6 kB)
+</p>
+
+<p>You need only the npuzzle binary to run the
+game. Just copy the binary to suitable place on a flash disk (using
+<code>rsync</code>, for example) and make a symbolic link
+<code>/home/default/.wmx/Games/NPuzzle</code> pointing to the
+binary. Remember to make sure that the downloaded binary has execute
+permissions (<code>chmod&nbsp;a+rx&nbsp;npuzzle</code>).</p>
+
+<hr>
+
+<h2><a name="reversi">Reversi</a></h2>
+
+<p><em>Reversi</em> is the second one of my FLTK experiments. My idea
+was to build couple of simple games to learn how to use FLTK toolkit.
+Reversi is not yet fully functional. I am also planning to add IrDA
+support for two player game if possible. Check this page later for
+more information.</p>
+
+<hr>
+
+<h2><a name="sketchpad">SketchPad</a></h2>
+
+<p><em>SketchPad</em> (which is the name I am using for now) will be
+an application enabling user to mix textual notes and sketch drawings.
+The idea is for the application to make this easier by recognizing if
+the user tried to draw some specific form like a circle or a cube, for
+example. If such form is found then SketchPad makes an idealization
+of the actual drawing unless otherwise specified by the user. For now,
+I am just coming up with ideas and thoughts regarding this application
+so it is not very well defined yet. If you have any suggestions, let
+me know about them.</p>
+
+<hr>
+
+<p align=center>Copyright (C) 2000 Johannes Lehtinen<br>
+Last updated on 2001-01-28.</p>
+
+</body>
+</html>
