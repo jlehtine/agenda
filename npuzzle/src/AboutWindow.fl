@@ -10,20 +10,20 @@ class AboutWindow {open
   Function {AboutWindow()} {open
   } {
     Fl_Window win {
-      label {About NPuzzle} open selected
-      private xywh {1054 571 160 148} color 7 resizable modal visible
+      label {About NPuzzle} open
+      private xywh {1060 600 160 148} color 7 resizable modal visible
     } {
       Fl_Box {} {
         label NPuzzle
         xywh {30 20 100 25} labelfont 1
       }
       Fl_Box {} {
-        label {v 0.1}
+        label {v 0.2} selected
         xywh {45 55 65 20} labelsize 12
       }
       Fl_Box {} {
-        label {Copyright (C) 2000}
-        xywh {20 75 120 20} labelsize 12
+        label {Copyright 2000-2001}
+        xywh {15 75 130 20} labelsize 12
       }
       Fl_Box {} {
         label {Johannes Lehtinen}
