@@ -1,7 +1,9 @@
-// $Id: DrawingTool.hpp,v 1.3 2001-05-08 15:31:19 jle Exp $
+// $Id: DrawingTool.hpp,v 1.4 2001-05-16 19:50:16 jle Exp $
 
 #ifndef __DrawingTool_hpp_INCLUDED__
 #define __DrawingTool_hpp_INCLUDED__
+
+#if USE_EXPERIMENTAL_UI
 
 #include <vector>
 #include "Tool.hpp"
@@ -10,7 +12,7 @@
  * A common base class for tools that draw new elements.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 class DrawingTool : public Tool {
 
@@ -52,5 +54,7 @@ public:
   // Doc inherited from Tool
   virtual int handle(int event, FigureView *view);
 };
+
+#endif
 
 #endif

@@ -1,4 +1,4 @@
-// $Id: mathutil.cc,v 1.1 2001-05-08 21:20:02 jle Exp $
+// $Id: mathutil.cc,v 1.2 2001-05-16 19:50:16 jle Exp $
 
 #include "mathutil.hpp"
 
@@ -19,11 +19,19 @@ int div_fp16(int dividend, int divisor) {
 void intersect_straights(int xs1, int ys1, int xd1, int yd1,
                          int xs2, int ys2, int xd2, int yd2,
                          int &xi, int &yi) {
+
+  //      xd1 * (xd2 * ys2 + xs2 * yd2) - xd2 * (xd1 * ys1 + xs1 * yd1)
+  // xi = -------------------------------------------------------------
+  //                        xd2 * yd1 + xd1 * yd2
   xi = div_fp16(mul_fp16(xd1,
                          mul_fp16(xd2, ys2) + mul_fp16(xs2, yd2))
                 - mul_fp16(xd2,
                            mul_fp16(xd1, ys1) + mul_fp16(xs1, yd1)),
                 mul_fp16(xd2, yd1) - mul_fp16(xd1, yd2));
+
+  //      yd1 * (yd2 * xs2 + ys2 * xd2) - yd2 * (yd1 * xs1 + ys1 * xd1)
+  // yi = -------------------------------------------------------------
+  //                        yd2 * xd1 + yd1 * xd2
   yi = div_fp16(mul_fp16(yd1,
                          mul_fp16(yd2, xs2) + mul_fp16(ys2, xd2))
                 - mul_fp16(yd2,

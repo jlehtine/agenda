@@ -1,4 +1,4 @@
-// $Id: MainView.cc,v 1.6 2001-05-08 21:20:01 jle Exp $
+// $Id: MainView.cc,v 1.7 2001-05-16 19:50:16 jle Exp $
 
 #include <stdlib.h>
 #include <flpda/Widget_Factory.h>
@@ -49,12 +49,21 @@ static Fl_Menu_Item tools_popup[] = {
 };
 
 static Tool *tools[] = {
+#if EXPERIMENTAL_UI
   new DrawingTool(),
   new DrawingTool(), // For now
   new DrawingTool(), // For now
   new DrawingTool(), // For now
   new DrawingTool(), // For now
   new DrawingTool(), // For now
+#else
+  new MoveFigTool(),
+  new MoveFigTool(),
+  new MoveFigTool(),
+  new MoveFigTool(),
+  new MoveFigTool(),
+  new MoveFigTool(),
+#endif
   new MoveFigTool()
 };
 

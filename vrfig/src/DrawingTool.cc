@@ -1,16 +1,14 @@
-// $Id: DrawingTool.cc,v 1.3 2001-05-08 15:31:19 jle Exp $
+// $Id: DrawingTool.cc,v 1.4 2001-05-16 19:50:15 jle Exp $
 
-#include <X11/Xlib.h>
+#if USE_EXPERIMENTAL_UI
+
 #include <FL/Fl.H>
 #include <FL/Enumerations.H>
 #include <FL/fl_draw.H>
 #include <FL/Fl_Window.H>
-#include <FL/x.H>
 #include "DrawingTool.hpp"
 #include "Element.hpp"
-
-static void draw_xor_line(int x1, int y1, int x2, int y2);
-static void draw_xor_point(int x, int y);
+#include "flext.hpp"
 
 void DrawingTool::draw_current_line(FigureView *view) {
   fl_color(FL_WHITE);
@@ -18,8 +16,8 @@ void DrawingTool::draw_current_line(FigureView *view) {
   i += 2;
   while (i < points.end()) {
     if (i - points.begin() > 2)
-      draw_xor_point(*(i-2), *(i-1));
-    draw_xor_line(*(i-2), *(i-1), *i, *(i+1));
+      fle_xorred_point(*(i-2), *(i-1));
+    fle_xorred_line(*(i-2), *(i-1), *i, *(i+1));
     i += 2;
   }
 }
@@ -50,7 +48,7 @@ int DrawingTool::handle(int event, FigureView *view) {
       points.insert(points.end(), Fl::event_y());
       view->window()->make_current();
       fl_color(FL_WHITE);
-      draw_xor_point(Fl::event_x(), Fl::event_y());
+      fle_xorred_point(Fl::event_x(), Fl::event_y());
     }
     break;
 
@@ -77,8 +75,8 @@ int DrawingTool::handle(int event, FigureView *view) {
         i = points.end();
         view->window()->make_current();
         fl_color(FL_WHITE);
-        draw_xor_point(*(i-4), *(i-3));
-        draw_xor_line(*(i-4), *(i-3), *(i-2), *(i-1));
+        fle_xorred_point(*(i-4), *(i-3));
+        fle_xorred_line(*(i-4), *(i-3), *(i-2), *(i-1));
       }
     }
     break;
@@ -90,24 +88,4 @@ int DrawingTool::handle(int event, FigureView *view) {
   return 1;
 }
 
-static void draw_xor_line(int x1, int y1, int x2, int y2) {
-  XGCValues gcValues;
-  XGetGCValues(fl_display, fl_gc, GCFunction, &gcValues);
-  int old_func = gcValues.function;
-  gcValues.function = GXxor;
-  XChangeGC(fl_display, fl_gc, GCFunction, &gcValues);
-  XDrawLine(fl_display, fl_window, fl_gc, x1, y1, x2, y2);
-  gcValues.function = old_func;
-  XChangeGC(fl_display, fl_gc, GCFunction, &gcValues);
-}
-
-static void draw_xor_point(int x, int y) {
-  XGCValues gcValues;
-  XGetGCValues(fl_display, fl_gc, GCFunction, &gcValues);
-  int old_func = gcValues.function;
-  gcValues.function = GXxor;
-  XChangeGC(fl_display, fl_gc, GCFunction, &gcValues);
-  XDrawPoint(fl_display, fl_window, fl_gc, x, y);
-  gcValues.function = old_func;
-  XChangeGC(fl_display, fl_gc, GCFunction, &gcValues);
-}
+#endif

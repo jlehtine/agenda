@@ -1,8 +1,12 @@
-// $Id: Element.cc,v 1.1 2001-05-07 21:02:10 jle Exp $
+// $Id: Element.cc,v 1.2 2001-05-16 19:50:16 jle Exp $
 
 #include "Element.hpp"
-#include "PolyLine.hpp"
 
+#if USE_EXPERIMENTAL_UI
+#include "PolyLine.hpp"
+#endif
+
+#if USE_EXPERIMENTAL_UI
 Element *Element::fit_element(
   vector<int> *points, int origin_x, int origin_y, unsigned int scaling) {
   
@@ -13,3 +17,4 @@ Element *Element::fit_element(
     return element;
   return 0;
 }
+#endif
