@@ -1,4 +1,4 @@
-// $Id: Figure.cc,v 1.6 2001-05-23 12:47:50 jle Exp $
+// $Id: Figure.cc,v 1.7 2001-05-26 16:08:32 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <map.h>
+#include <algo.h>
 #include "Figure.hpp"
 #include "vrfig.hpp"
 
@@ -30,6 +31,10 @@ Figure::~Figure() {
   while (i < elements.end()) {
     delete *(i++);
   }
+}
+
+void Figure::remove_element(Element *element) {
+  elements.erase(find(elements.begin(), elements.end(), element));
 }
 
 struct char_ptr_less {

@@ -1,4 +1,4 @@
-// $Id: FigureView.cc,v 1.5 2001-05-26 14:25:19 jle Exp $
+// $Id: FigureView.cc,v 1.6 2001-05-26 16:08:32 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -76,4 +76,9 @@ void FigureView::add_element(Element *element) {
   fl_push_clip(x(), y(), w(), h());
   element->draw(origin_x, origin_y, scaling);
   fl_pop_clip();
+}
+
+void FigureView::remove_element(Element *element) {
+  figure->remove_element(element);
+  redraw();
 }

@@ -1,4 +1,4 @@
-// $Id: FigureView.hpp,v 1.6 2001-05-26 14:25:19 jle Exp $
+// $Id: FigureView.hpp,v 1.7 2001-05-26 16:08:33 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -34,7 +34,7 @@ enum cp_drawing_style { CP_NONE, CP_NORMAL, CP_SELECTED };
  * A widget which draws the associated figure.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  */
 class FigureView : public Fl_Widget {
 
@@ -154,6 +154,13 @@ public:
    */
   void add_element(Element *element);
 
+  /**
+   * Removes the specified element from the figure and updates the view
+   * accordingly.
+   *
+   * @param element the element to be removed
+   */
+  void remove_element(Element *element);
 };
 
 #endif

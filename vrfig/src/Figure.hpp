@@ -1,4 +1,4 @@
-// $Id: Figure.hpp,v 1.5 2001-05-23 12:47:50 jle Exp $
+// $Id: Figure.hpp,v 1.6 2001-05-26 16:08:32 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -30,7 +30,7 @@
  * Represents the whole figure composed of elements.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 class Figure {
 
@@ -65,6 +65,13 @@ public:
   inline void add_element(Element *element) {
     elements.insert(elements.end(), element);
   }
+
+  /**
+   * Removes element from this figure.
+   *
+   * @param element the element to remove
+   */
+  void remove_element(Element *element);
 
   /**
    * Serializes the figure to the specified output stream. The figure
