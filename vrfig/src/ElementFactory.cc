@@ -1,4 +1,4 @@
-// $Id: ElementFactory.cc,v 1.2 2001-05-22 21:26:16 jle Exp $
+// $Id: ElementFactory.cc,v 1.3 2001-05-22 21:38:54 jle Exp $
 
 #include <map.h>
 #include <string>
@@ -22,11 +22,14 @@ struct char_ptr_less {
 };
 
 /** Mapping from element names to deserialization functions */
-static map<const char *, void (*)(XML_Parser *, ElementFactory *), 
+static map<const char *, void (*)(XML_Parser, ElementFactory *), 
   char_ptr_less> *deserializers = 0;
 
 // Initializes the list of deserializers
 static void init_deserializers();
+
+static void add_deserializer(const char *ns, const char *name, 
+                             element_deserializer deserializer);
 
 Figure *ElementFactory::deserialize(istream &is) {
 
@@ -159,23 +162,23 @@ void ElementFactory::msg_error(char *msg = 0) {
 
 static void init_deserializers() {
   deserializers =
-    new map<const char *, void (*)(XML_Parser *, ElementFactory *),
+    new map<const char *, void (*)(XML_Parser, ElementFactory *),
     char_ptr_less>;
-  string str;
 
-  // Add polyline
-  str.assign(PolyLine::get_namespace_static());
-  str.append("#");
-  str.append(PolyLine::get_name_static());
-  char *cp = new char[str.length()+1];
-  strcpy(cp, str.c_str());
-  (*deserializers)[cp] = PolyLine::deserialize;
+  add_deserializer(PolyLine::get_namespace_static(),
+                   PolyLine::get_name_static(),
+                   PolyLine::deserialize);
+  add_deserializer(Rectangle::get_namespace_static(),
+                   Rectangle::get_name_static(),
+                   Rectangle::deserialize);
+}
 
-  // Add rectangle
-  str.assign(Rectangle::get_namespace_static());
+static void add_deserializer(const char *ns, const char *name, 
+                             element_deserializer deserializer) {
+  string str(ns);
   str.append("#");
-  str.append(Rectangle::get_name_static());
-  cp = new char[str.length()+1];
+  str.append(name);
+  char *cp = new char[str.length() + 1];
   strcpy(cp, str.c_str());
-  (*deserializers)[cp] = Rectangle::deserialize;
+  (*deserializers)[cp] = deserializer;
 }
