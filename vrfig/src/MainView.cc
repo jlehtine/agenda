@@ -1,4 +1,4 @@
-// $Id: MainView.cc,v 1.15 2001-05-22 13:46:56 jle Exp $
+// $Id: MainView.cc,v 1.16 2001-05-23 07:52:03 jle Exp $
 
 #include <stdlib.h>
 #include <string.h>
@@ -16,6 +16,7 @@
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Menu_Item.H>
 #include <FL/Fl_Menu_Button.H>
+#include <FL/Fl_Box.H>
 #include <FL/fl_draw.H>
 #include <FL/fl_ask.H>
 #include "MainView.hpp"
@@ -31,6 +32,9 @@ static Fl_Bitmap vfg_bitmap
 
 static Fl_Bitmap directory_bitmap
 (directory_icon_bits, directory_icon_width, directory_icon_height);
+
+static Fl_App_Window *create_about_win();
+static void cb_about_done(Fl_Widget *widget, void *data);
 
 // Tool selection button. This is an ordinary button except that it
 // displays the icon of the selected tool.
@@ -104,6 +108,9 @@ MainView::MainView(): current_file("") {
   // Create tool list
   tools = ToolFactory::create_tools();
 
+  // Create about window
+  about_win = create_about_win();
+
   // Create toolbar
   Fl_Dockable_Window *toolbar = Widget_Factory::new_toolbar();
   Fl_Menu_Button *file_menu = Widget_Factory::new_menu_button("File");
@@ -125,7 +132,8 @@ MainView::MainView(): current_file("") {
 #endif
   tools_button->callback(cb_tool, this);
 
-  Widget_Factory::new_button("Undo", cb_undo, this);
+  Fl_Button *undo_button = Widget_Factory::new_button("Undo", cb_undo, this);
+  undo_button->deactivate();
   Fl_Button *zoomout_button = 
     Widget_Factory::new_button("-", cb_zoomout, this);
   zoomout_button->resize(zoomout_button->x(), zoomout_button->y(),
@@ -136,10 +144,12 @@ MainView::MainView(): current_file("") {
   zoomin_button->resize(zoomin_button->x(), zoomin_button->y(),
                          Widget_Factory::buttonheight(),
                          zoomin_button->h());
-  Fl_Menu_Button *info_menu = Widget_Factory::new_menu_button("?");
+  Fl_Menu_Button *info_menu = Widget_Factory::new_menu_button("Help");
   info_menu->menu(info_popup);
-  info_menu->resize(info_menu->x(), info_menu->y(),
-                    Widget_Factory::buttonheight(), info_menu->h());
+  info_popup[0].deactivate();
+  info_popup[1].deactivate();
+  info_popup[2].deactivate();
+  info_popup[3].callback(cb_about, this);
   toolbar->end();
   win->add_dockable(toolbar, 1);
 
@@ -356,4 +366,57 @@ void MainView::cb_save_as(Fl_Widget *widget, void *data) {
   }
   
   cb_save(widget, data);
+}
+
+void MainView::cb_about(Fl_Widget *widget, void *data) {
+  MainView *view = reinterpret_cast<MainView *>(data);
+  view->about_win->show();
+}
+
+static Fl_App_Window *create_about_win() {
+  Fl_App_Window *about_win = Widget_Factory::new_window("About VRFig");
+
+  // Create the toolbar with "Done" button
+  Fl_Dockable_Window *toolbar = Widget_Factory::new_toolbar();
+  Widget_Factory::new_button("Done", cb_about_done, about_win);
+  toolbar->end();
+  about_win->add_dockable(toolbar, 1);
+
+  // Create the label
+  Fl_Box *vrfig = new Fl_Box(0, 0, about_win->w(), 40, "VRFig");
+  vrfig->labelfont(FL_HELVETICA_BOLD);
+  about_win->contents()->add(vrfig);
+  
+  // Create the version text
+  Fl_Box *ver = new Fl_Box(0, 40, about_win->w(), 20, "v 0.1");
+  ver->labelsize(Widget_Factory::labelsize());
+  about_win->contents()->add(ver);
+  
+  // Create the copyright text
+  Fl_Box *copyright = new Fl_Box(
+    0, 60, about_win->w(), 40,
+    "Copyright 2001\nJohannes Lehtinen");
+  copyright->labelsize(Widget_Factory::labelsize());
+  about_win->contents()->add(copyright);
+
+  // Create the license text
+  Fl_Box *gpl = new Fl_Box(
+    5, 100, about_win->w() - 5, about_win->h() - 100 - toolbar->h(),
+    "This program is free software; you can redistribute it and/or modify "
+    "it under the terms of the GNU General Public License as published by "
+    "the Free Software Foundation; either version 2 of the License, or "
+    "(at your option) any later version.");
+  gpl->labelsize(8);
+  gpl->align(FL_ALIGN_WRAP);
+  about_win->contents()->add(gpl);
+  about_win->contents()->resizable(gpl);
+
+  about_win->end();
+  about_win->set_modal();
+  return about_win;
+}
+
+static void cb_about_done(Fl_Widget *widget, void *data) {
+  Fl_App_Window *about_win = reinterpret_cast<Fl_App_Window *>(data);
+  about_win->hide();
 }

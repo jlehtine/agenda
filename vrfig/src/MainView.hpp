@@ -1,4 +1,4 @@
-// $Id: MainView.hpp,v 1.7 2001-05-20 11:49:43 jle Exp $
+// $Id: MainView.hpp,v 1.8 2001-05-23 07:52:03 jle Exp $
 
 #ifndef __MainWindow_hpp_INCLUDED__
 #define __MainWindow_hpp_INCLUDED__
@@ -17,7 +17,7 @@ class ToolsButton;
  * a subclass of Fl_Window.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  */
 class MainView {
 
@@ -50,6 +50,9 @@ protected:
   /** The filename for the current figure or empty string if none */
   string current_file;
 
+  /** The about window */
+  Fl_App_Window *about_win;
+
   // Callback functions
   static void cb_exit(Fl_Widget *widget, void *data);
   static void cb_tool(Fl_Widget *widget, void *data);
@@ -62,6 +65,7 @@ protected:
   static void cb_revert(Fl_Widget *widget, void *data);
   static void cb_save(Fl_Widget *widget, void *data);
   static void cb_save_as(Fl_Widget *widget, void *data);
+  static void cb_about(Fl_Widget *widget, void *data);
 
 public:
 
