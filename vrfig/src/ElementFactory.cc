@@ -1,4 +1,4 @@
-// $Id: ElementFactory.cc,v 1.6 2001-05-24 18:47:09 jle Exp $
+// $Id: ElementFactory.cc,v 1.7 2001-05-24 18:47:32 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -99,7 +99,10 @@ bool ElementFactory::parse() {
     } else {
       if (!XML_ParseBuffer(
         parser, input_stream.gcount(), input_stream.eof())) {
-        fl_alert("XML parser error occurred. Document is malformed.");
+        fl_alert("Document is malformed. XML parser error occurred on "
+                 "line %d: %s", 
+                 XML_GetCurrentLineNumber(parser),
+                 XML_ErrorString(XML_GetErrorCode(parser)));
         return false;
       }
     }
