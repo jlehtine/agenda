@@ -1,4 +1,4 @@
-// $Id: mathutil.cc,v 1.6 2001-05-22 18:03:59 jle Exp $
+// $Id: mathutil.cc,v 1.7 2001-05-23 07:53:12 jle Exp $
 
 #include <stdio.h>
 #include <string.h>
@@ -80,16 +80,6 @@ fp16 str_to_fp16(const char *str) {
 
 fp16 div_int_fp16u_fp16(int dividend, u_fp16 divisor) {
   return ((dividend << 16) / (divisor >> 8)) << 8;
-}
-
-fp16 div_fp16(fp16 dividend, fp16 divisor) {
-  u_fp16 mask = 0xffff8000;
-  int dividend_shift = 16;
-  while ((dividend & mask) != 0 && (dividend & mask) != mask) {
-    mask <<= 1;
-    dividend_shift--;
-  }
-  return (dividend << dividend_shift) / (divisor >> (16 - dividend_shift));
 }
 
 u_fp16 sqrt_fp32_fp16(u_fp32 square) {

@@ -1,4 +1,4 @@
-// $Id: mathutil.hpp,v 1.5 2001-05-22 18:03:59 jle Exp $
+// $Id: mathutil.hpp,v 1.6 2001-05-23 07:53:11 jle Exp $
 
 #ifndef __mathutil_hpp_INCLUDED__
 #define __mathutil_hpp_INCLUDED__
@@ -162,7 +162,9 @@ fp16 div_int_fp16u_fp16(int dividend, u_fp16 divisor);
  * @param b the second value 
  * @return the result 
  */
-fp16 div_fp16(fp16 dividend, fp16 divisor);
+inline fp16 div_fp16(fp16 dividend, fp16 divisor) {
+  return (static_cast<fp32>(dividend) << 16) / divisor;
+}
 
 /**
  * Divides two 32.32 fixed point values.
