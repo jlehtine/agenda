@@ -1,10 +1,10 @@
 ## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.1 2001-05-17 19:35:28 jle Exp $
+## $Id: Makefile.am,v 1.2 2001-05-22 12:55:17 jle Exp $
 
 srcdir = @srcdir@
 VPATH = @srcdir@
 
-CPPFLAGS += -I..
+INCLUDES = -I..
 
 noinst_LIBRARIES = libelements.a
 
