@@ -1,4 +1,4 @@
-// $Id: PolyLine.cc,v 1.10 2001-05-24 18:25:52 jle Exp $
+// $Id: PolyLine.cc,v 1.11 2001-05-24 18:47:09 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -108,10 +108,10 @@ static void end_handler(void *data, const XML_Char *name) {
   else if (info->depth == 0) {
     XML_SetElementHandler(info->parser, 0, 0);
     XML_SetUserData(info->parser, info->old_data);
-    info->ef->get_figure()->add_element(info->pl);
+    Element *pl = info->pl;
     ElementFactory *ef = info->ef;
     delete info;
-    ef->done();
+    ef->done(pl);
     return;
   }
   info->depth--;

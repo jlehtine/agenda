@@ -1,4 +1,4 @@
-// $Id: ElementFactory.hpp,v 1.2 2001-05-23 12:47:50 jle Exp $
+// $Id: ElementFactory.hpp,v 1.3 2001-05-24 18:47:09 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -30,7 +30,7 @@
  * Class for deserializing XML format element data to element objects.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@ik.fi>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 class ElementFactory {
 
@@ -96,21 +96,15 @@ public:
   static Figure *deserialize(istream &is);
 
   /**
-   * Returns the figure being deserialized.
-   *
-   * @return the figure being deserialized
-   */
-  inline Figure *get_figure() {
-    return figure;
-  }
-
-  /**
    * An element specific deserializer must call this method to acknowledge
    * that it has finished parsing of an element. Before calling this
    * method the deserializer should unset any XML parser handlers it has
-   * used.
+   * used and restore the user data pointer if necessary.
+   *
+   * @param element the deserialized element or null pointer if the element \
+   *   could not be deserialized or was ignored on purpose
    */
-  void done();
+  void done(Element *element);
 
   /**
    * An element specific deserializer can call this method to warn

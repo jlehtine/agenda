@@ -1,4 +1,4 @@
-// $Id: ElementFactory.cc,v 1.5 2001-05-23 12:47:50 jle Exp $
+// $Id: ElementFactory.cc,v 1.6 2001-05-24 18:47:09 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -162,9 +162,10 @@ void ElementFactory::end_handler(const XML_Char *name) {
   depth--;
 }
 
-void ElementFactory::done() {
+void ElementFactory::done(Element *element) {
   depth--;
   XML_SetElementHandler(parser, start_handler_static, end_handler_static);
+  figure->add_element(element);
 }
 
 void ElementFactory::msg_warning(char *msg) {

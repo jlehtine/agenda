@@ -1,4 +1,4 @@
-// $Id: Ellipse.cc,v 1.3 2001-05-24 18:25:52 jle Exp $
+// $Id: Ellipse.cc,v 1.4 2001-05-24 18:47:09 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -79,10 +79,9 @@ static void end_handler(void *data, const XML_Char *name) {
     Ellipse *el = new Ellipse(
       info->x, info->y,
       info->x + info->xr, info->y + info->yr);
-    info->ef->get_figure()->add_element(el);
     ElementFactory *ef = info->ef;
     delete info;
-    ef->done();
+    ef->done(el);
     return;
   }
   info->depth--;

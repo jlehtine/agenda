@@ -1,4 +1,4 @@
-// $Id: Rectangle.cc,v 1.5 2001-05-24 18:25:52 jle Exp $
+// $Id: Rectangle.cc,v 1.6 2001-05-24 18:47:09 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -78,10 +78,9 @@ static void end_handler(void *data, const XML_Char *name) {
     XML_SetElementHandler(info->parser, 0, 0);
     XML_SetUserData(info->parser, info->old_data);
     Rectangle *rect = new Rectangle(info->x, info->y, info->w, info->h);
-    info->ef->get_figure()->add_element(rect);
     ElementFactory *ef = info->ef;
     delete info;
-    ef->done();
+    ef->done(rect);
     return;
   }
   info->depth--;
