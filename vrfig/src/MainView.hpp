@@ -1,4 +1,4 @@
-// $Id: MainView.hpp,v 1.5 2001-05-19 08:43:43 jle Exp $
+// $Id: MainView.hpp,v 1.6 2001-05-20 11:18:33 jle Exp $
 
 #ifndef __MainWindow_hpp_INCLUDED__
 #define __MainWindow_hpp_INCLUDED__
@@ -7,6 +7,7 @@
 #include <FL/Fl_Widget.H>
 #include "Editor.hpp"
 #include "ToolsChoice.hpp"
+#include "espws/FileChooser.h"
 
 class ToolsButton;
 
@@ -16,7 +17,7 @@ class ToolsButton;
  * a subclass of Fl_Window.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 class MainView {
 
@@ -40,6 +41,15 @@ protected:
   /** The menu window for tool selection */
   ToolsChoice *tools_choice;
 
+  /** The file chooser for saving */
+  FileChooser *file_chooser_save;
+
+  /** The file chooser for loading */
+  FileChooser *file_chooser_load;
+
+  /** The filename for the current figure or empty string if none */
+  string current_file;
+
   // Callback functions
   static void cb_exit(Fl_Widget *widget, void *data);
   static void cb_tool(Fl_Widget *widget, void *data);
@@ -47,6 +57,10 @@ protected:
   static void cb_undo(Fl_Widget *widget, void *data);
   static void cb_zoomout(Fl_Widget *widget, void *data);
   static void cb_zoomin(Fl_Widget *widget, void *data);
+  static void cb_load(Fl_Widget *widget, void *data);
+  static void cb_revert(Fl_Widget *widget, void *data);
+  static void cb_save(Fl_Widget *widget, void *data);
+  static void cb_save_as(Fl_Widget *widget, void *data);
 
 public:
 

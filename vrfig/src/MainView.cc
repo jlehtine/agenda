@@ -1,6 +1,12 @@
-// $Id: MainView.cc,v 1.10 2001-05-19 08:43:29 jle Exp $
+// $Id: MainView.cc,v 1.11 2001-05-20 11:18:33 jle Exp $
 
 #include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <iostream.h>
 #include <flpda/Widget_Factory.h>
 #include <Flek/Fl_Dockable_Window.H>
 #include <FL/Fl_Widget.H>
@@ -10,9 +16,19 @@
 #include <FL/Fl_Menu_Item.H>
 #include <FL/Fl_Menu_Button.H>
 #include <FL/fl_draw.H>
+#include <FL/fl_ask.H>
 #include "MainView.hpp"
 #include "ToolFactory.hpp"
 #include "mathutil.hpp"
+#include "espws/FileChooser.h"
+#include "icons/directory_icon.xbm"
+#include "icons/vfg_icon.xbm"
+
+static Fl_Bitmap vfg_bitmap
+(vfg_icon_bits, vfg_icon_width, vfg_icon_height);
+
+static Fl_Bitmap directory_bitmap
+(directory_icon_bits, directory_icon_width, directory_icon_height);
 
 // Tool selection button. This is an ordinary button except that it
 // displays the icon of the selected tool.
@@ -44,6 +60,23 @@ public:
   }
 };
 
+// File icon which displays X bitmaps
+class BitmapFileIcon : public FileIcon {
+
+protected:
+  Fl_Bitmap *bitmap;
+  
+public:
+  BitmapFileIcon(Fl_Bitmap *bitmap,
+              const char *p, int t, int nd = 0, short *d = 0):
+    FileIcon(p, t, nd, d), bitmap(bitmap) {}
+
+  virtual void draw(int x, int y, int w, int h, Fl_Color ic, int active = 1) {
+    fl_color(ic);
+    bitmap->draw(x, y, w, h, (bitmap->w - w) >> 1, (bitmap->h - h) >> 1);
+  }
+};
+
 static Fl_Menu_Item file_popup[] = {
   { "New", 0, 0, 0, FL_MENU_DIVIDER },
   { "Load" },
@@ -62,7 +95,9 @@ static Fl_Menu_Item info_popup[] = {
   { 0 }
 };
 
-MainView::MainView() {
+MainView::MainView(): current_file("") {
+  current_file[0] = '\0';
+
   win = Widget_Factory::new_window("VRFig");
 
   // Create tool list
@@ -72,6 +107,9 @@ MainView::MainView() {
   Fl_Dockable_Window *toolbar = Widget_Factory::new_toolbar();
   Fl_Menu_Button *file_menu = Widget_Factory::new_menu_button("File");
   file_menu->menu(file_popup);
+  file_popup[1].callback(cb_load, this);
+  file_popup[3].callback(cb_save, this);
+  file_popup[4].callback(cb_save_as, this);
   file_popup[5].callback(cb_exit, this);
 
   // Create tool selection button (taken from FLPDA)
@@ -110,6 +148,7 @@ MainView::MainView() {
 
   // Create the tools choice
   tools_choice = new ToolsChoice(0, 0, tools);
+  tools_choice->end();
   tools_choice->callback(cb_tool_select, this);
 
   win->end();
@@ -119,6 +158,45 @@ MainView::MainView() {
   active_tool = *tools->begin();
   tools_button->set_active_tool(active_tool);
   editor->set_tool(active_tool);
+
+  // Check if $HOME/figures exists and if not, whether it should be created
+  string path("");
+  char *home = getenv("HOME");
+  if (home) {
+    path.assign(home);
+    path.append("/figures");
+    struct stat stat_info;
+    if (stat(path.data(), &stat_info)) {
+
+      // Create $HOME/figures if user accepts
+      if (fl_ask("$HOME/figures does not exist. Would you like to create it "
+                 "for VRFig figure files?")) {
+        if (mkdir(path.data(), 0777)) {
+          fl_alert("Could not create $HOME/figures.");
+          path.assign("");
+        }
+      } else
+        path.assign("");
+    }
+  }
+
+  // Fallback to current working directory or root as a last resort
+  if (path.length() == 0) {
+    char directory[256];
+    if (!getcwd(directory, 256))
+      path.assign("/");
+    path.assign(directory);
+  }
+
+  // Initialize icons for file chooser
+  new BitmapFileIcon(&directory_bitmap, "*", FileIcon::DIRECTORY);
+  new BitmapFileIcon(&vfg_bitmap, "*.vfg", FileIcon::PLAIN);
+  
+  // Create file choosers
+  file_chooser_save = new FileChooser(
+    path.data(), "*.vfg", FileChooser::CREATE, "VRFig Save As");
+  file_chooser_load = new FileChooser(
+    path.data(), "*.vfg", FileChooser::SINGLE, "VRFig Load");
 }
 
 void MainView::cb_exit(Fl_Widget *widget, void *data) {
@@ -175,4 +253,46 @@ void MainView::cb_zoomin(Fl_Widget *widget, void *data) {
     view->editor->set_scaling(scaling);
     view->editor->set_origin(ox, oy);
   }
+}
+
+void MainView::cb_load(Fl_Widget *widget, void *data) {
+  MainView *view = reinterpret_cast<MainView *>(data);
+  view->file_chooser_load->show();
+  while (view->file_chooser_load->visible())
+    Fl::wait();
+  if (!(view->file_chooser_load->value()))
+    return;
+  view->current_file.assign(view->file_chooser_load->value());
+  cb_revert(widget, data);
+}
+
+void MainView::cb_revert(Fl_Widget *widget, void *data) {
+  MainView *view = reinterpret_cast<MainView *>(data);
+  if (view->current_file.length() == 0) {
+    fl_message("No file to revert from.");
+    return;
+  }
+
+  // XXX: Enter the actual loading code here
+}
+
+void MainView::cb_save(Fl_Widget *widget, void *data) {
+  MainView *view = reinterpret_cast<MainView *>(data);
+  
+  // Check if actually a Save As operation
+  if (view->current_file.length() == '\0')
+    cb_save_as(widget, data);
+
+  // XXX: Enter the actual saving code here
+}
+
+void MainView::cb_save_as(Fl_Widget *widget, void *data) {
+  MainView *view = reinterpret_cast<MainView *>(data);
+  view->file_chooser_save->show();
+  while (view->file_chooser_save->visible())
+    Fl::wait();
+  if (!(view->file_chooser_save->value()))
+    return;
+  view->current_file.assign(view->file_chooser_save->value());
+  cb_save(widget, data);
 }
