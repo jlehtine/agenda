@@ -1,4 +1,4 @@
-// $Id: LabelTool.hpp,v 1.1 2001-05-25 22:32:15 jle Exp $
+// $Id: LabelTool.hpp,v 1.2 2001-05-26 19:53:05 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -22,6 +22,7 @@
 #ifndef __LabelTool_hpp_INCLUDED__
 #define __LabelTool_hpp_INCLUDED__
 
+#include <string>
 #include "Tool.hpp"
 #include "Textual.hpp"
 
@@ -34,6 +35,9 @@ protected:
 
   /** The current edit position */
   size_t position;
+
+  /** The original text of the element when the element was selected */
+  string org_text;
 
   /**
    * Selects the specified element. Places the cursor at the end of the
@@ -75,7 +79,7 @@ protected:
 
 public:
   
-  inline LabelTool(): element(0) {}
+  inline LabelTool(): element(0), org_text("") {}
 
   virtual const char *get_name() const;
 

@@ -1,4 +1,4 @@
-// $Id: LabelTool.cc,v 1.2 2001-05-26 16:13:10 jle Exp $
+// $Id: LabelTool.cc,v 1.3 2001-05-26 19:53:05 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -20,18 +20,70 @@
  *------------------------------------------------------------------------*/
 
 #include <vector.h>
+#include <string.h>
 #include <FL/Fl.H>
 #include <FL/Enumerations.H>
 #include <FL/Fl_Bitmap.H>
 #include <FL/Fl_Window.H>
 #include <FL/fl_draw.H>
 #include "LabelTool.hpp"
+#include "Action.hpp"
 #include "elements/Label.hpp"
 #include "icons/text_icon.xbm"
 #include "vrfig.hpp"
 
 static Fl_Bitmap text_bitmap
 (text_icon_bits, text_icon_width, text_icon_height);
+
+/**
+ * An action for undoing label modifications.
+ */
+class LabelAction : public Action {
+
+protected:
+
+  /** The view */
+  FigureView *view;
+
+  /** The edited element */
+  Textual *element;
+
+  /** The original text for the element (empty string if new created) */
+  char *text;
+  
+  /** Whether the element was deleted (because of empty string) */
+  bool deleted;
+
+public:
+
+  LabelAction(FigureView *view, Textual *element, const char *_text,
+                     bool deleted):
+    view(view), element(element), deleted(deleted) {
+    text = new char[strlen(_text) + 1];
+    strcpy(text, _text);
+  }
+
+  virtual ~LabelAction() {
+    delete text;
+  }
+
+  virtual void undo() {
+    if (text[0] == '\0') {
+      view->remove_element(dynamic_cast<Element *>(element));
+    } else {
+      element->set_text(text);
+      if (deleted)
+        view->add_element(dynamic_cast<Element *>(element));
+      view->redraw();
+    }
+  }
+
+  virtual void commit() {
+    if (deleted)
+      delete element;
+  }
+
+};
 
 const char *LabelTool::get_name() const {
   static const char *name = "label";
@@ -186,6 +238,7 @@ void LabelTool::select(Textual *elem, FigureView *view) {
   // Calculate the cursor position
   position = elem->get_text_length();
   element = elem;
+  org_text.assign(elem->get_text());
   
   // Draw the cursor
   draw_xorred_text_cursor(view);
@@ -204,9 +257,18 @@ void LabelTool::unselect(FigureView *view) {
     if (element->get_text_length() == 0) {
       Element *elem = dynamic_cast<Element *>(element);
       view->get_figure()->remove_element(elem);
+      if (org_text.length() > 0)
+        view->get_action_buffer()->add_action
+          (new LabelAction(view, element, org_text.c_str(), true));
     }
+
+    // Otherwise store the edit action
+    else if (strcmp(element->get_text(), org_text.c_str()))
+      view->get_action_buffer()->add_action
+        (new LabelAction(view, element, org_text.c_str(), false));
     
     element = 0;
+    org_text.erase();
   }
 }
 
