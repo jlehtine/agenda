@@ -10,8 +10,8 @@ class AboutWindow {open
   Function {AboutWindow()} {open
   } {
     Fl_Window win {
-      label {About NPuzzle} open
-      private xywh {1048 542 160 148} color 7 resizable modal visible
+      label {About NPuzzle} open selected
+      private xywh {1054 571 160 148} color 7 resizable modal visible
     } {
       Fl_Box {} {
         label NPuzzle
@@ -30,19 +30,19 @@ class AboutWindow {open
         xywh {20 95 120 20} labelsize 12
       }
       Fl_Group {} {open
-        xywh {0 130 160 20} box UP_BOX
+        xywh {0 135 160 15} box UP_BOX
       } {
         Fl_Button {} {
           label Done
           callback {win->hide();}
-          xywh {0 130 35 20} labelsize 10
+          xywh {0 135 35 15} labelsize 10
         }
         Fl_Box {} {
-          xywh {35 130 125 20} resizable
+          xywh {35 135 125 15} resizable
         }
       }
-      Fl_Box {} {selected
-        xywh {0 120 160 10} resizable
+      Fl_Box {} {
+        xywh {0 125 160 10} resizable
       }
     }
   }

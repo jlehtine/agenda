@@ -10,31 +10,30 @@ class InstructionsWindow {open
   Function {InstructionsWindow()} {open
   } {
     Fl_Window win {
-      label Instructions open
-      private xywh {1041 486 160 200} color 7 resizable modal visible
+      label Instructions open selected
+      private xywh {1047 515 160 200} color 7 resizable modal visible
     } {
       Fl_Box instructions_text {
         label Instructions
-        private xywh {10 20 140 155} box FLAT_BOX color 7 align 1 resizable
+        private xywh {5 20 150 160} box FLAT_BOX color 7 align 1 resizable
         code0 {\#include <FL/Fl_Multiline_Output.H>}
         class Fl_Multiline_Output
       }
       Fl_Group {} {open
-        xywh {0 180 160 20} box UP_BOX
+        xywh {0 185 160 15} box UP_BOX
       } {
         Fl_Button {} {
           label Done
           callback {win->hide();}
-          xywh {0 180 40 20} labelsize 10
+          xywh {0 185 40 15} labelsize 10
         }
         Fl_Box {} {
-          xywh {40 180 120 20} resizable
+          xywh {40 185 120 15} resizable
         }
       }
     }
     code {instructions_text->value("\\n\\"15 puzzle\\" is a famous yet\\nvery simple game. It has\\nbeen used in AI research as\\na well defined test problem.\\n\\nThe idea is to order the\\nnumbered tiles by moving\\nthem one at a time. The\\nbottom right corner should\\nbe left empty.");
-instructions_text->textsize(10);} {selected
-    }
+instructions_text->textsize(10);} {}
   }
   Function {show()} {open return_type void
   } {
