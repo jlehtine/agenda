@@ -1,4 +1,4 @@
-// $Id: ToolsChoice.cc,v 1.2 2001-05-18 05:14:44 jle Exp $
+// $Id: ToolsChoice.cc,v 1.3 2001-05-19 06:18:08 jle Exp $
 
 #include <FL/Fl.H>
 #include <FL/Enumerations.H>
@@ -67,7 +67,7 @@ int ToolsChoice::handle(int event) {
         selected_tool = (*tools)[tool];
         fl_color(labelcolor());
         fl_rect(x * CELL_SIZE + 2, y * CELL_SIZE + 2,
-                CELL_SIZE - 2, CELL_SIZE - 2);
+                CELL_SIZE, CELL_SIZE);
         waiting_release = true;
         return 1;
       }
