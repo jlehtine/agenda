@@ -1,4 +1,4 @@
-// $Id: Action.hpp,v 1.1 2001-05-26 13:02:30 jle Exp $
+// $Id: Action.hpp,v 1.2 2001-05-26 14:25:19 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -28,17 +28,15 @@
  * interface and use it to update the ActionBuffer object.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 class Action {
 
 public:
 
   /**
-   * Old actions will be deleted to make space for new actions. At this point
-   * it is safe to delete all such objects which could not have been used
-   * after this action. For example, the deleted elements are not really
-   * deleted until in the destructor of the corresponding actions.
+   * Destructor for the action object. Notice that action objects are deleted
+   * when the effects become permanent _OR_ when they have been undone.
    */
   virtual ~Action() {};
 
@@ -52,10 +50,16 @@ public:
   virtual bool isReversible() const;
 
   /**
-   * Undos the action.
+   * Undos the action. This method is called when the action is undone.
    */
-  virtual void undo() const = 0;
-  
+  virtual void undo() = 0;
+
+  /**
+   * Commits the action record making the effects permanent. This method
+   * is called when the action is thrown out of the buffer therefore
+   * committing to the action effects.
+   */
+  virtual void commit() {}
 };
 
 #endif

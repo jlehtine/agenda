@@ -1,4 +1,4 @@
-// $Id: Editor.cc,v 1.7 2001-05-23 12:47:49 jle Exp $
+// $Id: Editor.cc,v 1.8 2001-05-26 14:25:19 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -21,8 +21,8 @@
 
 #include "Editor.hpp"
 
-Editor::Editor(int x, int y, int w, int h): 
-  FigureView(x, y, w, h), tool(0) {}
+Editor::Editor(int x, int y, int w, int h, ActionBuffer *abuffer): 
+  FigureView(x, y, w, h, abuffer), tool(0) {}
 
 void Editor::set_figure(Figure *figure_) {
   if (tool && figure)

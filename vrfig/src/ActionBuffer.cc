@@ -1,4 +1,4 @@
-// $Id: ActionBuffer.cc,v 1.1 2001-05-26 13:02:31 jle Exp $
+// $Id: ActionBuffer.cc,v 1.2 2001-05-26 14:25:19 jle Exp $
 
 
 /*--------------------------------------------------------------------------
@@ -28,6 +28,7 @@ void ActionBuffer::add_action(Action *action) {
   // Check if we need to cleanup the oldest action
   if (buffer_count >= ACTION_BUFFER_LENGTH) {
     Action *old = buffer[buffer_tail];
+    old->commit();
     delete old;
     buffer_tail++;
     buffer_tail &= ACTION_BUFFER_LENGTH - 1;

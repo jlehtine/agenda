@@ -1,4 +1,4 @@
-// $Id: FigureView.hpp,v 1.5 2001-05-23 12:47:50 jle Exp $
+// $Id: FigureView.hpp,v 1.6 2001-05-26 14:25:19 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -24,6 +24,7 @@
 
 #include <FL/Fl_Widget.H>
 #include "Figure.hpp"
+#include "ActionBuffer.hpp"
 #include "mathutil.hpp"
 
 /** Enumeration for control point drawing style */
@@ -33,7 +34,7 @@ enum cp_drawing_style { CP_NONE, CP_NORMAL, CP_SELECTED };
  * A widget which draws the associated figure.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 class FigureView : public Fl_Widget {
 
@@ -51,13 +52,16 @@ protected:
   /** The scaling (16.16 fixed) */
   u_fp16 scaling;
 
+  /** The action buffer associated with the figure */
+  ActionBuffer *action_buffer;
+
 public:
 
   /**
    * Constructs a new view and initializes it for default look. No
    * figure is initially associated with the view.
    */
-  FigureView(int x, int y, int w, int h);
+  FigureView(int x, int y, int w, int h, ActionBuffer *abuffer);
 
   virtual ~FigureView() {};
 
@@ -76,6 +80,15 @@ public:
    */
   inline Figure *get_figure() {
     return figure; 
+  }
+
+  /**
+   * Returns the action buffer associated with the view.
+   *
+   * @return the associated action buffer
+   */
+  inline ActionBuffer *get_action_buffer() {
+    return action_buffer;
   }
 
   /**

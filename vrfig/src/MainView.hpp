@@ -1,4 +1,4 @@
-// $Id: MainView.hpp,v 1.10 2001-05-26 13:02:30 jle Exp $
+// $Id: MainView.hpp,v 1.11 2001-05-26 14:25:19 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -26,7 +26,6 @@
 #include <FL/Fl_Widget.H>
 #include <FL/Fl_Button.H>
 #include "Editor.hpp"
-#include "ActionBuffer.hpp"
 #include "ToolsChoice.hpp"
 #include "espws/FileChooser.h"
 
@@ -38,7 +37,7 @@ class ToolsButton;
  * a subclass of Fl_Window.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  */
 class MainView {
 
@@ -49,9 +48,6 @@ protected:
 
   /** The editor widget */
   Editor *editor;
-
-  /** The action buffer */
-  ActionBuffer *action_buffer;
 
   /** The tools available */
   vector<Tool *> *tools;

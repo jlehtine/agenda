@@ -1,4 +1,4 @@
-// $Id: Editor.hpp,v 1.4 2001-05-23 12:47:50 jle Exp $
+// $Id: Editor.hpp,v 1.5 2001-05-26 14:25:19 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -24,6 +24,7 @@
 
 #include "FigureView.hpp"
 #include "Tool.hpp"
+#include "ActionBuffer.hpp"
 
 /**
  * The widget used for the editing area. This class is responsible for
@@ -31,7 +32,7 @@
  * the tool specific drawing hooks.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 class Editor : public FigureView {
 
@@ -46,7 +47,7 @@ public:
    * Constructs a new editor and initializes it for default look. No
    * figure or callback hooks are associated with the editor.
    */
-  Editor(int x, int y, int w, int h);
+  Editor(int x, int y, int w, int h, ActionBuffer *abuffer);
 
   virtual void set_figure(Figure *figure);
 

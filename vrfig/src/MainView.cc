@@ -1,4 +1,4 @@
-// $Id: MainView.cc,v 1.18 2001-05-26 13:02:30 jle Exp $
+// $Id: MainView.cc,v 1.19 2001-05-26 14:25:19 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -40,11 +40,12 @@
 #include <FL/fl_ask.H>
 #include "MainView.hpp"
 #include "ToolFactory.hpp"
+#include "ElementFactory.hpp"
+#include "ActionBuffer.hpp"
 #include "mathutil.hpp"
 #include "espws/FileChooser.h"
 #include "icons/directory_icon.xbm"
 #include "icons/vfg_icon.xbm"
-#include "ElementFactory.hpp"
 
 static Fl_Bitmap vfg_bitmap
 (vfg_icon_bits, vfg_icon_width, vfg_icon_height);
@@ -122,9 +123,6 @@ static Fl_Menu_Item info_popup[] = {
 
 MainView::MainView(): current_file("") {
 
-  // Create new action buffer
-  action_buffer = new ActionBuffer();
-
   win = Widget_Factory::new_window("VRFig");
 
   // Create tool list
@@ -156,7 +154,6 @@ MainView::MainView(): current_file("") {
 
   undo_button = Widget_Factory::new_button("Undo", cb_undo, this);
   undo_button->deactivate();
-  action_buffer->set_callback(cb_action_buffer, this);
   Fl_Button *zoomout_button = 
     Widget_Factory::new_button("-", cb_zoomout, this);
   zoomout_button->resize(zoomout_button->x(), zoomout_button->y(),
@@ -177,7 +174,9 @@ MainView::MainView(): current_file("") {
   win->add_dockable(toolbar, 1);
 
   // Create editor view
-  editor = new Editor(0, 0, win->w(), win->h() - toolbar->h());
+  editor = new Editor(0, 0, win->w(), win->h() - toolbar->h(),
+                      new ActionBuffer());
+  editor->get_action_buffer()->set_callback(cb_action_buffer, this);
   win->contents()->add(editor);
   win->contents()->resizable(editor);
   editor->set_figure(new Figure());
@@ -236,7 +235,7 @@ MainView::MainView(): current_file("") {
 }
 
 bool MainView::check_discard() {
-  if (action_buffer->is_dirty())
+  if (editor->get_action_buffer()->is_dirty())
     return fl_ask("This will discard the changes made to the current "
                   "figure. Do you want to continue?");
   else
@@ -272,6 +271,8 @@ void MainView::cb_tool_select(Fl_Widget *widget, void *data) {
 }
 
 void MainView::cb_undo(Fl_Widget *widget, void *data) {
+  MainView *view = reinterpret_cast<MainView *>(data);
+  view->editor->get_action_buffer()->undo_action();
 }
 
 void MainView::cb_zoomout(Fl_Widget *widget, void *data) {

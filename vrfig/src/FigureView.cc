@@ -1,4 +1,4 @@
-// $Id: FigureView.cc,v 1.4 2001-05-23 12:47:50 jle Exp $
+// $Id: FigureView.cc,v 1.5 2001-05-26 14:25:19 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -26,11 +26,13 @@
 #include "FigureView.hpp"
 #include "Element.hpp"
 
-FigureView::FigureView(int x, int y, int w, int h): 
+FigureView::FigureView(int x, int y, int w, int h, ActionBuffer *abuffer): 
   Fl_Widget(x, y, w, h), figure(0),
-  origin_x(0), origin_y(0), scaling(0x10000) {}
+  origin_x(0), origin_y(0), scaling(0x10000),
+  action_buffer(abuffer) {}
 
 void FigureView::set_figure(Figure *_figure) {
+  action_buffer->clear();
   figure = _figure;
   origin_x = 0;
   origin_y = 0;
