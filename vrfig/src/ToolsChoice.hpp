@@ -1,4 +1,4 @@
-// $Id: ToolsChoice.hpp,v 1.1 2001-05-17 19:35:28 jle Exp $
+// $Id: ToolsChoice.hpp,v 1.2 2001-05-18 05:14:44 jle Exp $
 
 #ifndef __ToolsChoice_hpp_INCLUDED__
 #define __ToolsChoice_hpp_INCLUDED__
@@ -12,7 +12,7 @@
  * Provides the menu for selecting the active tool.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 class ToolsChoice : public Fl_Window {
 
@@ -29,6 +29,9 @@ protected:
 
   /** The currently selected tool */
   Tool *selected_tool;
+
+  /** Whether waiting for button release */
+  bool waiting_release;
   
 public:
 
