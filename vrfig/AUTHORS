@@ -1,0 +1,45 @@
+AUTHORS
+=======
+
+The VRFig was written and is being developed by
+
+	Johannes Lehtinen
+	<johannes.lehtinen@iki.fi>
+
+
+However, the VRFig wouldn't exist without the available open source
+software and tools. The VRFig uses several external open source
+software components by various authors. The following list tries to
+acknowledge the non-system libraries utilized by VRFig (sorry if I
+missed some).
+
+	* The Fast Light Tool Kit (FLTK) user interface library
+          originally by Bill Spitzak and currently being maintained by
+          Michael Sweet, Craig P. Earls, Bill Spitzak and others
+          (patched by Agenda Computing for their VR3 Linux PDA) (GNU
+          Library General Public License)
+
+	* The Fast Light Environment Kit (FLEK) by James Dean Palmer
+          and others (patched by Agenda Computing for their VR3 Linux
+          PDA) (GNU Library General Public License)
+
+	* The flpda user interface library by Agenda Computing and
+          Bradley D. LaRonde (GNU General Public License)
+
+	* The Expat XML parser library by James Clark (MIT/X
+          Consortium License)
+
+	* File chooser from ESP Widget Set by Easy Software Products
+          (modified by Johannes Lehtinen to match VR3 look and feel)
+          (GNU General Public License)
+
+
+Special thanks go to Bradley D. LaRonde for pushing the development of
+Linux and open source software based PDA products.
+
+If you would like to participate the development process by fixing
+bugs or adding features, please read the README file for instructions
+on how to contribute.
+
+--
+Johannes Lehtinen <johannes.lehtinen@iki.fi>

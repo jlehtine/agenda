@@ -1,0 +1,186 @@
+README
+======
+
+You can find the latest information and release at the URL
+
+	http://www.iki.fi/jle/agenda/vrfig/
+
+For contacting the author, see the file 'AUTHOR'.
+
+
+Description
+-----------
+
+VRFig is a simple tool for drawing figures. It has been developed for
+PDA use and especially for the Agenda Computing VR3 Linux PDA *). The
+goal is to be able to plan things and sketch technical drawings on the
+road without always dragging a laptop computer around. The intended
+ultimate use could be sketching or browsing a software architecture
+diagram while sitting in a bus, for example. The biggest challenge is
+to overcome the inherent limitations of a PDA user interface.
+
+Wouldn't it be easier to stick to pen and paper then? I don't believe
+myself that anything PDA based could come close to the usability of
+pen and paper (as long as we are talking about the palm sized PDAs).
+However, the one advantage VRFig has over pen and paper is that it is
+easier to import/export figures from/to desktop drawing programs.
+VRFig is not intended to be a stand-alone fully featured vector
+graphics editor but a kind of off-line terminal to a desktop drawing
+program.
+
+
+*) http://www.agendacomputing.com/
+
+
+License
+-------
+
+VRFig, a vector graphics editor for PDA environment
+Copyright 2001 Johannes Lehtinen
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or (at
+your option) any later version. See the file 'COPYING' for details.
+
+Parts of the source code (file chooser to be exact) is strongly based
+on the ESP Widget Set 2.0 by Easy Software Products. It has been just
+modified to match the VR3 look and feel. This code can be found in the
+subdirectory 'src/espws'. More information about the ESP Widget Set
+and the original source code can be obtained at the URL
+
+	http://www.easysw.com/~mike/espws/
+
+
+Status
+------
+
+VRFig is currently under development. It is not yet ready for real
+indented use. These early releases are mostly targeted to other
+developers who are interested in participating the development process
+or who want to reuse VRFig source code. VRFig can be already used for
+drawing figures and it is able to save and load them but the set of
+drawing primitives is still rather limited. The user interface also
+needs work and the desktop side interface to desktop drawing programs
+(such as XFig) does not exist yet.
+
+See the file 'NEWS' for news about the current release and the file
+'ChangeLog' for the latest changes.
+
+
+Binary distributions
+--------------------
+
+The binary distributions for Agenda VR3 are named as
+'vrfig-vr3-VERSION.tar.gz' or 'vrfig-VERSION.vrp'. The first one is
+the best choice if you want to manually install the vrfig to VR3 while
+the latter is mainly for romdisk builders.
+
+To install a binary distribution ('vrfig-vr3-VERSION.tar.gz') just
+extract the archive and move the binary file 'vrfig' to your VR3 using
+rsync. You can place the file in '/usr/local/bin' or
+'/home/default/bin' for example. To make VRFig appear in the system
+menu you can manually create the necessary symbolic link or let a tool
+such as LaPaMaSu (by ???) do it for you. More information about
+LaPaMaSu at
+
+     ???
+
+There are no usage instructions at this point. Like I said, it is not
+yet ready for prime time, sorry :)
+
+
+Source code distributions
+-------------------------
+
+The source code distributions are named as 'vrfig-VERSION.tar.gz'. If
+you downloaded a source code distribution you need to compile the
+VRFig yourself. To compile the VRFig for Agenda VR3 you need a
+suitable cross-compiling environment. For further information about
+Agenda VR3 development, see the Andrej Cedilnik's great info page at
+
+	http://www.cs.umbc.edu/~acedil1/agenda/
+
+To compile the VRFig you must have the following libraries installed.
+The version numbers in parentheses are versions that are known to work
+but newer versions might work as well if they are backwards
+compatible. If you have a full Agenda VR3 cross-compile environment
+then the only thing you probably need to cross-compile is the Expat
+XML parser library.
+
+	* standard C/C++ libraries (glibc 2.1.2 & 2.0.7)
+
+	* X development environment (XFree86 3.3.6)
+
+	* Fast Light Tool Kit (FLTK) 1 (1.0.9)
+	  with Agenda Computing patches
+
+	  http://www.fltk.org/
+	  http://developer.agendacomputing.com/
+
+	* Fast Light Environment Kit (FLEK) (2001-03-05)
+	  with Agenda Computing patches
+
+	  http://flek.sourceforge.net/
+	  http://developer.agendacomputing.com/
+
+	* flpda user interface library (0.3)
+
+	  http://developer.agendacomputing.com/
+
+	* Expat XML parser library (0.7.13)
+	  (you want to link with a static Expat library if you intend
+	  to run the resulting binary on VR3)
+
+	  http://expat.sourceforge.net/
+
+
+See the file 'INSTALL' for generic build instructions. The VRFig build
+system uses automake and autoconf so it should be very GNUish.
+
+There are no usage instructions at this point. Like I said, it is not
+yet ready for prime time, sorry :)
+
+
+Contributing
+------------
+
+If you would like to contribute to the VRFig development process,
+please do so :) You can contribute by
+
+	* Sending bug reports
+
+	* Sending bug fixes
+
+	* Implementing new tools and elements
+
+	* Having new insights about how things should be and letting
+          me know about them
+
+	* Going through the documentation and correcting my English
+
+	* Writing documentation for developers or users
+
+	* Supporting other open source projects (VRFig wouldn't exist
+          without the available open source software and tools)
+
+
+The preferred contact method is e-mail.
+
+If you have fixed a bug or would like to implement a new tool or
+element for the next VRFig release please send me your modifications
+as diffs using the '-u' option of 'diff' (unified context). Try to
+base your modifications on a fresh (latest) release and remember to
+tell me which release you used as a base for your modifications.
+
+I'll set up a CVS repository somewhere if it turns out that there are
+actually people who would like to contribute regularly.
+
+At the moment the only real developer documentation available is the
+C++ API documentation generated by Doc++. You can find it in the
+subdirectory 'doc/developer/api'. To implement a new element or tool,
+the source code for the existing elements/tools should be useful
+reading.
+
+--
+Johannes Lehtinen <johannes.lehtinen@iki.fi>

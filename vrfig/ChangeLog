@@ -1,0 +1,61 @@
+2001-05-23  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
+
+	* Cleaned up the code and user interface for the initial beta
+	  release
+
+	* Added the about dialog and deactivated those buttons which are
+	  not yet fully implemented
+
+	* Added new element: Ellipse (and the drawing tool for it)
+
+2001-05-22  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
+
+	* Added new element: Rectangle (and the drawing tool for it)
+
+	* Added new interface and tool: Elements implementing the
+	  Controllable interface can be edited by moving control points
+	  (using the EditTool)
+
+	* Added new tool: Delete
+
+	* Added new tool: Move
+
+2001-05-21  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
+
+	* Implemented the deserialization framework using the Expat XML
+	  parsing library. Polyline based figures can now be loaded and
+	  saved, yahoo :)
+
+2001-05-20  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
+
+	* Modified the FileChooser from the ESP Widget Set to use flpda
+	  and match Agenda VR3 look and feel
+
+2001-05-19  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
+
+	* The first element implements the full element framework:
+	  Polyline
+
+	* Generic framework for elements and tools
+
+2001-05-18  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
+
+	* Added new generic tool selection widget
+
+2001-05-16  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
+
+	* Commented away the experimental user interface code which tries
+	  to guess what the user is drawing (concentrate on making the
+	  basic things work first)
+
+	* Extended FLTK with few functions to draw in xorred mode
+
+2001-05-08  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
+
+	* Fixed point arithmetic for solving the required geometric
+	  calculations without floating point instructions
+
+2001-05-05  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
+
+	* Project started, imported the initial files to the CVS
+	  repository
