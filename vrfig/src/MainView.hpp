@@ -1,4 +1,4 @@
-// $Id: MainView.hpp,v 1.4 2001-05-17 19:35:27 jle Exp $
+// $Id: MainView.hpp,v 1.5 2001-05-19 08:43:43 jle Exp $
 
 #ifndef __MainWindow_hpp_INCLUDED__
 #define __MainWindow_hpp_INCLUDED__
@@ -8,13 +8,15 @@
 #include "Editor.hpp"
 #include "ToolsChoice.hpp"
 
+class ToolsButton;
+
 /**
  * The MainView class controls the main view of the drawing application
  * including the drawing area and toolbar. Notice that this class is not
  * a subclass of Fl_Window.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 class MainView {
 
@@ -31,6 +33,9 @@ protected:
 
   /** The currently active tool */
   Tool *active_tool;
+
+  /** The tool selection button */
+  ToolsButton *tools_button;
 
   /** The menu window for tool selection */
   ToolsChoice *tools_choice;

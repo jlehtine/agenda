@@ -1,4 +1,4 @@
-// $Id: MainView.cc,v 1.9 2001-05-18 13:16:54 jle Exp $
+// $Id: MainView.cc,v 1.10 2001-05-19 08:43:29 jle Exp $
 
 #include <stdlib.h>
 #include <flpda/Widget_Factory.h>
@@ -75,7 +75,7 @@ MainView::MainView() {
   file_popup[5].callback(cb_exit, this);
 
   // Create tool selection button (taken from FLPDA)
-  ToolsButton *tools_button = new ToolsButton
+  tools_button = new ToolsButton
     (0, 0, Widget_Factory::buttonheight(), Widget_Factory::buttonheight());
 #ifdef FLTK_VR3
   tools_button->box(VR_BUTTON_UP_BOX);
@@ -110,6 +110,7 @@ MainView::MainView() {
 
   // Create the tools choice
   tools_choice = new ToolsChoice(0, 0, tools);
+  tools_choice->callback(cb_tool_select, this);
 
   win->end();
   win->show();
@@ -139,8 +140,10 @@ void MainView::cb_tool_select(Fl_Widget *widget, void *data) {
   MainView *view = reinterpret_cast<MainView *>(data);
   Tool *old_tool = view->active_tool;
   view->active_tool = (dynamic_cast<ToolsChoice *>(widget))->get_tool();
-  if (view->active_tool != old_tool)
+  if (view->active_tool != old_tool) {
     view->editor->set_tool(view->active_tool);
+    view->tools_button->set_active_tool(view->active_tool);
+  }
 }
 
 void MainView::cb_undo(Fl_Widget *widget, void *data) {
