@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.10 2001-05-21 00:47:36 jle Exp $
+## $Id: Makefile.am,v 1.11 2001-05-22 19:50:02 jle Exp $
 
 srcdir = @srcdir@
 VPATH = @srcdir@
@@ -19,6 +19,7 @@ vrfig_SOURCES = vrfig.hpp vrfig.cc \
 	Tool.hpp \
 	Selectable.hpp Selectable.cc \
 	Movable.hpp \
+	Controllable.hpp \
 	Editor.hpp Editor.cc \
 	ToolFactory.hpp ToolFactory.cc \
 	ToolsChoice.hpp ToolsChoice.cc \
