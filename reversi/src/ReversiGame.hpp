@@ -1,4 +1,4 @@
-// $Id: ReversiGame.hpp,v 1.2 2000-11-03 20:35:21 jle Exp $
+// $Id: ReversiGame.hpp,v 1.3 2000-11-03 21:04:38 jle Exp $
 
 #ifndef __ReversiGame_hpp_INCLUDED__
 #define __ReversiGame_hpp_INCLUDED__
@@ -10,7 +10,7 @@ enum ReversiChipColor { WHITE = 0, BLACK = 1, EMPTY = 2 };
  * Game logic and game state wrapper for Reversi.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 class ReversiGame {
 
@@ -123,6 +123,15 @@ public:
   }
 
 protected:
+
+  /**
+   * Check if the chip in the specified position can be moved.
+   *
+   * @param x the x coordinate of the position
+   * @param y the y coordinate of the position
+   * @return whether move is possible or not
+   */
+  bool can_move_chip(int x, int y);
 
   /**
    * Sets the specified position to given chip color.
