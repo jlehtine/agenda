@@ -1,4 +1,4 @@
-// $Id: PolyLineTool.cc,v 1.3 2001-05-23 12:47:52 jle Exp $
+// $Id: PolyLineTool.cc,v 1.4 2001-05-27 13:21:46 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -46,112 +46,178 @@ void PolyLineTool::draw_icon(int x, int y, int w, int h) const {
 }
 
 void PolyLineTool::deactivated(FigureView *view) {
-  last_polyline = 0;
-  drawing_segment = false;
+  polyline = 0;
 }
 
 void PolyLineTool::draw(FigureView *view) {
   fl_color(FL_WHITE);
-  if (drawing_segment)
-    fle_xorred_line(last_x, last_y, seg_x, seg_y);
-  else if (last_polyline) {
-    int old_func = fle_xorred_mode();
-    Selectable::draw_select_helper(last_x, last_y);
-    fle_reset_mode(old_func);
+
+  // Draw select helpers
+  int old_func = fle_xorred_mode();
+  const vector<Element *> *elements = view->get_figure()->get_elements();
+  vector<Element *>::const_iterator i = elements->begin();
+  while (i < elements->end()) {
+    PolyLine *pl = dynamic_cast<PolyLine *>(*i);
+    if (pl && !(pl->is_closed())) {
+      const vector<fp16> *vertices = pl->get_vertices();
+      Selectable::draw_select_helper
+        ((*vertices)[0], (*vertices)[1],
+         view->get_origin_x(), view->get_origin_y(), view->get_scaling());
+      int s = vertices->size();
+      if (s > 2)
+        Selectable::draw_select_helper
+          ((*vertices)[s-2], (*vertices)[s-1],
+           view->get_origin_x(), view->get_origin_y(), view->get_scaling());
+    }
+    i++;
   }
+
+  // Draw the line being drawn and remove the old selector
+  if (polyline) {
+    fl_line(start_x, start_y, last_x, last_y);
+    const vector<fp16> *vertices = polyline->get_vertices();
+    int s = vertices->size();
+    Selectable::draw_select_helper
+      ((*vertices)[extend_first ? 0 : s - 2],
+       (*vertices)[extend_first ? 1 : s - 1],
+       view->get_origin_x(), view->get_origin_y(), view->get_scaling());
+  }
+  fle_reset_mode(old_func);
 }
 
 int PolyLineTool::handle(int event, FigureView *view) {
   view->window()->make_current();
 
   switch (event) {
-    vector<fp16> *vertices;
-    vector<fp16>::const_iterator start;
-    int old_func;
-    int start_x, start_y;
 
   case FL_PUSH:
-    if (drawing_segment)
+    if (polyline)
       return 0;
-
-    // Remove the old select helper
-    if (last_polyline) {
+    do {
+      
+      // Find the closest possible starting point
+      start_x = Fl::event_x();
+      start_y = Fl::event_y();
+      last_x = start_x;
+      last_y = start_y;
+      fp16 fx = screen_to_coord(start_x, 
+                                view->get_origin_x(), view->get_scaling());
+      fp16 fy = screen_to_coord(start_y,
+                                view->get_origin_y(), view->get_scaling());
+      u_fp32 min_dist = ~static_cast<u_fp32>(0);
+      const vector<Element *> *elements = view->get_figure()->get_elements();
+      vector<Element *>::const_iterator i = elements->begin();
+      while (i < elements->end()) {
+        PolyLine *pl = dynamic_cast<PolyLine *>(*i);
+        if (pl) {
+          const vector<fp16> *vertices = pl->get_vertices();
+          int s = vertices->size();
+          u_fp32 dist;
+          if (s > 2) {
+            dist = vector_length_sqr_fp16_fp32
+              (fx - (*vertices)[0], fy - (*vertices)[1]);
+            if (dist < min_dist) {
+              polyline = pl;
+              extend_first = true;
+              min_dist = dist;
+              start_x = coord_to_screen
+                ((*vertices)[0], view->get_origin_x(), view->get_scaling());
+              start_y = coord_to_screen
+                ((*vertices)[1], view->get_origin_y(), view->get_scaling());
+            }
+          }
+          dist = vector_length_sqr_fp16_fp32
+            (fx - (*vertices)[s-2], fy - (*vertices)[s-1]);
+          if (dist < min_dist) {
+            polyline = pl;
+            extend_first = false;
+            min_dist = dist;
+            start_x = coord_to_screen
+              ((*vertices)[s-2], view->get_origin_x(), view->get_scaling());
+            start_y = coord_to_screen
+              ((*vertices)[s-1], view->get_origin_y(), view->get_scaling());
+          }
+        }
+        i++;
+      }
+      
+      // Check if a new polyline should be created
       fl_color(FL_WHITE);
-      old_func = fle_xorred_mode();
-      Selectable::draw_select_helper(last_x, last_y);
-      fle_reset_mode(old_func);
-    }
+      if (!polyline || 
+          coord_to_screen(fp32_to_fp16(min_dist), view->get_scaling())
+          > CONTINUE_DIST_SQR) {
+        start_x = Fl::event_x();
+        start_y = Fl::event_y();
+        PolyLine *pl = new PolyLine();
+        vector<fp16> *vertices = pl->get_vertices();
+        vertices->insert(vertices->end(),
+                         screen_to_coord(start_x, view->get_origin_x(),
+                                         view->get_scaling()));
+        vertices->insert(vertices->end(),
+                         screen_to_coord(start_y, view->get_origin_y(),
+                                         view->get_scaling()));
+        view->get_figure()->add_element(pl);
+        polyline = pl;
+        extend_first = false;
+        new_polyline = true;
+      } else {
 
-    // Check if a new polyline should be created
-    if (!last_polyline 
-        || vector_length_sqr_int(Fl::event_x() - last_x,
-                                 Fl::event_y() - last_y) > CONTINUE_DIST_SQR) {
-      PolyLine *pl = new PolyLine();
-      vertices = pl->get_vertices();
-      last_x = Fl::event_x();
-      last_y = Fl::event_y();
-      vertices->insert(vertices->end(),
-                       screen_to_coord(last_x, view->get_origin_x(),
-                                       view->get_scaling()));
-      vertices->insert(vertices->end(),
-                       screen_to_coord(last_y, view->get_origin_y(),
-                                       view->get_scaling()));
-      view->add_element(pl);
-      last_polyline = pl;
-    }
+        // Hide the extended select helper
+        const vector<fp16> *vertices = polyline->get_vertices();
+        int s = vertices->size();
+        fl_color(FL_WHITE);
+        int old_func = fle_xorred_mode();
+        Selectable::draw_select_helper
+          ((*vertices)[extend_first ? 0 : s - 2],
+           (*vertices)[extend_first ? 1 : s - 1],
+           view->get_origin_x(), view->get_origin_y(), view->get_scaling());
+        fle_reset_mode(old_func);
+        new_polyline = false;
+      }
 
-    drawing_segment = true;
-    seg_x = Fl::event_x();
-    seg_y = Fl::event_y();
-    fl_color(FL_WHITE);
-    fle_xorred_line(last_x, last_y, seg_x, seg_y);
+      fle_xorred_line(start_x, start_y, last_x, last_y);
+    } while (0);
     return 1;
 
   case FL_DRAG:
-    if (!drawing_segment)
+    if (!polyline)
       return 0;
     fl_color(FL_WHITE);
-    fle_xorred_line(last_x, last_y, seg_x, seg_y);
-    seg_x = Fl::event_x();
-    seg_y = Fl::event_y();
-    fle_xorred_line(last_x, last_y, seg_x, seg_y);
+    fle_xorred_line(start_x, start_y, last_x, last_y);
+    last_x = Fl::event_x();
+    last_y = Fl::event_y();
+    fle_xorred_line(start_x, start_y, last_x, last_y);
     return 1;
 
   case FL_RELEASE:
-    if (!drawing_segment)
+    if (!polyline)
       return 0;
-    fl_color(FL_WHITE);
-    fle_xorred_line(last_x, last_y, seg_x, seg_y);
-    seg_x = Fl::event_x();
-    seg_y = Fl::event_y();
-    vertices = last_polyline->get_vertices();
-    start = vertices->begin();
-    start_x = coord_to_screen(*(start++), view->get_origin_x(),
-                              view->get_scaling());
-    start_y = coord_to_screen(*start, view->get_origin_x(),
-                              view->get_scaling());
-    fl_color(FL_BLACK);
-    if (vector_length_sqr_int(start_x - seg_x, start_y - seg_y)
-        <= CONTINUE_DIST_SQR) {
-      fl_line(last_x, last_y, start_x, start_y);
-      last_polyline->set_closed(true);
-      last_polyline = 0;
-    } else {
-      fl_line(last_x, last_y, seg_x, seg_y);
-      vertices->insert(vertices->end(),
-                       screen_to_coord(seg_x, view->get_origin_x(),
+    do {
+      fl_color(FL_BLACK);
+      fl_line(start_x, start_y, last_x, last_y);
+      vector<fp16> *vertices = polyline->get_vertices();
+      vertices->insert(extend_first ? vertices->begin() : vertices->end(),
+                       screen_to_coord(last_x, view->get_origin_x(),
                                        view->get_scaling()));
-      vertices->insert(vertices->end(),
-                       screen_to_coord(seg_y, view->get_origin_y(),
+      vertices->insert(extend_first ? vertices->begin() + 1 : vertices->end(),
+                       screen_to_coord(last_y, view->get_origin_y(),
                                        view->get_scaling()));
-      last_x = seg_x;
-      last_y = seg_y;
+
+      // Draw new select helpers
       fl_color(FL_WHITE);
-      old_func = fle_xorred_mode();
-      Selectable::draw_select_helper(last_x, last_y);
+      int old_func = fle_xorred_mode();
+      if (new_polyline)
+        Selectable::draw_select_helper
+          ((*vertices)[0], (*vertices)[1],
+           view->get_origin_x(), view->get_origin_y(), view->get_scaling());
+      int s = vertices->size();
+      Selectable::draw_select_helper
+        ((*vertices)[extend_first ? 0 : s - 2],
+         (*vertices)[extend_first ? 1 : s - 1],
+         view->get_origin_x(), view->get_origin_y(), view->get_scaling());
       fle_reset_mode(old_func);
-    }
-    drawing_segment = false;
+    } while (0);
+    polyline = 0;
     return 1;
 
   default:

@@ -1,4 +1,4 @@
-// $Id: PolyLineTool.hpp,v 1.3 2001-05-23 12:47:52 jle Exp $
+// $Id: PolyLineTool.hpp,v 1.4 2001-05-27 13:21:46 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -29,33 +29,36 @@
  * Tool for drawing polylines and polygons.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 class PolyLineTool : public Tool {
 
 protected:
 
-  /** The last polyline drawn or 0 for none */
-  PolyLine *last_polyline;
+  /** The polyline being currently extended */
+  PolyLine *polyline;
 
-  /** Whether currently drawing a line segment */
-  bool drawing_segment;
+  /** Whether the point will be added to the start of the polyline */
+  bool extend_first;
 
-  /** The x coordinate of the last fixed point */
+  /** The x screen coordinate of the start point */
+  int start_x;
+
+  /** The y screen coordinate of the start point */
+  int start_y;
+
+  /** The last end point x screen coordinate */
   int last_x;
 
-  /** The y coordinate of the last fixed point */
+  /** The last end point y screen coordinate */
   int last_y;
 
-  /** The last end point x coordinate for the segment */
-  int seg_x;
-
-  /** The last end point y coordinate for the segment */
-  int seg_y;
+  /** Whether drawing a new polyline */
+  bool new_polyline;
 
 public:
 
-  PolyLineTool(): last_polyline(0), drawing_segment(false) {}
+  PolyLineTool(): polyline(0) {}
 
   virtual const char *get_name() const;
 
