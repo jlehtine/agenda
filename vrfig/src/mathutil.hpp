@@ -1,4 +1,4 @@
-// $Id: mathutil.hpp,v 1.10 2001-05-29 18:05:10 jle Exp $
+// $Id: mathutil.hpp,v 1.11 2001-06-10 18:36:43 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -35,28 +35,6 @@ typedef unsigned int u_fp16;
 
 /** An unsigned 32.32 fixed point value */
 typedef unsigned long long u_fp32;
-
-/** Type for point coordinate info. */
-struct Point {
-
-  /** The x coordinate */
-  fp16 x;
-
-  /** The y coordinate */
-  fp16 y;
-
-  Point() {}
-
-  Point(fp16 x, fp16 y): x(x), y(y) {}
-
-  inline bool operator<(Point &p) {
-    return (y < p.y || (y == p.y && x < p.x));
-  }
-
-  inline bool operator==(Point &p) {
-    return (y == p.y && x == p.y);
-  }
-};
 
 inline fp16 int_to_fp16(int i) {
   return i << 16;
@@ -261,18 +239,6 @@ u_fp32 distance_to_line_sqr(
 fp16 project_point_to_vector(fp16 x, fp16 y, fp16 xv, fp16 yv);
 
 /**
- * Transforms the specified figure coordinate to screen coordinate.
- *
- * @param c the figure coordinate
- * @param origin the origin for the current view
- * @param scaling the scaling factor for the current view
- * @return the screen coordinate
- */
-inline int coord_to_screen(fp16 c, fp16 origin, u_fp16 scaling) {
-  return mul_fp16_fp16_int(c - origin, scaling);
-}
-
-/**
  * Transforms the specified length from figure coordinates to screen
  * coordinates.
  *
@@ -280,20 +246,8 @@ inline int coord_to_screen(fp16 c, fp16 origin, u_fp16 scaling) {
  * @param scaling the scaling factor for the current view
  * @return the length in screen coordinates
  */
-inline int coord_to_screen(fp16 l, u_fp16 scaling) {
+inline int length_to_screen(fp16 l, u_fp16 scaling) {
   return mul_fp16_fp16_int(l, scaling);
-}
-
-/**
- * Transforms the specified screen coordinate to figure coordinate.
- *
- * @param sc the screen coordinate
- * @param origin the origin for the current view
- * @param scaling the scaling factor for the current view
- * @return the figure coordinate
- */
-inline fp16 screen_to_coord(int sc, fp16 origin, u_fp16 scaling) {
-  return div_int_fp16u_fp16(sc, scaling) + origin;
 }
 
 /**
@@ -304,7 +258,7 @@ inline fp16 screen_to_coord(int sc, fp16 origin, u_fp16 scaling) {
  * @param scaling the scaling factor for the current view
  * @return the length in figure coordinates
  */
-inline fp16 screen_to_coord(int lc, u_fp16 scaling) {
+inline fp16 length_from_screen(int lc, u_fp16 scaling) {
   return div_int_fp16u_fp16(lc, scaling);
 }
 

@@ -1,4 +1,4 @@
-// $Id: PolyLine.cc,v 1.12 2001-05-29 18:05:10 jle Exp $
+// $Id: PolyLine.cc,v 1.13 2001-06-10 18:36:43 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -142,11 +142,10 @@ void PolyLine::draw(fp16 origin_x, fp16 origin_y, u_fp16 scaling,
   int last_x, last_y;
   if (closed) {
     vector<Point>::const_iterator last = points.end();
-    last_x = coord_to_screen((*last).x, origin_x, scaling);
-    last_y = coord_to_screen((*last).y, origin_y, scaling);
+    last--;
+    (*last).to_screen(origin_x, origin_y, scaling, last_x, last_y);
   } else {
-    last_x = coord_to_screen((*i).x, origin_x, scaling);
-    last_y = coord_to_screen((*i).y, origin_y, scaling);
+    (*i).to_screen(origin_x, origin_y, scaling, last_x, last_y);
     i++;
   }
 
@@ -161,8 +160,8 @@ void PolyLine::draw(fp16 origin_x, fp16 origin_y, u_fp16 scaling,
 
   // Draw the polyline
   while (i < points.end()) {
-    int x = coord_to_screen((*i).x, origin_x, scaling);
-    int y = coord_to_screen((*i).y, origin_y, scaling);
+    int x, y;
+    (*i).to_screen(origin_x, origin_y, scaling, x, y);
     fl_line(last_x, last_y, x, y);
     last_x = x;
     last_y = y;
@@ -203,7 +202,7 @@ ostream &PolyLine::serialize(ostream &os, const char *ns, int indent) const {
 
   output_indent(os, indent);
   output_ns_name(os << "<", ns, elem_points) << 
-    " num=\"" << (points.size() >> 1) << 
+    " num=\"" << points.size() << 
     "\" closed=\"" << (closed ? "true" : "false") << "\">\n";
   vector<Point>::const_iterator i = points.begin();
   while (i < points.end()) {

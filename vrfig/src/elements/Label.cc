@@ -1,4 +1,4 @@
-// $Id: Label.cc,v 1.1 2001-05-25 22:31:01 jle Exp $
+// $Id: Label.cc,v 1.2 2001-06-10 18:36:43 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -134,10 +134,10 @@ void Label::get_bounding_box(fp16 &_x, fp16 &_y, fp16 &_w, fp16 &_h) const {
   fl_font(FL_HELVETICA + FL_BOLD, 16);
   int w=1000, h;
   fl_measure(text.c_str(), w, h);
-  _x = x;
-  _y = y;
   _w = int_to_fp16(w);
   _h = int_to_fp16(h);
+  _x = position.x;
+  _y = position.y - _h;
 }
   
 void Label::draw(fp16 origin_x, fp16 origin_y, u_fp16 scaling,
@@ -150,14 +150,15 @@ void Label::draw(fp16 origin_x, fp16 origin_y, u_fp16 scaling,
     fl_color(FL_BLACK);
   
   // Check whether to draw the text or placeholder box
-  int font_size = coord_to_screen(int_to_fp16(16), 0, scaling);
+  int font_size = length_to_screen(int_to_fp16(16), scaling);
   if (font_size < 8 || font_size > 32) {
     fp16 bx, by, bw, bh;
     get_bounding_box(bx, by, bw, bh);
-    fl_rectf(coord_to_screen(bx, origin_x, scaling),
-             coord_to_screen(by, origin_y, scaling),
-             coord_to_screen(bw, 0, scaling),
-             coord_to_screen(bh, 0, scaling));
+    int sx, sy;
+    position.to_screen(origin_x, origin_y, scaling, sx, sy);
+    fl_rectf(sx, sy,
+             length_to_screen(bw, scaling),
+             length_to_screen(bh, scaling));
   } else {
 
     // Make it either 8, 16 or 32
@@ -174,9 +175,9 @@ void Label::draw(fp16 origin_x, fp16 origin_y, u_fp16 scaling,
     }
 
     fl_font(FL_HELVETICA + FL_BOLD, font_size);
-    fl_draw(text.c_str(),
-            coord_to_screen(x, origin_x, scaling),
-            coord_to_screen(y, origin_y, scaling),
+    int sx, sy;
+    position.to_screen(origin_x, origin_y, scaling, sx, sy);
+    fl_draw(text.c_str(), sx, sy,
             1000, 1000, FL_ALIGN_TOP_LEFT);
   }
   if (xorred)
@@ -190,8 +191,8 @@ ostream &Label::serialize(ostream &os, const char *ns, int indent) const {
   output_indent(os, indent);
   output_ns_name(os << "<", ns, elem_position) <<
     " x=\"";
-  write_fp16(os, x) << "\" y=\"";
-  write_fp16(os, y) << "\"/>\n";
+  write_fp16(os, position.x) << "\" y=\"";
+  write_fp16(os, position.y) << "\"/>\n";
   output_indent(os, indent);
   output_ns_name(os << "<", ns, elem_text) << ">" << text;
   output_ns_name(os << "</", ns, elem_text) << ">\n";
@@ -235,8 +236,8 @@ u_fp32 Label::select_distance_sqr(fp16 x, fp16 y) const {
 }
   
 void Label::move(fp16 xoff, fp16 yoff) {
-  x += xoff;
-  y += yoff;
+  position.x += xoff;
+  position.y += yoff;
 }
 
 const char *Label::get_text() const {
@@ -296,9 +297,11 @@ void Label::draw_text_cursor(size_t pos, fp16 origin_x, fp16 origin_y,
     cursor_x = w;
     cursor_y = h - font_height;
   }
-  int cx = coord_to_screen(x + int_to_fp16(cursor_x), origin_x, scaling);
-  int cy = coord_to_screen(y + int_to_fp16(cursor_y), origin_y, scaling);
-  int ch = coord_to_screen(int_to_fp16(font_height), 0, scaling);
+  Point cp(position.x + int_to_fp16(cursor_x), 
+           position.y + int_to_fp16(cursor_y));
+  int cx, cy;
+  cp.to_screen(origin_x, origin_y, scaling, cx, cy);
+  int ch = length_to_screen(int_to_fp16(font_height), scaling);
   
   // Draw the cursor (two lines)
   int old_func;

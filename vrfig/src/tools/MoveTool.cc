@@ -1,4 +1,4 @@
-// $Id: MoveTool.cc,v 1.7 2001-05-27 11:31:30 jle Exp $
+// $Id: MoveTool.cc,v 1.8 2001-06-10 18:36:44 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -26,6 +26,7 @@
 #include <FL/Fl_Window.H>
 #include "MoveTool.hpp"
 #include "Action.hpp"
+#include "Point.hpp"
 #include "icons/move_icon.xbm"
 
 static Fl_Bitmap move_bitmap
@@ -101,10 +102,8 @@ int MoveTool::handle(int event, FigureView *view) {
     do {
       last_x = Fl::event_x();
       last_y = Fl::event_y();
-      fp16 x = screen_to_coord(
-        last_x, view->get_origin_x(), view->get_scaling());
-      fp16 y = screen_to_coord(
-        last_y, view->get_origin_y(), view->get_scaling());
+      Point p;
+      p.from_screen(last_x, last_y, view);
       u_fp32 min_dist = ~static_cast<u_fp32>(0);
       vector<Element *> *elements = view->get_figure()->get_elements();
       vector<Element *>::iterator i = elements->begin();
@@ -113,7 +112,7 @@ int MoveTool::handle(int event, FigureView *view) {
         Selectable *sel = dynamic_cast<Selectable *>(elem);
         Movable *mov = dynamic_cast<Movable *>(elem);
         if (sel && mov) {
-          u_fp32 d = sel->select_distance_sqr(x, y);
+          u_fp32 d = sel->select_distance_sqr(p.x, p.y);
           if (d < min_dist) {
             min_dist = d;
             element = mov;
@@ -147,8 +146,8 @@ int MoveTool::handle(int event, FigureView *view) {
                  view->get_scaling(), true);
       sel->draw_select_helpers(view->get_origin_x(), view->get_origin_y(),
                                view->get_scaling(), true);
-      fp16 move_x = screen_to_coord(x - last_x, view->get_scaling());
-      fp16 move_y = screen_to_coord(y - last_y, view->get_scaling());
+      fp16 move_x = length_from_screen(x - last_x, view->get_scaling());
+      fp16 move_y = length_from_screen(last_y - y, view->get_scaling());
       element->move(move_x, move_y);
       cum_x += move_x;
       cum_y += move_y;

@@ -1,4 +1,4 @@
-// $Id: RectangleTool.cc,v 1.3 2001-05-28 18:46:26 jle Exp $
+// $Id: RectangleTool.cc,v 1.4 2001-06-10 18:36:44 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -139,17 +139,17 @@ int RectangleTool::handle(int event, FigureView *view) {
         w = xs - last_x;
       }
       if (ys < last_y) {
-        y = ys;
+        y = last_y;
         h = last_y - ys;
       } else {
-        y = last_y;
+        y = ys;
         h = ys - last_y;
       }
-      fp16 fx = screen_to_coord(x, view->get_origin_x(), view->get_scaling());
-      fp16 fy = screen_to_coord(y, view->get_origin_y(), view->get_scaling());
-      fp16 fw = screen_to_coord(w, 0, view->get_scaling());
-      fp16 fh = screen_to_coord(h, 0, view->get_scaling());
-      Rectangle *rect = new Rectangle(fx, fy, fw, fh);
+      Point p;
+      p.from_screen(x, y, view);
+      fp16 fw = length_from_screen(w, view->get_scaling());
+      fp16 fh = length_from_screen(h, view->get_scaling());
+      Rectangle *rect = new Rectangle(p.x, p.y, fw, fh);
       view->add_element(rect);
       view->redraw();
       drawing = false;

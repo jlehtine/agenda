@@ -1,4 +1,4 @@
-// $Id: Controllable.hpp,v 1.3 2001-05-29 18:05:10 jle Exp $
+// $Id: Controllable.hpp,v 1.4 2001-06-10 18:36:43 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -25,12 +25,13 @@
 #include "FigureView.hpp"
 #include "Selectable.hpp"
 #include "mathutil.hpp"
+#include "Point.hpp"
 
 /**
  * An interface for elements that can be controlled by control points.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 class Controllable {
 

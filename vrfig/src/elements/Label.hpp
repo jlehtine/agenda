@@ -1,4 +1,4 @@
-// $Id: Label.hpp,v 1.1 2001-05-25 22:31:01 jle Exp $
+// $Id: Label.hpp,v 1.2 2001-06-10 18:36:43 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -29,23 +29,21 @@
 #include "Movable.hpp"
 #include "Textual.hpp"
 #include "ElementFactory.hpp"
+#include "Point.hpp"
 
 /**
  * A text label element.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 class Label : public Element, public Selectable, public Movable,
               public Textual {
 
 protected:
 
-  /** The x coordinate of the label */
-  fp16 x;
-
-  /** The y coordinate of the label */
-  fp16 y;
+  /** The label position */
+  Point position;
 
   /** The label text */
   string text;
@@ -60,7 +58,7 @@ public:
    * @param text the text for the label (buffer is copied)
    */
   inline Label(fp16 x, fp16 y, const char *text):
-    x(x), y(y), text(text) {}
+    position(x, y), text(text) {}
 
   static const char *get_name_static();
   virtual const char *get_name() const;

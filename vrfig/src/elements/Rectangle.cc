@@ -1,4 +1,4 @@
-// $Id: Rectangle.cc,v 1.7 2001-05-29 18:05:10 jle Exp $
+// $Id: Rectangle.cc,v 1.8 2001-06-10 18:36:43 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -114,11 +114,11 @@ void Rectangle::draw(fp16 origin_x, fp16 origin_y, u_fp16 scaling,
     old_func = fle_xorred_mode();
   } else
     fl_color(FL_BLACK);
-  fp16 sx = coord_to_screen(x, origin_x, scaling);
-  fp16 sy = coord_to_screen(y, origin_y, scaling);
-  fp16 sw = coord_to_screen(w, 0, scaling);
-  fp16 sh = coord_to_screen(h, 0, scaling);
-  fl_rect(sx, sy, sw, sh);
+  int sx, sy;
+  controls[0].to_screen(origin_x, origin_y, scaling, sx, sy);
+  int sw = length_to_screen(w, scaling);
+  int sh = length_to_screen(h, scaling);
+  fl_rect(sx, sy - sh, sw, sh);
   if (xorred)
     fle_reset_mode(old_func);
 }

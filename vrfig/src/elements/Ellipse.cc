@@ -1,4 +1,4 @@
-// $Id: Ellipse.cc,v 1.5 2001-05-29 18:05:10 jle Exp $
+// $Id: Ellipse.cc,v 1.6 2001-06-10 18:36:43 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -118,19 +118,19 @@ void Ellipse::get_bounding_box(fp16 &x, fp16 &y, fp16 &w, fp16 &h) const {
   
 void Ellipse::draw(fp16 origin_x, fp16 origin_y, u_fp16 scaling,
                    bool xorred=false) const {
-  fp16 x, y, w, h;
-  get_bounding_box(x, y, w, h);
+  Point p;
+  fp16 w, h;
+  get_bounding_box(p.x, p.y, w, h);
   int old_func;
   if (xorred) {
     fl_color(FL_WHITE);
     old_func = fle_xorred_mode();
   } else
     fl_color(FL_BLACK);
-  fl_arc(coord_to_screen(x, origin_x, scaling),
-         coord_to_screen(y, origin_y, scaling),
-         coord_to_screen(w, 0, scaling),
-         coord_to_screen(h, 0, scaling),
-         0, 360);
+  int sx, sy;
+  p.to_screen(origin_x, origin_y, scaling, sx, sy);
+  int sh = length_to_screen(h, scaling);
+  fl_arc(sx, sy - sh, length_to_screen(w, scaling), sh, 0, 360);
   if (xorred)
     fle_reset_mode(old_func);
 }

@@ -1,4 +1,4 @@
-// $Id: LabelTool.cc,v 1.3 2001-05-26 19:53:05 jle Exp $
+// $Id: LabelTool.cc,v 1.4 2001-06-10 18:36:44 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -119,10 +119,8 @@ int LabelTool::handle(int event, FigureView *view) {
       unselect(view);
 
       // Choose the closest textual element if it is close enough
-      fp16 x = screen_to_coord(
-        Fl::event_x(), view->get_origin_x(), view->get_scaling());
-      fp16 y = screen_to_coord(
-        Fl::event_y(), view->get_origin_y(), view->get_scaling());
+      Point p;
+      p.from_screen(Fl::event_x(), Fl::event_y(), view);
       u_fp32 min_dist = ~static_cast<u_fp32>(0);
       vector<Element *> *elements = view->get_figure()->get_elements();
       vector<Element *>::iterator i = elements->begin();
@@ -132,7 +130,7 @@ int LabelTool::handle(int event, FigureView *view) {
         Selectable *sel = dynamic_cast<Selectable *>(elem);
         Textual *tex = dynamic_cast<Textual *>(elem);
         if (sel && tex) {
-          u_fp32 d = sel->select_distance_sqr(x, y);
+          u_fp32 d = sel->select_distance_sqr(p.x, p.y);
           if (d < min_dist) {
             min_dist = d;
             closest = tex;
@@ -151,7 +149,7 @@ int LabelTool::handle(int event, FigureView *view) {
       }
 
       // Otherwise create a new label
-      Label *label = new Label(x, y, "");
+      Label *label = new Label(p.x, p.y, "");
       view->add_element(label);
       select(static_cast<Textual *>(label), view);
       
@@ -251,6 +249,7 @@ void LabelTool::unselect(FigureView *view) {
   if (element) {
 
     // Wipe the cursor
+    view->window()->make_current();
     draw_xorred_text_cursor(view);
 
     // Remove the element if it has become empty

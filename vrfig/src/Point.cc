@@ -1,4 +1,4 @@
-// $Id: Selectable.cc,v 1.3 2001-06-10 18:36:43 jle Exp $
+// $Id: Point.cc,v 1.1 2001-06-10 18:36:43 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -19,22 +19,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *------------------------------------------------------------------------*/
 
-#include <FL/fl_draw.H>
-#include <FL/Enumerations.H>
-#include "Selectable.hpp"
 #include "Point.hpp"
 
-#define HELPER_RECT_SIZE 5
-
-void Selectable::draw_select_helper(int x, int y) {
-  fl_rect(x - HELPER_RECT_SIZE/2, y - HELPER_RECT_SIZE/2,
-          HELPER_RECT_SIZE, HELPER_RECT_SIZE);
+void Point::to_screen(fp16 origin_x, fp16 origin_y, fp16 scaling,
+                      int &sx, int &sy) const {
+  sx = mul_fp16_fp16_int(x - origin_x, scaling);
+  sy = -mul_fp16_fp16_int(y - origin_y, scaling);
 }
 
-void Selectable::draw_select_helper(
-  fp16 x, fp16 y, fp16 origin_x, fp16 origin_y, u_fp16 scaling) {
-  int sx, sy;
-  Point p(x, y);
-  p.to_screen(origin_x, origin_y, scaling, sx, sy);
-  draw_select_helper(sx, sy);
+void Point::from_screen(int sx, int sy, fp16 origin_x, fp16 origin_y, 
+                        fp16 scaling) {
+  x = div_int_fp16u_fp16(sx, scaling) + origin_x;
+  y = -div_int_fp16u_fp16(sy, scaling) + origin_y;
 }

@@ -1,4 +1,4 @@
-// $Id: PolyLineTool.cc,v 1.8 2001-05-29 18:05:11 jle Exp $
+// $Id: PolyLineTool.cc,v 1.9 2001-06-10 18:36:44 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -208,11 +208,9 @@ int PolyLineTool::handle(int event, FigureView *view) {
     do {
       
       // Find the closest possible starting point
-      fp16 fx = screen_to_coord(Fl::event_x(), 
-                                view->get_origin_x(), view->get_scaling());
-      fp16 fy = screen_to_coord(Fl::event_y(),
-                                view->get_origin_y(), view->get_scaling());
-      polyline = find_connect_point(view, fx, fy, extend_first);
+      Point f;
+      f.from_screen(Fl::event_x(), Fl::event_y(), view);
+      polyline = find_connect_point(view, f.x, f.y, extend_first);
       
       // Check if a new polyline should be created
       fl_color(FL_WHITE);
@@ -221,7 +219,7 @@ int PolyLineTool::handle(int event, FigureView *view) {
         start_y = Fl::event_y();
         PolyLine *pl = new PolyLine();
         vector<Point> *vertices = pl->get_vertices();
-        vertices->insert(vertices->end(), Point(fx, fy));
+        vertices->insert(vertices->end(), f);
         view->get_figure()->add_element(pl);
         polyline = pl;
         extend_first = false;
@@ -236,10 +234,7 @@ int PolyLineTool::handle(int event, FigureView *view) {
           i = polyline->get_vertices()->end();
           i--;
         }
-        start_x = coord_to_screen
-          ((*i).x, view->get_origin_x(), view->get_scaling());
-        start_y = coord_to_screen
-          ((*i).y, view->get_origin_y(), view->get_scaling());
+        (*i).to_screen(view, start_x, start_y);
 
         // Hide the extended select helper
         fl_color(FL_WHITE);
@@ -271,14 +266,12 @@ int PolyLineTool::handle(int event, FigureView *view) {
     do {
       fl_color(FL_WHITE);
       fle_xorred_line(start_x, start_y, last_x, last_y);
-      fp16 fx = screen_to_coord(last_x, 
-                                view->get_origin_x(), view->get_scaling());
-      fp16 fy = screen_to_coord(last_y,
-                                view->get_origin_y(), view->get_scaling());
+      Point f;
+      f.from_screen(last_x, last_y, view);
       
       // Check if closed polygon
       bool fv;
-      PolyLine *pl = find_connect_point(view, fx, fy, fv);
+      PolyLine *pl = find_connect_point(view, f.x, f.y, fv);
       if (pl == polyline && fv != extend_first && !new_polyline) {
         polyline->set_closed(true);
         vector<Point>::const_iterator i;
@@ -288,10 +281,8 @@ int PolyLineTool::handle(int event, FigureView *view) {
           i = polyline->get_vertices()->end();
           i--;
         }
-        int ox = coord_to_screen(
-          (*i).x, view->get_origin_x(), view->get_scaling());
-        int oy = coord_to_screen(
-          (*i).y, view->get_origin_x(), view->get_scaling());
+        int ox, oy;
+        (*i).to_screen(view, ox, oy);
         int old_func = fle_xorred_mode();
         Selectable::draw_select_helper(ox, oy);
         fle_reset_mode(old_func);
@@ -314,10 +305,7 @@ int PolyLineTool::handle(int event, FigureView *view) {
           i2 = vertices2->end();
           i2--;
         }
-        last_x = coord_to_screen
-          ((*i2).x, view->get_origin_x(), view->get_scaling());
-        last_y = coord_to_screen
-          ((*i2).y, view->get_origin_x(), view->get_scaling());
+        (*i2).to_screen(view, last_x, last_y);
         int old_func = fle_xorred_mode();
         Selectable::draw_select_helper(last_x, last_y);
         fle_reset_mode(old_func);
@@ -347,7 +335,7 @@ int PolyLineTool::handle(int event, FigureView *view) {
         fl_line(start_x, start_y, last_x, last_y);
         vector<Point> *vertices = polyline->get_vertices();
         vertices->insert(extend_first ? vertices->begin() : vertices->end(),
-                         Point(fx, fy));
+                         f);
         
         // Draw new select helpers
         fl_color(FL_WHITE);
@@ -402,7 +390,7 @@ PolyLine *find_connect_point(FigureView *view, fp16 x, fp16 y,
     }
     i++;
   }
-  if (coord_to_screen(fp32_to_fp16(min_dist), view->get_scaling())
+  if (length_to_screen(fp32_to_fp16(min_dist), view->get_scaling())
       > CONTINUE_DIST_SQR)
     polyline = 0;
   return polyline;

@@ -1,4 +1,4 @@
-// $Id: DeleteTool.cc,v 1.7 2001-05-26 16:13:59 jle Exp $
+// $Id: DeleteTool.cc,v 1.8 2001-06-10 18:36:44 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -24,6 +24,7 @@
 #include "DeleteTool.hpp"
 #include "Selectable.hpp"
 #include "Action.hpp"
+#include "Point.hpp"
 #include "icons/delete_icon.xbm"
 
 static Fl_Bitmap delete_bitmap
@@ -87,10 +88,8 @@ int DeleteTool::handle(int event, FigureView *view) {
     // Find the closest element
     // Select the element closest to the selection point, if close enough
     do {
-      fp16 x = screen_to_coord(
-        Fl::event_x(), view->get_origin_x(), view->get_scaling());
-      fp16 y = screen_to_coord(
-        Fl::event_y(), view->get_origin_y(), view->get_scaling());
+      Point p;
+      p.from_screen(Fl::event_x(), Fl::event_y(), view);
       u_fp32 min_dist = ~static_cast<u_fp32>(0);
       vector<Element *> *elements = view->get_figure()->get_elements();
       vector<Element *>::iterator i = elements->begin();
@@ -99,7 +98,7 @@ int DeleteTool::handle(int event, FigureView *view) {
         Element *elem = *i;
         Selectable *sel = dynamic_cast<Selectable *>(elem);
         if (sel) {
-          u_fp32 d = sel->select_distance_sqr(x, y);
+          u_fp32 d = sel->select_distance_sqr(p.x, p.y);
           if (d < min_dist) {
             min_dist = d;
             closest = i;

@@ -1,4 +1,4 @@
-// $Id: MoveFigTool.hpp,v 1.3 2001-05-23 12:47:52 jle Exp $
+// $Id: MoveFigTool.hpp,v 1.4 2001-06-10 18:36:44 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -28,7 +28,7 @@
  * The MoveFigTool is used to move the figure around the view.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 class MoveFigTool : public Tool {
 
@@ -41,7 +41,7 @@ protected:
   int screen_coord[2];
 
   /** The original figure origin coordinates */
-  int fig_coord[2];
+  fp16 fig_coord[2];
 
 public:
 

@@ -1,4 +1,4 @@
-// $Id: MainView.cc,v 1.22 2001-05-28 20:30:59 jle Exp $
+// $Id: MainView.cc,v 1.23 2001-06-10 18:36:43 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -283,8 +283,8 @@ void MainView::cb_zoomout(Fl_Widget *widget, void *data) {
   int scaling = view->editor->get_scaling();
   int ox, oy;
   view->editor->get_origin(ox, oy);
-  ox -= div_int_fp16u_fp16(view->editor->w() >> 1, scaling);
-  oy -= div_int_fp16u_fp16(view->editor->h() >> 1, scaling);
+  ox -= length_from_screen(view->editor->w() >> 1, scaling);
+  oy += length_from_screen(view->editor->h() >> 1, scaling);
   scaling >>= 1;
   if (scaling > 256) {
     view->editor->set_scaling(scaling);
@@ -297,10 +297,10 @@ void MainView::cb_zoomin(Fl_Widget *widget, void *data) {
   int scaling = view->editor->get_scaling();
   scaling <<= 1;
   if (scaling) {
-    int ox, oy;
+    fp16 ox, oy;
     view->editor->get_origin(ox, oy);
-    ox += div_int_fp16u_fp16(view->editor->w() >> 1, scaling);
-    oy += div_int_fp16u_fp16(view->editor->h() >> 1, scaling);
+    ox += length_from_screen(view->editor->w() >> 1, scaling);
+    oy -= length_from_screen(view->editor->h() >> 1, scaling);
     view->editor->set_scaling(scaling);
     view->editor->set_origin(ox, oy);
   }

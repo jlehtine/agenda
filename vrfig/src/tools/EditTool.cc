@@ -1,4 +1,4 @@
-// $Id: EditTool.cc,v 1.6 2001-05-29 18:05:11 jle Exp $
+// $Id: EditTool.cc,v 1.7 2001-06-10 18:36:44 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -113,10 +113,8 @@ int EditTool::handle(int event, FigureView *view) {
       // Select the closest control point (if it is close enough)
       sx = Fl::event_x();
       sy = Fl::event_y();
-      fp16 x = screen_to_coord(
-        sx, view->get_origin_x(), view->get_scaling());
-      fp16 y = screen_to_coord(
-        sy, view->get_origin_y(), view->get_scaling());
+      Point p;
+      p.from_screen(sx, sy, view);
       u_fp32 min_dist = ~static_cast<u_fp32>(0);
       const vector<Element *> *elements = view->get_figure()->get_elements();
       vector<Element *>::const_iterator i = elements->begin();
@@ -129,7 +127,7 @@ int EditTool::handle(int event, FigureView *view) {
           while (ii < points->end()) {
             fp16 cx = (*ii).x;
             fp16 cy = (*ii).y;
-            u_fp32 d = vector_length_sqr_fp16_fp32(x - cx, y - cy);
+            u_fp32 d = vector_length_sqr_fp16_fp32(p.x - cx, p.y - cy);
             if (d < min_dist) {
               min_dist = d;
               element = elem;
@@ -175,10 +173,10 @@ int EditTool::handle(int event, FigureView *view) {
                  view->get_scaling(), true);
 
       // Edit the control point
-      fp16 new_x = org_x + screen_to_coord(
-        Fl::event_x() - sx, 0, view->get_scaling());
-      fp16 new_y = org_y + screen_to_coord(
-        Fl::event_y() - sy, 0, view->get_scaling());
+      fp16 new_x = org_x + length_from_screen(
+        Fl::event_x() - sx, view->get_scaling());
+      fp16 new_y = org_y - length_from_screen(
+        Fl::event_y() - sy, view->get_scaling());
       element->control(cp_index, new_x, new_y);
 
       // Show the element again

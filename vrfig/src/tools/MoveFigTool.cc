@@ -1,4 +1,4 @@
-// $Id: MoveFigTool.cc,v 1.3 2001-05-23 12:47:52 jle Exp $
+// $Id: MoveFigTool.cc,v 1.4 2001-06-10 18:36:44 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -60,10 +60,10 @@ int MoveFigTool::handle(int event, FigureView *view) {
     if (moving) {
       int sx = Fl::event_x();
       int sy = Fl::event_y();
-      int origin_x = fig_coord[0] 
-        + div_int_fp16u_fp16(screen_coord[0] - sx, view->get_scaling());
-      int origin_y = fig_coord[1]
-        + div_int_fp16u_fp16(screen_coord[1] - sy, view->get_scaling());
+      fp16 origin_x = fig_coord[0] 
+        + length_from_screen(screen_coord[0] - sx, view->get_scaling());
+      fp16 origin_y = fig_coord[1]
+        - length_from_screen(screen_coord[1] - sy, view->get_scaling());
       view->set_origin(origin_x, origin_y);
     }
     break;

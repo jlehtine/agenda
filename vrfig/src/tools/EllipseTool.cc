@@ -1,4 +1,4 @@
-// $Id: EllipseTool.cc,v 1.3 2001-05-26 16:13:42 jle Exp $
+// $Id: EllipseTool.cc,v 1.4 2001-06-10 18:36:44 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -86,11 +86,9 @@ int EllipseTool::handle(int event, FigureView *view) {
       return 1;
     do {
       view->window()->make_current();
-      fp16 x = screen_to_coord(Fl::event_x(), view->get_origin_x(),
-                               view->get_scaling());
-      fp16 y = screen_to_coord(Fl::event_y(), view->get_origin_y(),
-                               view->get_scaling());
-      ellipse = new Ellipse(x, y, x, y);
+      Point p;
+      p.from_screen(Fl::event_x(), Fl::event_y(), view);
+      ellipse = new Ellipse(p.x, p.y, p.x, p.y);
       draw(view);
     } while (0);
     return 1;
@@ -98,14 +96,14 @@ int EllipseTool::handle(int event, FigureView *view) {
   case FL_DRAG:
     if (!ellipse)
       return 1;
-    view->window()->make_current();
-    draw(view);
-    ellipse->control(1,
-                     screen_to_coord(Fl::event_x(), view->get_origin_x(),
-                                     view->get_scaling()),
-                     screen_to_coord(Fl::event_y(), view->get_origin_y(),
-                                     view->get_scaling()));
-    draw(view);
+    do {
+      view->window()->make_current();
+      draw(view);
+      Point p;
+      p.from_screen(Fl::event_x(), Fl::event_y(), view);
+      ellipse->control(1, p.x, p.y);
+      draw(view);
+    } while (0);
     return 1;
 
   case FL_RELEASE:
