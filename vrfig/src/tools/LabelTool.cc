@@ -1,4 +1,4 @@
-// $Id: LabelTool.cc,v 1.1 2001-05-25 22:32:15 jle Exp $
+// $Id: LabelTool.cc,v 1.2 2001-05-26 16:13:10 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -20,7 +20,6 @@
  *------------------------------------------------------------------------*/
 
 #include <vector.h>
-#include <algo.h>
 #include <FL/Fl.H>
 #include <FL/Enumerations.H>
 #include <FL/Fl_Bitmap.H>
@@ -203,10 +202,8 @@ void LabelTool::unselect(FigureView *view) {
 
     // Remove the element if it has become empty
     if (element->get_text_length() == 0) {
-      vector<Element *> *elements = view->get_figure()->get_elements();
       Element *elem = dynamic_cast<Element *>(element);
-      elements->erase(find(elements->begin(), elements->end(), elem));
-      view->redraw();
+      view->get_figure()->remove_element(elem);
     }
     
     element = 0;
