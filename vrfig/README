@@ -45,7 +45,7 @@ your option) any later version. See the file 'COPYING' for details.
 
 The file chooser used in the VRFig is strongly based on the ESP Widget
 Set 2.0 by Easy Software Products. It has been just modified to match
-the VR3 look and feel (to us the flpda library). This code can be
+the VR3 look and feel (to use the flpda library). This code can be
 found in the subdirectory 'src/espws'. More information about the ESP
 Widget Set and the original source code can be obtained at the URL
 
@@ -71,17 +71,14 @@ See the file 'NEWS' for news about the current release and the file
 Binary distributions
 --------------------
 
-The binary distributions for Agenda VR3 are named as
-'vrfig-vr3-VERSION.tar.gz' or 'vrfig-VERSION.vrp'. The first one is
-the best choice if you want to manually install the vrfig to VR3 while
-the latter is mainly for romdisk builders.
-
-To install a binary distribution ('vrfig-vr3-VERSION.tar.gz') just
-extract the archive and move the binary file 'vrfig' to your VR3 using
-rsync. You can place the file in '/usr/local/bin' or
-'/home/default/bin' for example. To make VRFig appear in the system
-menu you can manually create the necessary symbolic link from
-'/home/default/.wmx/Applications/VRFig' to the VRFig binary.
+The binary distribution for Agenda VR3 is named as
+'vrfig-vr3-VERSION.tar.gz' (no .vrp at this time, sorry). To install a
+binary distribution just extract the archive and move the binary file
+'vrfig' to your VR3 using rsync. You can place the file in
+'/usr/local/bin' or '/home/default/bin' for example. To make VRFig
+appear in the system menu you can manually create the necessary
+symbolic link from '/home/default/.wmx/Applications/VRFig' to the
+VRFig binary.
 
 There are no usage instructions at this point. Like I said, it is not
 yet ready for prime time, sorry :)
