@@ -1,7 +1,7 @@
-// $Id: PuzzleGame.hpp,v 1.2 2000-10-16 18:48:05 jle Exp $
+// $Id: PuzzleGame.hpp,v 1.3 2000-10-28 11:22:26 jle Exp $
 
-#ifndef __PuzzleGame_h_INCLUDED__
-#define __PuzzleGame_h_INCLUDED__
+#ifndef __PuzzleGame_hpp_INCLUDED__
+#define __PuzzleGame_hpp_INCLUDED__
 
 #ifdef __cplusplus
 
@@ -9,7 +9,7 @@
  * 15(n)-puzzle game logic and wrapper for storing game situations.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 class PuzzleGame {
 
@@ -34,14 +34,14 @@ public:
   /**
    * Destructor freeing all allocated resources.
    */
-  ~PuzzleGame(void);
+  ~PuzzleGame();
 
   /**
    * Checks whether the blocks are in correct order.
    *
    * @return whether blocks are currently in correct order
    */
-  bool solved(void);
+  bool solved();
 
   /**
    * Moves the specified block to empty square.
@@ -53,14 +53,25 @@ public:
   bool move(int x, int y);
 
   /**
-   * Get number of the block in the specified position. Returns 0
+   * Get number of the tile in the specified position. Returns 0
    * if the position is currently free.
    *
    * @param x the x coordinate of the position
    * @param y the y coordinate of the position
-   * @return number of the block or 0 if currently free
+   * @return number of the tile or 0 if currently free
    */
-  inline int getBlock(int x, int y);
+  inline int get_tile(int x, int y) {
+    return state[y*size + x];
+  }
+
+  /**
+   * Returns the size of the game.
+   *
+   * @returns the size of the game
+   */
+  inline int get_size() {
+    return size;
+  }
 };
 
 #endif

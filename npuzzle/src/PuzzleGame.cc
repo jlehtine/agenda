@@ -1,4 +1,4 @@
-// $Id: PuzzleGame.cc,v 1.2 2000-10-16 18:48:05 jle Exp $
+// $Id: PuzzleGame.cc,v 1.3 2000-10-28 11:22:26 jle Exp $
 
 #include <stdlib.h>
 #include "PuzzleGame.hpp"
@@ -9,8 +9,8 @@ PuzzleGame::PuzzleGame(int size) {
 
   // Initialize state
   int i;
-  for (i = 0; i < size*size - 1; i++) {
-    state[i] = i;
+  for (i = 0; i < size*size-1; i++) {
+    state[i] = i+1;
   }
   state[size*size-1] = 0;
   
@@ -28,7 +28,7 @@ PuzzleGame::PuzzleGame(int size) {
     int i;
     for (i = 0; i < 4; i++) {
       axel = (i < 2 ? 0 : 1);
-      off = 2*i - 4*axel - 1;
+      off = 2*(i&1) - 1;
       availDirs[i] = (axel == 0 ?
                       (zx + off >= 0 && zx + off < size) :
                       (zy + off >= 0 && zy + off < size));
@@ -49,7 +49,7 @@ PuzzleGame::PuzzleGame(int size) {
     }
     i--;
     axel = (i < 2 ? 0 : 1);
-    off = 2*i - 4*axel - 1;
+    off = 2*(i&1) - 1;
     int x = zx + (axel == 0 ? off : 0);
     int y = zy + (axel == 0 ? 0 : off);
     state[zy*size + zx] = state[y*size + x];
@@ -102,8 +102,4 @@ bool PuzzleGame::move(int x, int y) {
   state[(y+offy)*size + x + offx] = bxy;
   state[y*size + x] = 0;
   return true;
-}
-
-inline int PuzzleGame::getBlock(int x, int y) {
-  return state[y*size + x];
 }
