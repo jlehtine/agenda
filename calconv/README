@@ -1,0 +1,37 @@
+$Id: README,v 1.1.1.1 2001-03-19 21:13:58 jle Exp $
+
+VERSION
+-------
+
+  calconv 0.1 - packaged 2001-03-19
+
+
+ABOUT
+-----
+
+  Calconv is a very simple utility for converting the Agenda VR3
+  Schedule application database from the old pre-Matrix format to the
+  new format used in the Matrix release.
+
+    usage: calconv <old database file> <converted database file>
+
+  THIS PROGRAM IS PROVIDED WITHOUT WARRANTY OF ANY KIND. Keep the old
+  unconverted Schedule database for backup as long as it contains data
+  that you might need.
+
+  Notice that you must backup all your personal data _before_ flashing
+  the Matrix release.
+
+
+LICENSE
+-------
+
+  Calconv is released under the GNU General Public License. You can
+  find the license in the file COPYING.
+
+
+AUTHOR
+------
+
+  Johannes Lehtinen
+  <johannes.lehtinen@iki.fi>
