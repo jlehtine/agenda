@@ -11,14 +11,14 @@ class AboutWindow {open
   } {
     Fl_Window win {
       label {About NPuzzle} open
-      private xywh {1060 600 160 148} color 7 resizable modal visible
+      private xywh {1066 629 160 148} color 7 resizable modal visible
     } {
       Fl_Box {} {
         label NPuzzle
         xywh {30 20 100 25} labelfont 1
       }
       Fl_Box {} {
-        label {v 0.2} selected
+        label {v 0.2.1} selected
         xywh {45 55 65 20} labelsize 12
       }
       Fl_Box {} {
