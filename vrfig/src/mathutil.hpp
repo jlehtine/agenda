@@ -1,4 +1,4 @@
-// $Id: mathutil.hpp,v 1.8 2001-05-24 20:14:42 jle Exp $
+// $Id: mathutil.hpp,v 1.9 2001-05-27 11:29:52 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -251,6 +251,18 @@ inline int coord_to_screen(fp16 c, fp16 origin, u_fp16 scaling) {
 }
 
 /**
+ * Transforms the specified length from figure coordinates to screen
+ * coordinates.
+ *
+ * @param l the length in figure coordinates
+ * @param scaling the scaling factor for the current view
+ * @return the length in screen coordinates
+ */
+inline int coord_to_screen(fp16 l, u_fp16 scaling) {
+  return mul_fp16_fp16_int(l, scaling);
+}
+
+/**
  * Transforms the specified screen coordinate to figure coordinate.
  *
  * @param sc the screen coordinate
@@ -260,6 +272,18 @@ inline int coord_to_screen(fp16 c, fp16 origin, u_fp16 scaling) {
  */
 inline fp16 screen_to_coord(int sc, fp16 origin, u_fp16 scaling) {
   return div_int_fp16u_fp16(sc, scaling) + origin;
+}
+
+/**
+ * Transforms the specified length from screen coordinates to figure
+ * coordinates.
+ *
+ * @param lc the length in screen coordinates
+ * @param scaling the scaling factor for the current view
+ * @return the length in figure coordinates
+ */
+inline fp16 screen_to_coord(int lc, u_fp16 scaling) {
+  return div_int_fp16u_fp16(lc, scaling);
 }
 
 #endif
