@@ -1,10 +1,11 @@
 NPuzzle News
 ============
 
-This is the first release of NPuzzle and it is a very early release,
-indeed. I haven't had a chance to try NPuzzle on Agenda VR3 yet but I
-hope I will get my device soon and be able to prepare a real package
-specifically for VR3.
+This is the first release of NPuzzle tested on actual Agenda VR3
+device. It was also heavily customized to match the VR3 look and feel.
+Functionality of the game is exactly the same as for the previous
+release. I think that NPuzzle is now more or less ready and I am not
+planning any changes at the moment.
 
 I originally wrote NPuzzle to learn how to use FLTK and I think I
 might be writing another simple game (maybe Reversi) before starting

@@ -9,10 +9,21 @@ Prerequirements
    * FLTK UI toolkit (tested with FLTK 1.0.9)
      http://www.fltk.org/
 
+   To compile the VR3 native version, you must have the following.
+
+   * Linux VR cross development environment (MIPS cross compiler)
+     see http://developer.agendacomputing.com/ for more info
+
+   * Shared libraries from the VR3 device
+
+   * Customized FLTK version by Agenda Computing (for header files)
+     ftp://ftp.agendacomputing.com/
+
 Basic Installation
 ==================
 
-   These are generic installation instructions.
+   These are generic installation instructions. See the end of file
+for help when cross compiling the program for Agenda VR3.
 
    The `configure' shell script attempts to guess correct values for
 various system-dependent variables used during compilation.  It uses
@@ -191,3 +202,30 @@ operates.
      script, and exit.
 
 `configure' also accepts some other, not widely useful, options.
+
+Agenda VR3 Specific Hints
+=========================
+
+   To compile native binary for Agenda VR3, you should run the
+configure script with custom settings. Essentially, you have to
+specify the cross compiler and corresponding bintools to be used as
+well as use the right search paths for header and library files. If
+you have the standard mipsel development environment for VR3, the
+following example should work.
+
+   $> CXX=mipsel-linux-g++ CPPFLAGS='-I<path to header files>' \
+         LDFLAGS='-L<path to MIPS libraries>' ./configure \
+         --x-includes='<path to X11 header files>' \
+         --x-libraries='<path to MIPS X11 libraries>'
+
+   The specified header file directories should include the (VR3
+specific) glibc header files as well as header files for X11
+development and customized FLTK. The corresponding libraries should be
+found in library directories in the search path.
+
+   You should have received the standard C library header files and
+libraries with the mipsel development environment. The native X11 and
+FLTK libraries can be copied from the VR3 itself. However, you also
+need the X11 header files and FLTK header files. I have taken the X11
+header files from regular XFree 3.3.6 development environment and used
+FLTK version patched with the patch provided by Agenda Computing.

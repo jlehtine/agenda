@@ -1,3 +1,9 @@
+2001-01-28  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
+
+	* Fixed couple of X library problems in configure script.
+	* Ported game for Agenda VR3.
+	* Adjusted user interface for VR3 look and feel.
+
 2000-10-30  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
 
 	* Initial implementation of NPuzzle. Runs in regular Linux/X.
