@@ -1,4 +1,4 @@
-// $Id: PuzzleBox.hpp,v 1.4 2000-10-31 19:52:42 jle Exp $
+// $Id: PuzzleBox.hpp,v 1.5 2001-01-28 15:49:20 jle Exp $
 
 /*
 * NPuzzle
@@ -18,7 +18,6 @@
 #include <stdio.h>
 #include <FL/Fl_Box.H>
 #include "PuzzleGame.hpp"
-#include "SettingsWindow.hpp"
 
 #ifdef __cplusplus
 
@@ -43,7 +42,7 @@ struct TileLayout {
  * Box to render n-puzzle board.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  */
 class PuzzleBox : public Fl_Box {
   
@@ -52,8 +51,8 @@ protected:
   /** The current game to display */
   PuzzleGame *game;
 
-  /** Settings for displaying the board */
-  SettingsWindow *settings;
+  /** Whether to use alphabets (instead of numbers) */
+  bool use_alphabets;
 
   /** Callback for moves */
   void (*move_callback)();
@@ -85,7 +84,7 @@ public:
   inline PuzzleBox(int x, int y, int w, int h, const char *l = 0)
     : Fl_Box(x, y, w, h, l) {
     game = NULL;
-    settings = NULL;
+    use_alphabets = false;
     move_callback = NULL;
   }
   
@@ -95,7 +94,7 @@ public:
   inline PuzzleBox(Fl_Boxtype b, int x, int y, int w, int h, const char *l)
     : Fl_Box(b, x, y, w, h, l) {
     game = NULL;
-    settings = NULL;
+    use_alphabets = false;
     move_callback = NULL;
   }
 
@@ -110,23 +109,23 @@ public:
   virtual int handle(int event);
 
   /**
-   * Specify the settings to be used. Has to be called before set_game.
-   *
-   * @param settings to be used
-   */
-  inline void set_settings(SettingsWindow *settings) {
-    this->settings = settings;
-  }
-
-  /**
    * Associates new game with this box. The box is redrawn to
-   * reflect the change. Method set_settings must be called before
-   * first call to set_game.
+   * reflect the change.
    *
    * @param game the new game to be associated
    */
   inline void set_game(PuzzleGame *game) {
     this->game = game;
+    redraw();
+  }
+
+  /**
+   * Sets whether to use alphabets or not.
+   *
+   * @param flag whether to use alphabets
+   */
+  inline void set_alphabets(bool flag) {
+    use_alphabets = flag;
     redraw();
   }
 

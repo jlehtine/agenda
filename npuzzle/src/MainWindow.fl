@@ -12,12 +12,13 @@ class MainWindow {open
   decl {PuzzleGame *game;} {}
   decl {InstructionsWindow *instr_win;} {}
   decl {AboutWindow *about_win;} {}
-  decl {SettingsWindow *settings_win;} {}
   Function {MainWindow()} {open
   } {
+    code {instr_win = new InstructionsWindow();
+about_win = new AboutWindow();} {}
     Fl_Window win {
       label NPuzzle open
-      private xywh {1053 337 160 240} color 7 resizable visible
+      private xywh {1079 399 160 240} color 7 resizable visible
     } {
       Fl_Group {} {open
         xywh {0 0 160 25} box UP_BOX
@@ -48,32 +49,32 @@ class MainWindow {open
         label NPuzzle
         xywh {35 30 95 20} labelfont 1
       }
-      Fl_Box puzzle_box {selected
-        private xywh {10 55 140 155} color 7 resizable
+      Fl_Box puzzle_box {
+        private xywh {10 55 140 160} color 7 resizable
         code0 {\#include "PuzzleBox.hpp"}
         class PuzzleBox
       }
       Fl_Group {} {open
-        xywh {0 220 160 20} box UP_BOX
+        xywh {0 225 160 15} box UP_BOX
       } {
         Fl_Button {} {
           label Done
           callback {exit(0);}
-          xywh {0 220 35 20} labelsize 10
+          xywh {0 225 35 15} labelsize 10
         }
         Fl_Button {} {
           label New
           callback {PuzzleGame *old = game;
-game = new PuzzleGame(settings_win->get_size());
+game = new PuzzleGame(old->get_size());
 puzzle_box->set_game(game);
 delete old;
 update_moves();}
-          xywh {35 220 35 20} labelsize 10
+          xywh {35 225 35 15} labelsize 10
           code0 {\#include "PuzzleGame.hpp"}
         }
         Fl_Menu_Button {} {
           label Menu open
-          xywh {70 220 35 20} labelsize 10
+          xywh {70 225 35 15} labelsize 10
         } {
           menuitem {} {
             label About
@@ -87,23 +88,48 @@ update_moves();}
             xywh {0 0 100 20} labelsize 10
             code0 {\#include "InstructionsWindow.hpp"}
           }
-          menuitem {} {
-            label Settings
-            callback {settings_win->show();}
+          submenu {} {
+            label {Tile labels} open
             xywh {0 0 100 20} labelsize 10
-            code0 {\#include "SettingsWindow.hpp"}
+          } {
+            menuitem {} {
+              label Numbers
+              callback {puzzle_box->set_alphabets(false);}
+              xywh {0 0 100 20} labelsize 10
+            }
+            menuitem {} {
+              label Letters
+              callback {puzzle_box->set_alphabets(true);} selected
+              xywh {0 0 100 20} labelsize 10
+            }
+          }
+          submenu {} {
+            label {Puzzle size} open
+            xywh {0 0 100 20} labelsize 10
+          } {
+            menuitem {} {
+              label 3x3
+              callback {size_updated(3);}
+              xywh {0 0 100 20} labelsize 10
+            }
+            menuitem {} {
+              label 4x4
+              callback {size_updated(4);}
+              xywh {0 0 100 20} labelsize 10
+            }
+            menuitem {} {
+              label 5x5
+              callback {size_updated(5);}
+              xywh {0 0 100 20} labelsize 10
+            }
           }
         }
         Fl_Box {} {
-          xywh {105 220 55 20} resizable
+          xywh {105 225 55 15} resizable
         }
       }
     }
-    code {instr_win = new InstructionsWindow();
-about_win = new AboutWindow();
-settings_win = new SettingsWindow();} {}
-    code {puzzle_box->set_settings(settings_win);
-game = new PuzzleGame(settings_win->get_size());
+    code {game = new PuzzleGame(4);
 puzzle_box->set_game(game);} {}
     code {update_moves();} {}
   }
@@ -128,11 +154,11 @@ sprintf(str, "%d", game->get_moves());
 moves_output->value(str);
 moves_output->redraw();} {}
   }
-  Function {settings_updated()} {open return_type void
+  Function {size_updated(int puzzle_size)} {open private return_type void
   } {
-    code {if (game->get_size() != settings_win->get_size()) {
+    code {if (game->get_size() != puzzle_size) {
   PuzzleGame *old = game;
-  game = new PuzzleGame(settings_win->get_size());
+  game = new PuzzleGame(puzzle_size);
   puzzle_box->set_game(game);
   delete old;
 }
@@ -142,9 +168,5 @@ update_moves();} {}
   Function {set_move_callback(void (*cb)())} {open return_type void
   } {
     code {puzzle_box->set_move_callback(cb);} {}
-  }
-  Function {set_settings_callback(void (*cb)())} {open return_type void
-  } {
-    code {settings_win->set_update_callback(cb);} {}
   }
 } 

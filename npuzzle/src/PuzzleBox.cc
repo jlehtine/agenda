@@ -1,4 +1,4 @@
-// $Id: PuzzleBox.cc,v 1.6 2000-10-31 19:52:42 jle Exp $
+// $Id: PuzzleBox.cc,v 1.7 2001-01-28 15:49:20 jle Exp $
 
 /*
 * NPuzzle
@@ -13,13 +13,15 @@
 */
 
 #include <stdio.h>
+#include <FL/Fl.H>
+#include <FL/Fl_Window.H>
 #include <FL/fl_draw.H>
 #include <FL/Enumerations.H>
 #include "PuzzleBox.hpp"
 
 void PuzzleBox::draw() {
 
-  if (game == NULL || settings == NULL) {
+  if (game == NULL) {
     return;
   }
 
@@ -70,7 +72,7 @@ void PuzzleBox::draw() {
 int PuzzleBox::handle(int event) {
 
   // Ignore if not mouse push/drag/release or if not initialized yet
-  if (game == NULL || settings == NULL || event != FL_PUSH) {
+  if (game == NULL || event != FL_PUSH) {
     return Fl_Box::handle(event);
   }
 
@@ -157,7 +159,7 @@ void PuzzleBox::draw_tile(int size, int x, int y, int edge, int tile) {
     fl_color(FL_BLACK);
   }
   char str[3];
-  if (settings->use_numbers()) {
+  if (!use_alphabets) {
     sprintf(str, "%d", tile);
   } else {
     str[0] = 'A' + tile - 1;
