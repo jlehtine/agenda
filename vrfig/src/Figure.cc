@@ -1,4 +1,4 @@
-// $Id: Figure.cc,v 1.3 2001-05-20 11:49:43 jle Exp $
+// $Id: Figure.cc,v 1.4 2001-05-20 12:13:10 jle Exp $
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,9 +51,15 @@ void Figure::serialize(ostream &os) {
   i = elements.begin();
   while (i < elements.end()) {
     const string *nsid = element_to_nsid[*i];
-    cout << "    <" << nsid << ":" << (*i)->get_name() << ">\n";
+    string nss("");
+    if (nsid) {
+      nss.assign(*nsid);
+      nss.append(":");
+    }
+    os << "    <" << nss << *((*i)->get_name()) << ">\n";
     (*i)->serialize(os, nsid, 6);
-    cout << "    </" << nsid << ":" << (*i)->get_name() << ">\n";
+    os << "    </" << nss << *((*i)->get_name()) << ">\n";
+    i++;
   }
   os << "  </elements>\n";
   

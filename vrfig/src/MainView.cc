@@ -1,4 +1,4 @@
-// $Id: MainView.cc,v 1.12 2001-05-20 11:49:43 jle Exp $
+// $Id: MainView.cc,v 1.13 2001-05-20 12:13:10 jle Exp $
 
 #include <stdlib.h>
 #include <string.h>
@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <iostream.h>
+#include <fstream.h>
 #include <flpda/Widget_Factory.h>
 #include <Flek/Fl_Dockable_Window.H>
 #include <FL/Fl_Widget.H>
@@ -293,7 +294,16 @@ void MainView::cb_save(Fl_Widget *widget, void *data) {
   if (view->current_file.length() == '\0')
     cb_save_as(widget, data);
 
-  // XXX: Enter the actual saving code here
+  // Save the figure to file
+  ofstream ofs(view->current_file.data(), ios::out, 0666);
+  if (ofs.fail()) {
+    fl_alert("Error when creating the save file.");
+    return;
+  }
+  view->editor->get_figure()->serialize(ofs);
+  ofs.close();
+  if (ofs.fail())
+    fl_alert("Error when saving the figure.");
 }
 
 void MainView::cb_save_as(Fl_Widget *widget, void *data) {
