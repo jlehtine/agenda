@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.1 2001-05-19 19:12:40 jle Exp $
+## $Id: Makefile.am,v 1.2 2001-05-19 21:14:47 jle Exp $
 
 srcdir = @srcdir@
 VPATH = @srcdir@
@@ -13,8 +13,8 @@ libespws_fc_a_SOURCES = FileIcon.h FileIcon.cxx \
 	FileInput.h FileInput.cxx \
 	FileChooser.h FileChooser.cxx FileChooser2.cxx
 
-%.hpp: %.fl
+%.h: %.fl
 	$(FLUID) -c $<
 
-%.cc: %.fl
+%.cxx: %.fl
 	$(FLUID) -c $<
