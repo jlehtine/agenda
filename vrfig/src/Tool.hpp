@@ -1,4 +1,4 @@
-// $Id: Tool.hpp,v 1.3 2001-05-17 19:35:28 jle Exp $
+// $Id: Tool.hpp,v 1.4 2001-05-19 06:18:21 jle Exp $
 
 #ifndef __Tool_hpp_INCLUDED__
 #define __Tool_hpp_INCLUDED__
@@ -12,7 +12,7 @@
  * class for all tools.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 class Tool {
 
@@ -41,14 +41,16 @@ public:
   virtual void draw_icon(int x, int y, int w, int h) const {}
 
   /**
-   * Tells that the tool has been activated.
+   * Tells that the tool has been activated. The draw method is called
+   * separately to update the view.
    *
    * @param view the current state of the view
    */
   virtual void activated(FigureView *view) {}
 
   /**
-   * Tells that the tool has been deactivated.
+   * Tells that the tool has been deactivated. The view will be redrawn
+   * so there is no need to restore any changes made to the view.
    *
    * @param view the current state of the view
    */
