@@ -1,4 +1,4 @@
-// $Id: PuzzleGame.cc,v 1.4 2000-10-28 11:56:48 jle Exp $
+// $Id: PuzzleGame.cc,v 1.5 2000-10-29 15:06:19 jle Exp $
 
 #include <stdlib.h>
 #include "PuzzleGame.hpp"
@@ -27,8 +27,8 @@ PuzzleGame::PuzzleGame(int size) {
     bool availDirs[4];
     int i;
     for (i = 0; i < 4; i++) {
-      axel = (i < 2 ? 0 : 1);
-      off = 2*(i&1) - 1;
+      axel = (i&1);
+      off = (i&2) - 1;
       availDirs[i] = (axel == 0 ?
                       (zx + off >= 0 && zx + off < size) :
                       (zy + off >= 0 && zy + off < size));
@@ -48,8 +48,8 @@ PuzzleGame::PuzzleGame(int size) {
       }
     }
     i--;
-    axel = (i < 2 ? 0 : 1);
-    off = 2*(i&1) - 1;
+    axel = (i&1);
+    off = (i&2) - 1;
     int x = zx + (axel == 0 ? off : 0);
     int y = zy + (axel == 0 ? 0 : off);
     state[zy*size + zx] = state[y*size + x];
@@ -79,14 +79,15 @@ bool PuzzleGame::move(int x, int y) {
   
   // Find the neighbouring empty block if any
   bool found = false;
-  int offx, offy;
-  for (offy = -1; offy <= 1 && !found; offy += 2) {
-    for (offx = -1; offx <= 1 && !found; offy += 2) {
-      if (x + offx >= 0 && x + offx < size &&
-          y + offy >= 0 && y + offy < size) {
-        if (state[(y+offy)*size + x + offx] == 0) {
-          found = true;
-        }
+  int off[2];
+  int i;
+  for (i = 0; i < 4 && !found; i++) {
+    off[i&1] = (i&2) - 1;
+    off[(i&1)^1] = 0;
+    if (x + off[0] >= 0 && x + off[0] < size &&
+        y + off[1] >= 0 && y + off[1] < size) {
+      if (state[(y+off[1])*size + x + off[0]] == 0) {
+        found = true;
       }
     }
   }
@@ -95,7 +96,7 @@ bool PuzzleGame::move(int x, int y) {
   }
 
   // Move the block
-  state[(y+offy)*size + x + offx] = bxy;
+  state[(y+off[1])*size + x + off[0]] = bxy;
   state[y*size + x] = 0;
   return true;
 }
