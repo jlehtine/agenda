@@ -1,4 +1,4 @@
-// $Id: DeleteTool.cc,v 1.4 2001-05-23 12:47:51 jle Exp $
+// $Id: DeleteTool.cc,v 1.5 2001-05-24 19:49:58 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -24,8 +24,6 @@
 #include "DeleteTool.hpp"
 #include "Selectable.hpp"
 #include "icons/delete_icon.xbm"
-
-#define SELECT_DIST_SQR 16
 
 static Fl_Bitmap delete_bitmap
 (delete_icon_bits, delete_icon_width, delete_icon_height);
@@ -85,7 +83,7 @@ int DeleteTool::handle(int event, FigureView *view) {
         int screen_dist_sqr = mul_fp32_fp32_int(
           min_dist, 
           mul_fp16_fp16_fp32(view->get_scaling(), view->get_scaling()));
-        if (screen_dist_sqr <= SELECT_DIST_SQR) {
+        if (screen_dist_sqr <= VRF_DEFAULT_SELECT_DIST_SQR) {
           
           // Delete the element
           elements->erase(closest);

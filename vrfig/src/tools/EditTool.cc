@@ -1,4 +1,4 @@
-// $Id: EditTool.cc,v 1.3 2001-05-23 12:47:51 jle Exp $
+// $Id: EditTool.cc,v 1.4 2001-05-24 19:49:58 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -29,8 +29,6 @@
 #include "Selectable.hpp"
 #include "icons/edit_icon.xbm"
 #include "flext.hpp"
-
-#define SELECT_DIST_SQR 16
 
 static Fl_Bitmap edit_bitmap
 (edit_icon_bits, edit_icon_width, edit_icon_height);
@@ -113,7 +111,7 @@ int EditTool::handle(int event, FigureView *view) {
         int screen_dist_sqr = mul_fp32_fp32_int(
           min_dist, 
           mul_fp16_fp16_fp32(view->get_scaling(), view->get_scaling()));
-        if (screen_dist_sqr > SELECT_DIST_SQR)
+        if (screen_dist_sqr > VRF_DEFAULT_SELECT_DIST_SQR)
           element = 0;
       }
 

@@ -1,4 +1,4 @@
-// $Id: MoveTool.cc,v 1.5 2001-05-23 12:47:52 jle Exp $
+// $Id: MoveTool.cc,v 1.6 2001-05-24 19:49:58 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -26,8 +26,6 @@
 #include <FL/Fl_Window.H>
 #include "MoveTool.hpp"
 #include "icons/move_icon.xbm"
-
-#define SELECT_DIST_SQR 16
 
 static Fl_Bitmap move_bitmap
 (move_icon_bits, move_icon_width, move_icon_height);
@@ -94,7 +92,7 @@ int MoveTool::handle(int event, FigureView *view) {
         int screen_dist_sqr = mul_fp32_fp32_int(
           min_dist, 
           mul_fp16_fp16_fp32(view->get_scaling(), view->get_scaling()));
-        if (screen_dist_sqr > SELECT_DIST_SQR)
+        if (screen_dist_sqr > VRF_DEFAULT_SELECT_DIST_SQR)
           element = 0;
       }
     } while (0);
