@@ -1,4 +1,4 @@
-// $Id: MainView.cc,v 1.3 2001-05-06 22:12:45 jle Exp $
+// $Id: MainView.cc,v 1.4 2001-05-07 21:02:10 jle Exp $
 
 #include <stdlib.h>
 #include <flpda/Widget_Factory.h>
@@ -12,6 +12,7 @@
 #include "MainView.hpp"
 #include "Editor.hpp"
 #include "DrawingTool.hpp"
+#include "transform.hpp"
 #include "icons/outline_icon.xbm"
 #include "icons/filled_icon.xbm"
 #include "icons/text_icon.xbm"
@@ -19,12 +20,6 @@
 #include "icons/move_icon.xbm"
 #include "icons/edit_icon.xbm"
 #include "icons/movefig_icon.xbm"
-
-static void cb_exit(Fl_Widget *widget, void *data);
-static void cb_tool(Fl_Widget *widget, void *data);
-static void cb_undo(Fl_Widget *widget, void *data);
-static void cb_zoomout(Fl_Widget *widget, void *data);
-static void cb_zoomin(Fl_Widget *widget, void *data);
 
 static Fl_Bitmap outline_bitmap
 (outline_icon_bits, outline_icon_width, outline_icon_height);
@@ -61,7 +56,7 @@ static Fl_Menu_Item file_popup[] = {
   { "Revert", 0, 0, 0, FL_MENU_DIVIDER },
   { "Save" },
   { "Save As", 0, 0, 0, FL_MENU_DIVIDER },
-  { "Exit", 0, cb_exit },
+  { "Exit" },
   { 0 }
 };
 
@@ -80,6 +75,7 @@ MainView::MainView() {
   Fl_Dockable_Window *toolbar = Widget_Factory::new_toolbar();
   Fl_Menu_Button *file_menu = Widget_Factory::new_menu_button("File");
   file_menu->menu(file_popup);
+  file_popup[5].callback(cb_exit, this);
 
   // Create tool choice
   Fl_Choice *tools_choice = Widget_Factory::new_choice(0, cb_tool);
@@ -96,11 +92,13 @@ MainView::MainView() {
   tools_choice->menu(tools_popup);
 
   Widget_Factory::new_button("Undo", cb_undo);
-  Fl_Button *zoomout_button = Widget_Factory::new_button("-", cb_zoomout);
+  Fl_Button *zoomout_button = 
+    Widget_Factory::new_button("-", cb_zoomout, this);
   zoomout_button->resize(zoomout_button->x(), zoomout_button->y(),
                          Widget_Factory::buttonheight(),
                          zoomout_button->h());
-  Fl_Button *zoomin_button = Widget_Factory::new_button("+", cb_zoomin);
+  Fl_Button *zoomin_button = 
+    Widget_Factory::new_button("+", cb_zoomin, this);
   zoomin_button->resize(zoomin_button->x(), zoomin_button->y(),
                          Widget_Factory::buttonheight(),
                          zoomin_button->h());
@@ -112,27 +110,50 @@ MainView::MainView() {
   win->add_dockable(toolbar, 1);
 
   // Create editor view
-  Editor *editor = new Editor(0, 0, win->w(), win->h() - toolbar->h());
+  editor = new Editor(0, 0, win->w(), win->h() - toolbar->h());
   win->contents()->add(editor);
   win->contents()->resizable(editor);
+  editor->set_figure(new Figure());
   editor->set_tool(new DrawingTool());
 
   win->end();
   win->show();
 }
 
-static void cb_exit(Fl_Widget *widget, void *data) {
+void MainView::cb_exit(Fl_Widget *widget, void *data) {
   exit(0);
 }
 
-static void cb_tool(Fl_Widget *widget, void *data) {
+void MainView::cb_tool(Fl_Widget *widget, void *data) {
 }
 
-static void cb_undo(Fl_Widget *widget, void *data) {
+void MainView::cb_undo(Fl_Widget *widget, void *data) {
 }
 
-static void cb_zoomout(Fl_Widget *widget, void *data) {
+void MainView::cb_zoomout(Fl_Widget *widget, void *data) {
+  MainView *view = (MainView *)data;
+  int scaling = view->editor->get_scaling();
+  int ox, oy;
+  view->editor->get_origin(ox, oy);
+  ox -= div_int_fp16u_fp16(view->editor->w() >> 1, scaling);
+  oy -= div_int_fp16u_fp16(view->editor->h() >> 1, scaling);
+  scaling >>= 1;
+  if (scaling > 256) {
+    view->editor->set_scaling(scaling);
+    view->editor->set_origin(ox, oy);
+  }
 }
 
-static void cb_zoomin(Fl_Widget *widget, void *data) {
+void MainView::cb_zoomin(Fl_Widget *widget, void *data) {
+  MainView *view = (MainView *)data;
+  int scaling = view->editor->get_scaling();
+  scaling <<= 1;
+  if (scaling) {
+    int ox, oy;
+    view->editor->get_origin(ox, oy);
+    ox += div_int_fp16u_fp16(view->editor->w() >> 1, scaling);
+    oy += div_int_fp16u_fp16(view->editor->h() >> 1, scaling);
+    view->editor->set_scaling(scaling);
+    view->editor->set_origin(ox, oy);
+  }
 }

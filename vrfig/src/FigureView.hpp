@@ -1,4 +1,4 @@
-// $Id: FigureView.hpp,v 1.1 2001-05-06 22:12:08 jle Exp $
+// $Id: FigureView.hpp,v 1.2 2001-05-07 21:02:10 jle Exp $
 
 #ifndef __FigureView_hpp_INCLUDED__
 #define __FigureView_hpp_INCLUDED__
@@ -13,7 +13,7 @@ enum cp_drawing_style { CP_NONE, CP_NORMAL, CP_SELECTED };
  * A widget which draws the associated figure.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 class FigureView : public Fl_Widget {
 
@@ -25,10 +25,10 @@ protected:
   /** How the element control points should be drawn */
   cp_drawing_style used_cp_style;
 
-  /** The x coordinate associated with the lower left corner (16.16 fixed) */
+  /** The x coordinate associated with the origin (16.16 fixed) */
   int origin_x;
   
-  /** The y coordinate associated with the lower left corner (16.16 fixed) */
+  /** The y coordinate associated with the origin (16.16 fixed) */
   int origin_y;
 
   /** The scaling (16.16 fixed) */
@@ -60,7 +60,7 @@ public:
   }
 
   /**
-   * Returns the current coordinates for the origin (lower left corner).
+   * Returns the current coordinates for the origin
    *
    * @param x returns the x coordinate (16.16 fixed)
    * @param y returns the y coordinate (16.16 fixed)
@@ -71,11 +71,44 @@ public:
   }
 
   /**
+   * Returns the current x coordinate for the origin.
+   *
+   * @return the x coordinate (16.16 fixed)
+   */
+  inline int get_origin_x() {
+    return origin_x;
+  }
+
+  /**
+   * Returns the current y coordinate for the origin.
+   *
+   * @return the x coordinate (16.16 fixed)
+   */
+  inline int get_origin_y() {
+    return origin_y;
+  }
+
+  /**
+   * Sets the coordinates for the origin and refreshes the view.
+   *
+   * @param x the x coordinate (16.16 fixed)
+   * @param y the y coordinate (16.16 fixed)
+   */
+  void set_origin(int x, int y);
+
+  /**
    * Returns the currently used scaling.
    *
    * @return the scaling (16.16 fixed)
    */
   inline unsigned int get_scaling() { return scaling; }
+
+  /**
+   * Sets the new scaling value to be used and refreshes the view.
+   *
+   * @param _scaling the new scaling
+   */
+  void set_scaling(unsigned int _scaling);
 
   /**
    * Sets how the control points are drawn.
@@ -91,6 +124,13 @@ public:
    * Draws the widget.
    */
   virtual void draw();
+
+  /**
+   * Adds a new element to the figure and updates the view accordingly.
+   *
+   * @param element the element to be added
+   */
+  void add_element(Element *element);
 
 };
 

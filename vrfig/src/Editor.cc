@@ -1,4 +1,4 @@
-// $Id: Editor.cc,v 1.1 2001-05-06 22:12:08 jle Exp $
+// $Id: Editor.cc,v 1.2 2001-05-07 21:02:10 jle Exp $
 
 #include "Editor.hpp"
 
@@ -22,5 +22,7 @@ void Editor::draw() {
 
 int Editor::handle(int event) {
   if (tool != 0)
-    tool->handle(event, this);
+    return tool->handle(event, this);
+  else
+    return 0;
 }

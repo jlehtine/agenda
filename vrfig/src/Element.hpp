@@ -1,4 +1,9 @@
-// $Id: Element.hpp,v 1.1 2001-05-06 22:12:08 jle Exp $
+// $Id: Element.hpp,v 1.2 2001-05-07 21:02:10 jle Exp $
+
+#ifndef __Element_hpp_INCLUDED__
+#define __Element_hpp_INCLUDED__
+
+#include <vector.h>
 
 /**
  * Each figure is composed of elements such as lines or circles. The elements
@@ -26,9 +31,24 @@ public:
    * Draws the element to the current widget using the specified scaling
    * and origin.
    *
-   * @param orig_x the x coordinate of the lower left corner
-   * @param orix_y the y coordinate of the lower left corner
-   * @param scale the scaling used as 16.16 fixed point value
+   * @param origin_x the x coordinate for the origin (16.16 fixed)
+   * @param origin_y the y coordinate for the origin (16.16 fixed)
+   * @param scaling the scaling used (16.16 fixed)
    */
-  virtual void draw(int orig_x, int orig_y, unsigned int scale) = 0;
+  virtual void draw(int origin_x, int origin_y, unsigned int scaling) = 0;
+
+  /**
+   * Fits some element to the specified point set or returns
+   * null if no element could be fitted.
+   *
+   * @param points a vector of point x/y coordinates
+   * @param origin_x the x coordinate for the origin (16.16 fixed)
+   * @param origin_y the y coordinate for the origin (16.16 fixed)
+   * @param scaling the scaling used (16.16 fixed)
+   * @return the fitted element
+   */
+  static Element *fit_element(
+    vector<int> *points, int origin_x, int origin_y, unsigned int scaling);
 };
+
+#endif
