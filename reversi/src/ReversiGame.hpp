@@ -1,4 +1,7 @@
-// $Id: ReversiGame.hpp,v 1.1.1.1 2000-11-03 20:18:24 jle Exp $
+// $Id: ReversiGame.hpp,v 1.2 2000-11-03 20:35:21 jle Exp $
+
+#ifndef __ReversiGame_hpp_INCLUDED__
+#define __ReversiGame_hpp_INCLUDED__
 
 enum ReversiChipColor { WHITE = 0, BLACK = 1, EMPTY = 2 };
 
@@ -7,7 +10,7 @@ enum ReversiChipColor { WHITE = 0, BLACK = 1, EMPTY = 2 };
  * Game logic and game state wrapper for Reversi.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.1.1.1 $
+ * @version $Revision: 1.2 $
  */
 class ReversiGame {
 
@@ -43,6 +46,16 @@ public:
   }
 
   /**
+   * Returns the opponent for the specified color.
+   *
+   * @param color the color to search opponent for
+   * @return the opposing color
+   */
+  inline ReversiChipColor opponent(ReversiChipColor color) {
+    return (color == BLACK ? WHITE : BLACK);
+  }
+
+  /**
    * Returns the chip color who makes the next move.
    *
    * @return the next color to move
@@ -75,7 +88,7 @@ public:
    * @return whether a move is possible
    */
   inline bool move_possible() {
-    return (can_move(next_to_move) || can_move(next_to_move ^ 1));
+    return (can_move(next_to_move) || can_move(opponent(next_to_move)));
   }
 
   /**
@@ -94,7 +107,33 @@ public:
    * @return the next color to move
    */
   inline ReversiChipColor pass_turn() {
-    next_to_move = (next_to_move ^ 1);
+    next_to_move = opponent(next_to_move);
     return next_to_move;
   }
-}
+
+  /**
+   * Return the color of chip in given position or EMPTY if empty.
+   *
+   * @param x the x coordinate of the position
+   * @param y the y coordinate of the position
+   * @return color of the chip of EMPTY
+   */
+  inline ReversiChipColor get_chip(int x, int y) {
+    return board[y*size + x];
+  }
+
+protected:
+
+  /**
+   * Sets the specified position to given chip color.
+   *
+   * @param x the x coordinate of the position
+   * @param y the y coordinate of the position
+   * @param color the color of the chip
+   */
+  inline void set_chip(int x, int y, ReversiChipColor color) {
+    board[y*size + x] = color;
+  }
+};
+
+#endif
