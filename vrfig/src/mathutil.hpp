@@ -1,4 +1,4 @@
-// $Id: mathutil.hpp,v 1.7 2001-05-23 12:47:51 jle Exp $
+// $Id: mathutil.hpp,v 1.8 2001-05-24 20:14:42 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -99,23 +99,7 @@ fp16 str_to_fp16(const char *str);
  * @return the result as integer
  */
 inline int mul_fp16_fp16_int(fp16 a, fp16 b) {
-
-#ifdef USE_MIPS_ASM
-
-  int res;
-  asm("mult %1, %2\n"
-      "mfhi %0\n"
-      : "=r" (res)
-      : "r" (a), "r" (b)
-      : "$9", "$10", "lo", "hi", "cc");
-  return res;
-
-#else
-
   return ((a >> 8) * (b >> 8)) >> 16;
-
-#endif
-
 }
 
 inline int mul_fp32_fp32_int(fp32 a, fp32 b) {
@@ -130,27 +114,7 @@ inline int mul_fp32_fp32_int(fp32 a, fp32 b) {
  * @return the result 
  */
 inline fp16 mul_fp16(fp16 a, fp16 b) {
-
-#ifdef USE_MIPS_ASM
-
-  int res;
-  asm("mult %1, %2\n"
-      "mflo $9\n"
-      "mfhi $10\n"
-      "srl $9, $9, 16\n"
-      "sll $10, $10, 16\n"
-      "or %0, $9, $10"
-      : "=r" (res)
-      : "r" (a), "r" (b)
-      : "$9", "$10", "lo", "hi", "cc");
-  return res;
-
-#else // USE_MIPS_ASM
-
   return (a >> 8) * (b >> 8);
-
-#endif // USE_MIPS_ASM
-
 }
 
 /**
