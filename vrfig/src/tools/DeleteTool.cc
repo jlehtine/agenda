@@ -1,4 +1,4 @@
-// $Id: DeleteTool.cc,v 1.2 2001-05-22 19:49:12 jle Exp $
+// $Id: DeleteTool.cc,v 1.3 2001-05-23 07:54:35 jle Exp $
 
 #include <FL/Fl.H>
 #include <FL/Fl_Bitmap.H>
@@ -64,7 +64,8 @@ int DeleteTool::handle(int event, FigureView *view) {
       }
       if (closest) {
         int screen_dist_sqr = mul_fp32_fp32_int(
-          min_dist, fp16_to_fp32(view->get_scaling()));
+          min_dist, 
+          mul_fp16_fp16_fp32(view->get_scaling(), view->get_scaling()));
         if (screen_dist_sqr <= SELECT_DIST_SQR) {
           
           // Delete the element

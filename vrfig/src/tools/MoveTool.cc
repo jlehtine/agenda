@@ -1,4 +1,4 @@
-// $Id: MoveTool.cc,v 1.3 2001-05-22 19:48:52 jle Exp $
+// $Id: MoveTool.cc,v 1.4 2001-05-23 07:54:36 jle Exp $
 
 #include <vector.h>
 #include <FL/Fl.H>
@@ -73,7 +73,8 @@ int MoveTool::handle(int event, FigureView *view) {
       }
       if (element) {
         int screen_dist_sqr = mul_fp32_fp32_int(
-          min_dist, fp16_to_fp32(view->get_scaling()));
+          min_dist, 
+          mul_fp16_fp16_fp32(view->get_scaling(), view->get_scaling()));
         if (screen_dist_sqr > SELECT_DIST_SQR)
           element = 0;
       }
