@@ -1,4 +1,4 @@
-// $Id: Element.hpp,v 1.5 2001-05-17 19:35:27 jle Exp $
+// $Id: Element.hpp,v 1.6 2001-05-19 06:17:43 jle Exp $
 
 #ifndef __Element_hpp_INCLUDED__
 #define __Element_hpp_INCLUDED__
@@ -93,16 +93,6 @@ public:
   virtual void draw(int origin_x, int origin_y, unsigned int scaling,
                     bool xorred=false) const = 0;
   
-  /**
-   * Calculate the distance between the specified point and this
-   * element.
-   *
-   * @param x the x coordinate of the point (16.16 fixed)
-   * @param y the y coordinate of the point (16.16 fixed)
-   * @return the distance (16.16)
-   */
-  virtual int distance_to_point(int x, int y) = 0;
-
   /**
    * Serializes element data to the specified ostream. The data is serialized
    * as an XML data using UTF-8 charset. The caller creates an enclosing

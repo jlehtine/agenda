@@ -1,19 +1,20 @@
-// $Id: PolyLine.hpp,v 1.1 2001-05-17 19:35:28 jle Exp $
+// $Id: PolyLine.hpp,v 1.2 2001-05-19 06:17:43 jle Exp $
 
 #ifndef __Line_hpp_INCLUDED__
 #define __Line_hpp_INCLUDED__
 
 #include <vector.h>
 #include "Element.hpp"
+#include "Selectable.hpp"
 #include "vrfig.hpp"
 
 /**
  * A polyline element which is the most generic element.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
-class PolyLine : public Element {
+class PolyLine : public Element, public Selectable {
 
 protected:
 
