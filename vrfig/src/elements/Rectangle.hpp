@@ -1,12 +1,14 @@
-// $Id: Rectangle.hpp,v 1.1 2001-05-22 21:07:34 jle Exp $
+// $Id: Rectangle.hpp,v 1.2 2001-05-22 21:26:06 jle Exp $
 
 #ifndef __Rectangle_hpp_INCLUDED__
 #define __Rectangle_hpp_INCLUDED__
 
+#include <expat.h>
 #include "Element.hpp"
 #include "Movable.hpp"
 #include "Selectable.hpp"
 #include "Controllable.hpp"
+#include "ElementFactory.hpp"
 
 class Rectangle : public Element, public Selectable, public Movable,
                   public Controllable {
@@ -48,8 +50,10 @@ public:
     update_controls();
   }
 
+  static const char *get_name_static();
   virtual const char *get_name() const;
   
+  static const char *get_namespace_static();
   virtual const char *get_namespace() const;
   
   virtual void get_bounding_box(fp16 &x, fp16 &y, fp16 &w, fp16 &h) 
@@ -61,6 +65,8 @@ public:
   virtual ostream &serialize(ostream &os, const char *ns, int indent) 
     const;
   
+  static void deserialize(XML_Parser *parser, ElementFactory *ef);
+
   virtual u_fp32 select_distance_sqr(fp16 x, fp16 y) const;
   
   virtual void move(fp16 xoff, fp16 yoff);

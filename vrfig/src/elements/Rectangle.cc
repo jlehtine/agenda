@@ -1,4 +1,4 @@
-// $Id: Rectangle.cc,v 1.1 2001-05-22 21:07:34 jle Exp $
+// $Id: Rectangle.cc,v 1.2 2001-05-22 21:26:06 jle Exp $
 
 #include <FL/Enumerations.H>
 #include <FL/fl_draw.H>
@@ -7,15 +7,84 @@
 #include "mathutil.hpp"
 #include "vrfig.hpp"
 
-const char *Rectangle::get_name() const {
+/**
+ * Information needed when deserializing XML data to rectangle.
+ */
+struct DeserializeInfo {
+  void *old_data;
+  ElementFactory *ef;
+  XML_Parser parser;
+  fp16 x, y;
+  fp16 w, h;
+  int depth;
+};
+
+/**
+ * Element start handler for deserialization.
+ */
+static void start_handler(
+  void *data, const XML_Char *name, const XML_Char **atts) {
+  static char *elem_position = VRF_DEFAULT_NAMESPACE "#position";
+  static char *elem_size = VRF_DEFAULT_NAMESPACE "#size";
+  DeserializeInfo *info = reinterpret_cast<DeserializeInfo *>(data);
+
+  if (info->depth == 0) {
+    if (!strcmp(name, elem_position)) {
+      while (*atts) {
+        if (!strcmp(*atts, "x"))
+          info->x = str_to_fp16(*(atts+1));
+        else if (!strcmp(*atts, "y"))
+          info->y = str_to_fp16(*(atts+1));
+        atts += 2;
+      }
+    } else if (!strcmp(name, elem_size)) {
+      while (*atts) {
+        if (!strcmp(*atts, "width"))
+          info->w = str_to_fp16(*(atts+1));
+        else if (!strcmp(*atts, "height"))
+          info->h = str_to_fp16(*(atts+1));
+        atts += 2;
+      }
+    }
+  }
+  info->depth++;
+}
+
+/**
+ * Element end handler for deserialization.
+ */
+static void end_handler(void *data, const XML_Char *name) {
+  DeserializeInfo *info = reinterpret_cast<DeserializeInfo *>(data);
+  if (info->depth == 0) {
+    XML_SetElementHandler(info->parser, 0, 0);
+    XML_SetUserData(info->parser, info->old_data);
+    Rectangle *rect = new Rectangle(info->x, info->y, info->w, info->h);
+    info->ef->get_figure()->add_element(rect);
+    ElementFactory *ef = info->ef;
+    delete info;
+    ef->done();
+    return;
+  }
+  info->depth--;
+}
+
+const char *Rectangle::get_name_static() {
   static const char *name = "rectangle";
   return name;
+}
+  
+const char *Rectangle::get_name() const {
+  return get_name_static();
+}
+
+const char *Rectangle::get_namespace_static() {
+  return vrf_default_namespace;
 }
   
 const char *Rectangle::get_namespace() const {
   return vrf_default_namespace;
 }
-  
+
 void Rectangle::get_bounding_box(fp16 &x, fp16 &y, fp16 &w, fp16 &h) const {
   x = Rectangle::x;
   y = Rectangle::y;
@@ -56,7 +125,17 @@ ostream &Rectangle::serialize(ostream &os, const char *ns, int indent) const {
   write_fp16(os, h) << "\"/>\n";
   return os;
 }
-  
+ 
+void Rectangle::deserialize(XML_Parser *parser, ElementFactory *ef) {
+  DeserializeInfo *info = new DeserializeInfo();
+  info->old_data = XML_GetUserData(parser);
+  info->ef = ef;
+  info->parser = parser;
+  info->depth = 0;
+  XML_SetUserData(parser, info);
+  XML_SetElementHandler(parser, start_handler, end_handler);
+}
+
 u_fp32 Rectangle::select_distance_sqr(fp16 x, fp16 y) const {
   u_fp32 min_dist = ~static_cast<u_fp32>(0);
   fp16 xs = controls[6];
