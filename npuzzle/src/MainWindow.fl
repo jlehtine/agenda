@@ -1,0 +1,65 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0009 
+i18n_type 1 
+i18n_include <libintl.h> 
+i18n_function gettext 
+header_name {.hpp} 
+code_name {.cc} 
+gridx 5 
+gridy 5 
+snap 3
+class MainWindow {open
+} {
+  Function {MainWindow()} {open
+  } {
+    code {win = make_window();} {}
+  }
+  Function {make_window()} {open private
+  } {
+    Fl_Window {} {open
+      xywh {958 141 160 240} color 7 resizable visible
+    } {
+      Fl_Menu_Bar {} {open
+        xywh {0 0 160 25}
+      } {
+        submenu {} {
+          label game open
+          xywh {0 0 100 20}
+        } {
+          menuitem {} {
+            label new
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label settings
+            xywh {0 0 100 20} divider
+          }
+          menuitem {} {
+            label exit
+            callback {MainWindow::exitSelected}
+            xywh {0 0 100 20}
+          }
+        }
+        submenu {} {
+          label help open
+          xywh {0 0 100 20}
+        } {
+          menuitem {} {
+            label instructions
+            xywh {0 0 100 20}
+          }
+          menuitem {} {
+            label {about npuzzle}
+            xywh {0 0 100 20}
+          }
+        }
+      }
+    }
+  }
+  Function {exit_selected(Fl_Widget *widget, void *data)} {open private return_type void
+  } {
+    code {exit(0);} {}
+  }
+  decl {Fl_Window *win;} {selected
+  }
+} 
