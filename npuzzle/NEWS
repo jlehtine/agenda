@@ -1,0 +1,16 @@
+NPuzzle News
+============
+
+This is the first release of NPuzzle and it is a very early release,
+indeed. I haven't had a chance to try NPuzzle on Agenda VR3 yet but I
+hope I will get my device soon and be able to prepare a real package
+specifically for VR3.
+
+I originally wrote NPuzzle to learn how to use FLTK and I think I
+might be writing another simple game (maybe Reversi) before starting
+to work on real applications for VR3. I am planning to write an
+application that would make it easy to mix textual notes and sketched
+diagrams.
+
+Johannes Lehtinen
+<johannes.lehtinen@iki.fi>
