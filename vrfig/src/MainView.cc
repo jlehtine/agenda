@@ -1,4 +1,4 @@
-// $Id: MainView.cc,v 1.1.1.1 2001-05-05 18:42:21 jle Exp $
+// $Id: MainView.cc,v 1.2 2001-05-05 18:46:29 jle Exp $
 
 #include <stdlib.h>
 #include <flpda/Widget_Factory.h>
@@ -64,12 +64,12 @@ static Fl_Menu_Item info_popup[] = {
   { "Tools" },
   { "Figures" },
   { "Tutorial", 0, 0, 0, FL_MENU_DIVIDER },
-  { "About SmartDraw" },
+  { "About VRFig" },
   { 0 }
 };
 
 MainView::MainView() {
-  win = Widget_Factory::new_window("SmartDraw");
+  win = Widget_Factory::new_window("VRFig");
 
   // Create toolbar
   Fl_Dockable_Window *toolbar = Widget_Factory::new_toolbar();
