@@ -1,4 +1,4 @@
-// $Id: PuzzleGame.hpp,v 1.3 2000-10-28 11:22:26 jle Exp $
+// $Id: PuzzleGame.hpp,v 1.4 2000-10-28 11:56:48 jle Exp $
 
 #ifndef __PuzzleGame_hpp_INCLUDED__
 #define __PuzzleGame_hpp_INCLUDED__
@@ -9,7 +9,7 @@
  * 15(n)-puzzle game logic and wrapper for storing game situations.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  */
 class PuzzleGame {
 
@@ -34,7 +34,9 @@ public:
   /**
    * Destructor freeing all allocated resources.
    */
-  ~PuzzleGame();
+  inline ~PuzzleGame() {
+    delete state;
+  }
 
   /**
    * Checks whether the blocks are in correct order.

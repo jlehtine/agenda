@@ -1,4 +1,4 @@
-// $Id: PuzzleGame.cc,v 1.3 2000-10-28 11:22:26 jle Exp $
+// $Id: PuzzleGame.cc,v 1.4 2000-10-28 11:56:48 jle Exp $
 
 #include <stdlib.h>
 #include "PuzzleGame.hpp"
@@ -57,10 +57,6 @@ PuzzleGame::PuzzleGame(int size) {
     zx = x;
     zy = y;
   }
-}
-
-PuzzleGame::~PuzzleGame() {
-  delete state;
 }
 
 bool PuzzleGame::solved() {
