@@ -1,5 +1,5 @@
 //
-// "$Id: FileIcon.h,v 1.1 2001-05-19 19:12:40 jle Exp $"
+// "$Id: FileIcon.h,v 1.2 2001-05-20 11:05:27 jle Exp $"
 //
 //   FileIcon definitions.
 //
@@ -21,6 +21,10 @@
 //       EMail: info@easysw.com
 //         WWW: http://www.easysw.com
 //
+
+// Modification by Johannes Lehtinen:
+//   Made FileIcon::draw(...) and destructor virtual so that it is possible to
+//   declare subclasses of FileIcon.
 
 //
 // Include necessary header files...
@@ -70,7 +74,7 @@ class FileIcon			//// Icon data
   };
 
   FileIcon(const char *p, int t, int nd = 0, short *d = 0);
-  ~FileIcon();
+  virtual ~FileIcon();
 
   short		*add(short d);
   short		*add_color(short c)
@@ -81,7 +85,7 @@ class FileIcon			//// Icon data
 		{ short *d = add(VERTEX); add((int)(x * 10000.0));
 		  add((int)(y * 10000.0)); return (d); }
   void		clear() { num_data_ = 0; }
-  void		draw(int x, int y, int w, int h, Fl_Color ic, int active = 1);
+  virtual void	draw(int x, int y, int w, int h, Fl_Color ic, int active = 1);
   void		label(Fl_Widget *w);
   static void	labeltype(const Fl_Label *o, int x, int y, int w, int h, Fl_Align a);
   void		load(const char *f);
@@ -102,5 +106,5 @@ class FileIcon			//// Icon data
 #endif // !_GUI_FILEICON_H_
 
 //
-// End of "$Id: FileIcon.h,v 1.1 2001-05-19 19:12:40 jle Exp $".
+// End of "$Id: FileIcon.h,v 1.2 2001-05-20 11:05:27 jle Exp $".
 //
