@@ -1,4 +1,4 @@
-// $Id: mathutil.cc,v 1.8 2001-05-23 12:47:51 jle Exp $
+// $Id: mathutil.cc,v 1.9 2001-06-10 19:35:13 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -60,12 +60,6 @@ size_t fp16_to_str(fp16 v, char *str, size_t n) {
   return num_written;
 }
 
-ostream &write_fp16(ostream &os, fp16 v) {
-  char str[20];
-  fp16_to_str(v, str, 20);
-  return os << str;
-}
-
 fp16 str_to_fp16(const char *str) {
   fp16 v = 0;
   bool minus_sign;
@@ -95,10 +89,6 @@ fp16 str_to_fp16(const char *str) {
     return 0;
   v |= (u_fp16)((((unsigned long long)dp << 16) + (divider >> 1)) / divider);
   return minus_sign ? -v : v;
-}
-
-fp16 div_int_fp16u_fp16(int dividend, u_fp16 divisor) {
-  return ((dividend << 16) / (divisor >> 8)) << 8;
 }
 
 u_fp16 sqrt_fp32_fp16(u_fp32 square) {
@@ -146,10 +136,4 @@ u_fp32 distance_to_line_sqr(
     fp16 yi = ys + mul_fp16(projection, yd);
     return vector_length_sqr_fp16_fp32(x - xi, y - yi);
   }
-}
-
-fp16 project_point_to_vector(fp16 x, fp16 y, fp16 xv, fp16 yv) {
-  fp32 dp = dot_product(x, y, xv, yv);
-  u_fp32 len = vector_length_sqr_fp16_fp32(xv, yv);
-  return div_fp32_fp32_fp16(dp, len);
 }

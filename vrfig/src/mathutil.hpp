@@ -1,4 +1,4 @@
-// $Id: mathutil.hpp,v 1.11 2001-06-10 18:36:43 jle Exp $
+// $Id: mathutil.hpp,v 1.12 2001-06-10 19:35:13 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -81,7 +81,11 @@ size_t fp16_to_str(fp16 v, char *str, size_t n);
  * @param os the output stream
  * @param v the fixed point value to write
  */
-ostream &write_fp16(ostream &os, fp16 v);
+inline ostream &write_fp16(ostream &os, fp16 v) {
+  char str[20];
+  fp16_to_str(v, str, 20);
+  return os << str;
+}
 
 /**
  * Converts a decimal string to 16.16 fixed point number.
@@ -136,7 +140,9 @@ inline fp32 mul_fp16_fp16_fp32(fp16 a, fp16 b) {
  * @param divisor the divisor 
  * @return the result 
  */
-fp16 div_int_fp16u_fp16(int dividend, u_fp16 divisor);
+inline fp16 div_int_fp16u_fp16(int dividend, u_fp16 divisor) {
+  return ((dividend << 16) / (divisor >> 8)) << 8;
+}
 
 /**
  * Divides two 16.16 fixed point values.
@@ -236,7 +242,11 @@ u_fp32 distance_to_line_sqr(
  * @param xv the x component of the vector
  * @param xy the y component of the vector
  */
-fp16 project_point_to_vector(fp16 x, fp16 y, fp16 xv, fp16 yv);
+inline fp16 project_point_to_vector(fp16 x, fp16 y, fp16 xv, fp16 yv) {
+  fp32 dp = dot_product(x, y, xv, yv);
+  u_fp32 len = vector_length_sqr_fp16_fp32(xv, yv);
+  return div_fp32_fp32_fp16(dp, len);
+}
 
 /**
  * Transforms the specified length from figure coordinates to screen
