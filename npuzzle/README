@@ -1,0 +1,36 @@
+NPuzzle
+=======
+
+NPuzzle is a very simple 15-puzzle (or 8-puzzle, or 24-puzzle)
+implementation. It has been written specifically for Agenda VR3(*) but
+because I don't have the VR3 device yet, I have not been able to test
+it with the actual hardware. However, it runs nicely in standard
+Linux/X environment so I decided to make an early release in case
+someone would like to try it out.
+
+NPuzzle is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 2 of the License, or (at your
+option) any later version. For details, see the file COPYING.
+
+For more information about NPuzzle author, see the file AUTHORS.
+
+NPuzzle uses GNU automake and GNU autoconf generated configuration
+system. For instructions on compiling and installing NPuzzle, see the
+file INSTALL. In the file NEWS you can find the latest news regarding
+NPuzzle.
+
+If you have new ideas, would like to file a bug report or would like
+to contribute to NPuzzle, don't hesitate to contact me. For the latest
+version of NPuzzle and possible other Agenda games and applications,
+see the web page
+
+  http://www.iki.fi/jle/agenda/
+
+
+Johannes Lehtinen
+<johannes.lehtinen@iki.fi>
+
+
+(*) A small handheld PDA device manufactured by Agenda Computing Inc.
+    http://www.agendacomputing.com/
