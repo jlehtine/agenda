@@ -11,28 +11,40 @@ class AboutWindow {open
   } {
     Fl_Window win {
       label {About NPuzzle} open
-      private xywh {1110 501 160 200} color 7 modal visible
+      private xywh {1048 542 160 148} color 7 resizable modal visible
     } {
       Fl_Box {} {
         label NPuzzle
-        xywh {15 25 130 30} labelfont 1 labelsize 18
+        xywh {30 20 100 25} labelfont 1
       }
       Fl_Box {} {
         label {v 0.1}
-        xywh {45 55 65 20}
+        xywh {45 55 65 20} labelsize 12
       }
-      Fl_Box copyright {
-        private xywh {15 85 130 45} box FLAT_BOX color 7
-        code0 {\#include <FL/Fl_Multiline_Output.H>}
-        class Fl_Multiline_Output
+      Fl_Box {} {
+        label {Copyright (C) 2000}
+        xywh {20 75 120 20} labelsize 12
       }
-      Fl_Button {} {
-        label Close
-        callback {win->hide();} selected
-        xywh {50 155 65 25}
+      Fl_Box {} {
+        label {Johannes Lehtinen}
+        xywh {20 95 120 20} labelsize 12
+      }
+      Fl_Group {} {open
+        xywh {0 130 160 20} box UP_BOX
+      } {
+        Fl_Button {} {
+          label Done
+          callback {win->hide();}
+          xywh {0 130 35 20} labelsize 10
+        }
+        Fl_Box {} {
+          xywh {35 130 125 20} resizable
+        }
+      }
+      Fl_Box {} {selected
+        xywh {0 120 160 10} resizable
       }
     }
-    code {copyright->value("Copyright (C) 2000\\nJohannes Lehtinen");} {}
   }
   Function {show()} {open return_type void
   } {
