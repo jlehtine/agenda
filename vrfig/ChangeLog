@@ -1,3 +1,8 @@
+2001-05-29  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
+
+	* Store vertices as Point objects instead of storing them as two
+	  separate fixed point values (cleanup, no functional changes)
+
 2001-05-28  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
 
 	* Prepared documentation for the 0.2 release
