@@ -1,8 +1,6 @@
-// $Id: PuzzleBox.cc,v 1.3 2000-10-29 15:58:41 jle Exp $
+// $Id: PuzzleBox.cc,v 1.4 2000-10-29 17:22:14 jle Exp $
 
 #include <stdio.h>
-#include <sys/time.h>
-#include <unistd.h>
 #include <FL/fl_draw.H>
 #include <FL/Enumerations.H>
 #include "PuzzleBox.hpp"
@@ -22,7 +20,7 @@ void PuzzleBox::draw() {
   int size = game->get_size();
 
   // Clear left over borders with background color
-  fl_color(FL_WHITE);
+  fl_color(color());
   if (offx > x()) {
     fl_rectf(x(), y(), offx - x(), h());
   }
@@ -50,7 +48,7 @@ void PuzzleBox::draw() {
       } else {
 
         // Clear box
-        fl_color(FL_WHITE);
+        fl_color(color());
         fl_rectf(offx + edge*x, offy + edge*y, edge, edge);
       }
     }
@@ -91,7 +89,7 @@ int PuzzleBox::handle(int event) {
               l.x_offset + new_pos[0]*l.edge, 
               l.y_offset + new_pos[1]*l.edge,
               l.edge, game->get_tile(new_pos[0], new_pos[1]));
-    fl_color(FL_WHITE);
+    fl_color(color());
     fl_rectf(l.x_offset + old_pos[0]*l.edge, 
              l.y_offset + old_pos[1]*l.edge, 
              l.edge, l.edge);
