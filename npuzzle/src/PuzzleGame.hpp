@@ -1,7 +1,9 @@
-// $Id: PuzzleGame.hpp,v 1.5 2000-10-29 15:57:57 jle Exp $
+// $Id: PuzzleGame.hpp,v 1.6 2000-10-29 17:21:38 jle Exp $
 
 #ifndef __PuzzleGame_hpp_INCLUDED__
 #define __PuzzleGame_hpp_INCLUDED__
+
+#include "time.h"
 
 #ifdef __cplusplus
 
@@ -18,7 +20,7 @@
  * 15(n)-puzzle game logic and wrapper for storing game situations.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  */
 class PuzzleGame {
 
@@ -29,6 +31,15 @@ protected:
 
   /** The current game situation */
   int *state;
+
+  /** When the game was started */
+  time_t start_time;
+
+  /** When the puzzle was solved. 0 if not solved yet. */
+  time_t solved_time;
+  
+  /** Number of moves made */
+  int moves;
   
 public:
   
@@ -82,6 +93,28 @@ public:
    */
   inline int get_size() {
     return size;
+  }
+
+  /**
+   * Returns the current game time.
+   *
+   * @returns the current game time in seconds
+   */
+  inline int get_time() {
+    if (solved_time == 0) {
+      return time(NULL) - start_time;
+    } else {
+      return solved_time - start_time;
+    }
+  }
+
+  /**
+   * Returns the number of moves made.
+   *
+   * @returns the number of moves made
+   */
+  inline int get_moves() {
+    return moves;
   }
 };
 

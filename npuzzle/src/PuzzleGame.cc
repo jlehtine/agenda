@@ -1,4 +1,4 @@
-// $Id: PuzzleGame.cc,v 1.6 2000-10-29 15:57:57 jle Exp $
+// $Id: PuzzleGame.cc,v 1.7 2000-10-29 17:21:38 jle Exp $
 
 #include <stdlib.h>
 #include "PuzzleGame.hpp"
@@ -57,6 +57,11 @@ PuzzleGame::PuzzleGame(int size) {
     zx = x;
     zy = y;
   }
+  
+  // Initialize time counters and move counter
+  start_time = time(NULL);
+  solved_time = 0;
+  moves = 0;
 }
 
 bool PuzzleGame::solved() {
@@ -98,5 +103,6 @@ int PuzzleGame::move(int x, int y) {
   // Move the block
   state[(y+off[1])*size + x + off[0]] = bxy;
   state[y*size + x] = 0;
+  moves++;
   return i-1;
 }
