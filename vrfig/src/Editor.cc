@@ -1,4 +1,4 @@
-// $Id: Editor.cc,v 1.4 2001-05-20 11:49:43 jle Exp $
+// $Id: Editor.cc,v 1.5 2001-05-22 14:53:26 jle Exp $
 
 #include "Editor.hpp"
 
@@ -20,6 +20,22 @@ void Editor::set_tool(Tool *_tool) {
   if (tool)
     tool->activated(this);
   redraw();
+}
+
+void Editor::set_origin(fp16 x, fp16 y) {
+  if (tool)
+    tool->deactivated(this);
+  FigureView::set_origin(x, y);
+  if (tool)
+    tool->activated(this);
+}
+
+void Editor::set_scaling(u_fp16 _scaling) {
+  if (tool)
+    tool->deactivated(this);
+  FigureView::set_scaling(scaling);
+  if (tool)
+    tool->activated(this);
 }
 
 void Editor::draw() {

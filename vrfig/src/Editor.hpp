@@ -1,4 +1,4 @@
-// $Id: Editor.hpp,v 1.2 2001-05-20 11:49:43 jle Exp $
+// $Id: Editor.hpp,v 1.3 2001-05-22 14:53:27 jle Exp $
 
 #ifndef __Editor_hpp_INCLUDED__
 #define __Editor_hpp_INCLUDED__
@@ -12,7 +12,7 @@
  * the tool specific drawing hooks.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 class Editor : public FigureView {
 
@@ -37,6 +37,10 @@ public:
    * @param tool the new tool to be used
    */
   void set_tool(Tool *_tool);
+
+  void set_origin(fp16 x, fp16 y);
+
+  void set_scaling(u_fp16 _scaling);
 
   /**
    * Draws the widget.
