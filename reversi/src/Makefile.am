@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.1.1.1 2000-11-03 20:18:24 jle Exp $
+## $Id: Makefile.am,v 1.2 2000-11-12 06:47:40 jle Exp $
 
 srcdir = @srcdir@
 VPATH = @srcdir@
@@ -8,7 +8,12 @@ FLUID = @FLUID@
 
 bin_PROGRAMS = reversi
 
-reversi_SOURCES = ReversiGame.cc ReversiGame.hpp
+reversi_SOURCES = ReversiGame.cc ReversiGame.hpp \
+	MainWindowBase.hpp \
+	MainWindow.cc MainWindow.hpp \
+	main.cc
+
+main.cc: MainWindow.hpp
 
 %.hpp: %.fl
 	$(FLUID) -c $<
