@@ -1,16 +1,44 @@
-// $Id: mathutil.hpp,v 1.1 2001-05-08 21:20:02 jle Exp $
+// $Id: mathutil.hpp,v 1.2 2001-05-19 08:42:17 jle Exp $
 
-#ifndef __transform_hpp_INCLUDED__
-#define __transform_hpp_INCLUDED__
+#ifndef __mathutil_hpp_INCLUDED__
+#define __mathutil_hpp_INCLUDED__
+
+/** A signed 16.16 fixed point value */
+typedef int fp16;
+
+/** A signed 32.32 fixed point value */
+typedef long long fp32;
+
+/** An unsigned 16.16 fixed point value */
+typedef unsigned int u_fp16;
+
+/** An unsigned 32.32 fixed point value */
+typedef unsigned long long u_fp32;
+
+inline fp16 int_to_fp16(int i) {
+  return i << 16;
+}
+
+inline fp32 int_to_fp32(int i) {
+  return static_cast<fp32>(i) << 32;
+}
+
+inline fp32 fp16_to_fp32(fp16 i) {
+  return static_cast<fp32>(i) << 16;
+}
+
+inline fp16 fp32_to_fp16(fp32 i) {
+  return i >> 16;
+}
 
 /**
  * Multiplies two 16.16 fixed point values returning the result as integer.
  *
- * @param a the first value (16.16 fixed)
- * @param b the second value (16.16 fixed)
+ * @param a the first value 
+ * @param b the second value 
  * @return the result as integer
  */
-inline int mul_fp16_fp16_int(int a, int b) {
+inline int mul_fp16_fp16_int(fp16 a, fp16 b) {
 
 #ifdef USE_MIPS_ASM
 
@@ -33,11 +61,11 @@ inline int mul_fp16_fp16_int(int a, int b) {
 /**
  * Multiplies two 16.16 fixed point values.
  *
- * @param a the first value (16.16 fixed)
- * @param b the second value (16.16 fixed)
- * @return the result (16.16 fixed)
+ * @param a the first value 
+ * @param b the second value 
+ * @return the result 
  */
-inline int mul_fp16(int a, int b) {
+inline fp16 mul_fp16(fp16 a, fp16 b) {
 
 #ifdef USE_MIPS_ASM
 
@@ -62,71 +90,113 @@ inline int mul_fp16(int a, int b) {
 }
 
 /**
+ * Multiplies tp 16.16 fixed point value and returns the result as
+ * 32.32 fixed point value.
+ *
+ * @param a the first value 
+ * @param b the second value 
+ * @return the result
+ */
+inline fp32 mul_fp16_fp16_fp32(fp16 a, fp16 b) {
+  return static_cast<fp32>(a) * static_cast<fp32>(b);
+}
+
+/**
  * Divides integer by 16.16 fixed point value.
  *
  * @param dividend the dividend (integer)
- * @param divisor the divisor (16.16 fixed)
- * @return the result (16.16 fixed)
+ * @param divisor the divisor 
+ * @return the result 
  */
-int div_int_fp16u_fp16(int dividend, unsigned int divisor);
+fp16 div_int_fp16u_fp16(int dividend, u_fp16 divisor);
 
 /**
  * Divides two 16.16 fixed point values.
  *
- * @param a the first value (16.16 fixed)
- * @param b the second value (16.16 fixed)
- * @return the result (16.16 fixed)
+ * @param a the first value 
+ * @param b the second value 
+ * @return the result 
  */
-int div_fp16(int dividend, int divisor);
+fp16 div_fp16(fp16 dividend, fp16 divisor);
+
+/**
+ * Divides two 32.32 fixed point values.
+ *
+ * @param a the first value
+ * @param v the second value
+ * @return the result
+ */
+inline fp16 div_fp32_fp32_fp16(fp32 dividend, fp32 divisor) {
+  return dividend / (divisor >> 16);
+}
+
+/**
+ * Calculates square root of a 32.32 fixed point value.
+ *
+ * @param s the squared value
+ * @return the square root
+ */
+u_fp16 sqrt_fp32_fp16(u_fp32 s);
+
+/**
+ * Calculates the squared length of the specified vector.
+ *
+ * @param x the x component of the vector 
+ * @param y the y component of the vector 
+ * @return the squared length of the vector 
+ */
+inline fp32 vector_length_sqr_fp16_fp32(fp16 x, fp16 y) {
+  return mul_fp16_fp16_fp32(x, x) + mul_fp16_fp16_fp32(y, y);
+}
 
 /**
  * Calculates the length of the specified vector.
  *
- * @param x the x component of the vector (16.16 fixed)
- * @param y the y component of the vector (16.16 fixed)
- * @return the square of the length of the vector (16.16 fixed)
+ * @param x the x component of the vector 
+ * @param y the y component of the vector 
+ * @return the length of the vector 
  */
-inline int vector_length(int x, int y) {
-  return mul_fp16(x, x) + mul_fp16(y, y);
+inline fp16 vector_length_fp16(fp16 x, fp16 y) {
+  return sqrt_fp32_fp16(vector_length_sqr_fp16_fp32(x, y));
 }
 
 /**
  * Calculates the intersection point of the two straights.
  *
- * @param xs1 the x coordinate of the starting point 1 (16.16 fixed)
- * @param ys1 the y coordinate of the starting point 1 (16.16 fixed)
- * @param xd1 the x component of the direction 1 (16.16 fixed)
- * @param yd1 the y component of the direction 1 (16.16 fixed)
- * @param xs2 the x coordinate of the starting point 2 (16.16 fixed)
- * @param ys2 the y coordinate of the starting point 2 (16.16 fixed)
- * @param xd2 the x component of the direction 2 (16.16 fixed)
- * @param yd2 the y component of the direction 2 (16.16 fixed)
- * @param xi the x coordinate of the intersection point (16.16 fixed)
- * @param yi the y coordinate of the intersectino point (16.16 fixed)
+ * @param xs1 the x coordinate of the starting point 1 
+ * @param ys1 the y coordinate of the starting point 1 
+ * @param xd1 the x component of the direction 1 
+ * @param yd1 the y component of the direction 1 
+ * @param xs2 the x coordinate of the starting point 2 
+ * @param ys2 the y coordinate of the starting point 2 
+ * @param xd2 the x component of the direction 2 
+ * @param yd2 the y component of the direction 2 
+ * @param xi the x coordinate of the intersection point 
+ * @param yi the y coordinate of the intersectino point 
  */
-void intersect_straights(int xs1, int ys1, int xd1, int yd1,
-                         int xs2, int ys2, int xd2, int yd2,
-                         int &xi, int &yi);
+void intersect_straights(fp16 xs1, fp16 ys1, fp16 xd1, fp16 yd1,
+                         fp16 xs2, fp16 ys2, fp16 xd2, fp16 yd2,
+                         fp16 &xi, fp16 &yi);
 
 /**
  * Calculates how far the specified point is from the specified
  * line segment.
  *
- * @param x the x coordinate of the point (16.16 fixed)
- * @param y the y coordinate of the point (16.16 fixed)
- * @param xs the x coordinate of the line end point (16.16 fixed)
- * @param ys the y coordinate of the line end point (16.16 fixed)
- * @param xd the x component of the line vector (16.16 fixed)
- * @param yd the y component of the line vector (16.16 fixed)
- * @return the minimum distance squared (16.16 fixed)
+ * @param x the x coordinate of the point 
+ * @param y the y coordinate of the point 
+ * @param xs the x coordinate of the line end point 
+ * @param ys the y coordinate of the line end point 
+ * @param xd the x component of the line vector 
+ * @param yd the y component of the line vector 
+ * @return the minimum distance squared 
  */
-int distance_from_line(int x, int y, int xs, int ys, int xd, int yd);
+int distance_from_line(fp16 x, fp16 y, fp16 xs, fp16 ys, fp16 xd, fp16 yd);
 
-inline int coord_to_screen(int c, int origin, unsigned int scaling) {
+inline int coord_to_screen(fp16 c, fp16 origin, u_fp16 scaling) {
   return mul_fp16_fp16_int(c - origin, scaling);
 }
 
-inline int screen_to_coord(int sc, int origin, unsigned int scaling) {
+inline fp16 screen_to_coord(int sc, fp16 origin, u_fp16 scaling) {
   return div_int_fp16u_fp16(sc, scaling) + origin;
 }
 
