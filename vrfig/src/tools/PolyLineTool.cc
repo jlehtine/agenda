@@ -1,4 +1,4 @@
-// $Id: PolyLineTool.cc,v 1.4 2001-05-27 13:21:46 jle Exp $
+// $Id: PolyLineTool.cc,v 1.5 2001-05-27 17:54:36 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -33,6 +33,20 @@
 
 static Fl_Bitmap polyline_bitmap
 (polyline_icon_bits, polyline_icon_width, polyline_icon_height);
+
+/**
+ * Finds the polyline end closest to the specified point. Points more than
+ * the maximum connect distance are ignored.
+ *
+ * @param view the current view
+ * @param x the x coordinate
+ * @param y the y coordinate
+ * @param first_vertex return value: whether the closest point is the first \
+ *    vertex (or the last one)
+ * @return the closes polyline or null if none
+ */
+PolyLine *find_connect_point(FigureView *view, fp16 x, fp16 y, 
+                             bool &first_vertex);
 
 const char *PolyLineTool::get_name() const {
   static const char *name = "polyline";
@@ -96,56 +110,15 @@ int PolyLineTool::handle(int event, FigureView *view) {
     do {
       
       // Find the closest possible starting point
-      start_x = Fl::event_x();
-      start_y = Fl::event_y();
-      last_x = start_x;
-      last_y = start_y;
-      fp16 fx = screen_to_coord(start_x, 
+      fp16 fx = screen_to_coord(Fl::event_x(), 
                                 view->get_origin_x(), view->get_scaling());
-      fp16 fy = screen_to_coord(start_y,
+      fp16 fy = screen_to_coord(Fl::event_y(),
                                 view->get_origin_y(), view->get_scaling());
-      u_fp32 min_dist = ~static_cast<u_fp32>(0);
-      const vector<Element *> *elements = view->get_figure()->get_elements();
-      vector<Element *>::const_iterator i = elements->begin();
-      while (i < elements->end()) {
-        PolyLine *pl = dynamic_cast<PolyLine *>(*i);
-        if (pl) {
-          const vector<fp16> *vertices = pl->get_vertices();
-          int s = vertices->size();
-          u_fp32 dist;
-          if (s > 2) {
-            dist = vector_length_sqr_fp16_fp32
-              (fx - (*vertices)[0], fy - (*vertices)[1]);
-            if (dist < min_dist) {
-              polyline = pl;
-              extend_first = true;
-              min_dist = dist;
-              start_x = coord_to_screen
-                ((*vertices)[0], view->get_origin_x(), view->get_scaling());
-              start_y = coord_to_screen
-                ((*vertices)[1], view->get_origin_y(), view->get_scaling());
-            }
-          }
-          dist = vector_length_sqr_fp16_fp32
-            (fx - (*vertices)[s-2], fy - (*vertices)[s-1]);
-          if (dist < min_dist) {
-            polyline = pl;
-            extend_first = false;
-            min_dist = dist;
-            start_x = coord_to_screen
-              ((*vertices)[s-2], view->get_origin_x(), view->get_scaling());
-            start_y = coord_to_screen
-              ((*vertices)[s-1], view->get_origin_y(), view->get_scaling());
-          }
-        }
-        i++;
-      }
+      polyline = find_connect_point(view, fx, fy, extend_first);
       
       // Check if a new polyline should be created
       fl_color(FL_WHITE);
-      if (!polyline || 
-          coord_to_screen(fp32_to_fp16(min_dist), view->get_scaling())
-          > CONTINUE_DIST_SQR) {
+      if (!polyline) {
         start_x = Fl::event_x();
         start_y = Fl::event_y();
         PolyLine *pl = new PolyLine();
@@ -162,19 +135,26 @@ int PolyLineTool::handle(int event, FigureView *view) {
         new_polyline = true;
       } else {
 
-        // Hide the extended select helper
-        const vector<fp16> *vertices = polyline->get_vertices();
+        // Adjust start coordinates
+        vector<fp16> *vertices = polyline->get_vertices();
         int s = vertices->size();
+        start_x = coord_to_screen
+          ((*vertices)[extend_first ? 0 : s - 2], 
+           view->get_origin_x(), view->get_scaling());
+        start_y = coord_to_screen
+          ((*vertices)[extend_first ? 1 : s - 1], 
+           view->get_origin_y(), view->get_scaling());
+
+        // Hide the extended select helper
         fl_color(FL_WHITE);
         int old_func = fle_xorred_mode();
-        Selectable::draw_select_helper
-          ((*vertices)[extend_first ? 0 : s - 2],
-           (*vertices)[extend_first ? 1 : s - 1],
-           view->get_origin_x(), view->get_origin_y(), view->get_scaling());
+        Selectable::draw_select_helper(start_x, start_y);
         fle_reset_mode(old_func);
         new_polyline = false;
       }
 
+      last_x = Fl::event_x();
+      last_y = Fl::event_y();
       fle_xorred_line(start_x, start_y, last_x, last_y);
     } while (0);
     return 1;
@@ -223,4 +203,41 @@ int PolyLineTool::handle(int event, FigureView *view) {
   default:
     return 0;
   }
+}
+
+PolyLine *find_connect_point(FigureView *view, fp16 x, fp16 y, 
+                             bool &first_vertex) {
+  PolyLine *polyline = 0;
+  u_fp32 min_dist = ~static_cast<u_fp32>(0);
+  const vector<Element *> *elements = view->get_figure()->get_elements();
+  vector<Element *>::const_iterator i = elements->begin();
+  while (i < elements->end()) {
+    PolyLine *pl = dynamic_cast<PolyLine *>(*i);
+    if (pl) {
+      const vector<fp16> *vertices = pl->get_vertices();
+      int s = vertices->size();
+      u_fp32 dist;
+      if (s > 2) {
+        dist = vector_length_sqr_fp16_fp32
+          (x - (*vertices)[0], y - (*vertices)[1]);
+        if (dist < min_dist) {
+          polyline = pl;
+          first_vertex = true;
+          min_dist = dist;
+        }
+      }
+      dist = vector_length_sqr_fp16_fp32
+        (x - (*vertices)[s-2], y - (*vertices)[s-1]);
+      if (dist < min_dist) {
+        polyline = pl;
+        first_vertex = false;
+        min_dist = dist;
+      }
+    }
+    i++;
+  }
+  if (coord_to_screen(fp32_to_fp16(min_dist), view->get_scaling())
+      > CONTINUE_DIST_SQR)
+    polyline = 0;
+  return polyline;
 }
