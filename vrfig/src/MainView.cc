@@ -1,4 +1,4 @@
-// $Id: MainView.cc,v 1.21 2001-05-26 19:52:35 jle Exp $
+// $Id: MainView.cc,v 1.22 2001-05-28 20:30:59 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -441,7 +441,7 @@ static Fl_App_Window *create_about_win() {
   about_win->contents()->add(vrfig);
   
   // Create the version text
-  Fl_Box *ver = new Fl_Box(0, 40, about_win->w(), 20, "v 0.1");
+  Fl_Box *ver = new Fl_Box(0, 40, about_win->w(), 20, "v " VERSION);
   ver->labelsize(Widget_Factory::labelsize());
   about_win->contents()->add(ver);
   
