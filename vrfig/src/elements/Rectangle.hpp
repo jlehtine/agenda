@@ -1,4 +1,4 @@
-// $Id: Rectangle.hpp,v 1.3 2001-05-23 12:47:51 jle Exp $
+// $Id: Rectangle.hpp,v 1.4 2001-05-24 18:25:52 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -73,7 +73,6 @@ public:
   virtual const char *get_name() const;
   
   static const char *get_namespace_static();
-  virtual const char *get_namespace() const;
   
   virtual void get_bounding_box(fp16 &x, fp16 &y, fp16 &w, fp16 &h) 
     const;

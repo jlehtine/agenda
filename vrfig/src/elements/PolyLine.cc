@@ -1,4 +1,4 @@
-// $Id: PolyLine.cc,v 1.9 2001-05-23 12:47:51 jle Exp $
+// $Id: PolyLine.cc,v 1.10 2001-05-24 18:25:52 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -121,21 +121,17 @@ PolyLine::~PolyLine() {
   points.clear();
 }
 
-static const char *polyline_name = "polyline";
 
 const char *PolyLine::get_name_static() {
-  return polyline_name;
+  static const char *name = "polyline";
+  return name;
 }
 
 const char *PolyLine::get_name() const {
-  return polyline_name;
+  return get_name_static();
 }
 
 const char *PolyLine::get_namespace_static() {
-  return vrf_default_namespace;
-}
-
-const char *PolyLine::get_namespace() const {
   return vrf_default_namespace;
 }
 

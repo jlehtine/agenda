@@ -1,4 +1,4 @@
-// $Id: Ellipse.cc,v 1.2 2001-05-23 12:47:51 jle Exp $
+// $Id: Ellipse.cc,v 1.3 2001-05-24 18:25:52 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -108,10 +108,6 @@ const char *Ellipse::get_namespace_static() {
   return vrf_default_namespace;
 }
 
-const char *Ellipse::get_namespace() const {
-  return vrf_default_namespace;
-}
-  
 void Ellipse::get_bounding_box(fp16 &x, fp16 &y, fp16 &w, fp16 &h) const {
   u_fp16 hw = abs(controls[0] - controls[2]);
   u_fp16 hh = abs(controls[1] - controls[3]);

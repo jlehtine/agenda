@@ -1,4 +1,4 @@
-// $Id: Ellipse.hpp,v 1.2 2001-05-23 12:47:51 jle Exp $
+// $Id: Ellipse.hpp,v 1.3 2001-05-24 18:25:52 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -33,7 +33,7 @@
  * An ellipse element.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 class Ellipse : public Element, public Selectable, public Movable,
                 public Controllable {
@@ -54,7 +54,6 @@ public:
   virtual const char *get_name() const;
   
   static const char *get_namespace_static();
-  virtual const char *get_namespace() const;
   
   virtual void get_bounding_box(fp16 &x, fp16 &y, fp16 &w, fp16 &h) 
     const;

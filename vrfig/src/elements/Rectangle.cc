@@ -1,4 +1,4 @@
-// $Id: Rectangle.cc,v 1.4 2001-05-23 12:47:51 jle Exp $
+// $Id: Rectangle.cc,v 1.5 2001-05-24 18:25:52 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -100,10 +100,6 @@ const char *Rectangle::get_namespace_static() {
   return vrf_default_namespace;
 }
   
-const char *Rectangle::get_namespace() const {
-  return vrf_default_namespace;
-}
-
 void Rectangle::get_bounding_box(fp16 &x, fp16 &y, fp16 &w, fp16 &h) const {
   x = Rectangle::x;
   y = Rectangle::y;
