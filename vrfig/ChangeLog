@@ -1,3 +1,10 @@
+2001-06-10  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
+
+	* Moved the transformation code to Point class
+
+	* Changed the internal coordinate system to follow the usual
+	  mathematical coordinate system rather than screen coordinates
+
 2001-05-29  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
 
 	* Store vertices as Point objects instead of storing them as two
