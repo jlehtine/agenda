@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 dnl
-dnl $Id: configure.in,v 1.4 2001-01-28 14:48:55 jle Exp $
+dnl $Id: configure.in,v 1.5 2001-02-18 08:01:43 jle Exp $
 
 dnl -----------------------
 dnl Autoconf initialization
@@ -12,7 +12,7 @@ AC_LANG_CPLUSPLUS
 dnl -----------------------
 dnl Automake initialization
 dnl -----------------------
-AM_INIT_AUTOMAKE(npuzzle, 0.1)
+AM_INIT_AUTOMAKE(npuzzle, 0.2)
 
 dnl ------------
 dnl C++ settings
