@@ -1,4 +1,4 @@
-// $Id: ToolsChoice.cc,v 1.4 2001-05-22 12:55:00 jle Exp $
+// $Id: ToolsChoice.cc,v 1.5 2001-05-22 18:02:51 jle Exp $
 
 #include <FL/Fl.H>
 #include <FL/Enumerations.H>
@@ -24,8 +24,14 @@ ToolsChoice::ToolsChoice(int x, int y, vector<Tool *> *tools):
   unsigned int numtools = tools->size();
   w_cells = static_cast<int>(sqrt(numtools));
   h_cells = w_cells;
-  if (w_cells * h_cells < numtools)
-    h_cells++;
+  bool increase_h = true;
+  while (w_cells * h_cells < numtools) {
+    if (increase_h)
+      h_cells++;
+    else
+      w_cells++;
+    increase_h = !increase_h;
+  }
 
   // Set the dimensions for the window
   resize(ToolsChoice::x(), ToolsChoice::y(), 
