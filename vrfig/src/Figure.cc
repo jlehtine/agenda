@@ -1,4 +1,4 @@
-// $Id: Figure.cc,v 1.4 2001-05-20 12:13:10 jle Exp $
+// $Id: Figure.cc,v 1.5 2001-05-21 00:46:26 jle Exp $
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,6 +13,17 @@ Figure::~Figure() {
   }
 }
 
+struct char_ptr_less {
+  inline bool operator()(const char *s1, const char *s2) const {
+    if (!s1 && s2)
+      return true;
+    else if (s1 && s2 && strcmp(s1, s2) < 0)
+      return true;
+    else
+      return false;
+  }
+};
+
 void Figure::serialize(ostream &os) {
 
   // Write the start of XML header
@@ -23,25 +34,23 @@ void Figure::serialize(ostream &os) {
   // to short namespace identifiers. Write the namespace identifiers
   // to the document element.
   int nscount = 0;
-  map<string *, string *> ns_to_nsid;
-  ns_to_nsid[const_cast<string *>(&vrf_default_namespace)] = 0;
-  map<Element *, string *> element_to_nsid;
+  map<const char *, const char *, char_ptr_less> ns_to_nsid;
+  ns_to_nsid[vrf_default_namespace] = 0;
+  map<const Element *, const char *> element_to_nsid;
   vector<Element *>::const_iterator i = elements.begin();
   while (i < elements.end()) {
-    const string *ns = (*i)->get_namespace();
-    const string *nsid;
-    if (ns_to_nsid.count(const_cast<string *>(ns))) {
-      nsid = ns_to_nsid[const_cast<string *>(ns)];
+    const char *ns = (*i)->get_namespace();
+    const char *nsid;
+    if (ns_to_nsid.count(ns)) {
+      nsid = ns_to_nsid[ns];
     } else {
-      string *id = new string("ns", 5);
-      char num[5];
-      snprintf(num, 5, "%d", nscount++);
-      id->append(num);
-      ns_to_nsid[(string *)ns] = id;
+      char *id = new char[8];
+      snprintf(id, 8, "ns%d", nscount++);
+      ns_to_nsid[ns] = id;
       nsid = id;
       os << "\n  xmlns:" << nsid << "=\"" << ns << "\"";
     }
-    element_to_nsid[*i] = const_cast<string *>(nsid);
+    element_to_nsid[*i] = nsid;
     i++;
   }
   os << ">\n";
@@ -50,15 +59,16 @@ void Figure::serialize(ostream &os) {
   os << "  <elements>\n";
   i = elements.begin();
   while (i < elements.end()) {
-    const string *nsid = element_to_nsid[*i];
-    string nss("");
-    if (nsid) {
-      nss.assign(*nsid);
-      nss.append(":");
-    }
-    os << "    <" << nss << *((*i)->get_name()) << ">\n";
+    const char *nsid = element_to_nsid[*i];
+    os << "    <";
+    if (nsid)
+      os << nsid << ":";
+    os << (*i)->get_name() << ">\n";
     (*i)->serialize(os, nsid, 6);
-    os << "    </" << nss << *((*i)->get_name()) << ">\n";
+    os << "    </";
+    if (nsid)
+      os << nsid << ":";
+    os << (*i)->get_name() << ">\n";
     i++;
   }
   os << "  </elements>\n";

@@ -1,4 +1,4 @@
-// $Id: Element.hpp,v 1.7 2001-05-19 08:42:38 jle Exp $
+// $Id: Element.hpp,v 1.8 2001-05-21 00:46:08 jle Exp $
 
 #ifndef __Element_hpp_INCLUDED__
 #define __Element_hpp_INCLUDED__
@@ -30,11 +30,11 @@ protected:
    * @param name the name of the element
    * @return the output stream for continuation
    */
-  static ostream &output_ns_name(ostream &os, const string *ns, 
-                                 const string *name) {
+  static ostream &output_ns_name(ostream &os, const char *ns, 
+                                 const char *name) {
     if (ns)
-      os << (*ns) << ":";
-    os << (*name);
+      os << ns << ":";
+    os << name;
     return os;
   }
 
@@ -60,7 +60,7 @@ public:
    *
    * @return the name of this element
    */
-  virtual const string *get_name() const = 0;
+  virtual const char *get_name() const = 0;
 
   /**
    * Returns the XML namespace for this element. The namespace is
@@ -69,7 +69,7 @@ public:
    *
    * @return the namespace for this element.
    */
-  virtual const string *get_namespace() const = 0;
+  virtual const char *get_namespace() const = 0;
 
   /**
    * Returns the bounding box for the element.
@@ -106,7 +106,7 @@ public:
    * @param indent the base indentation level
    * @return the output stream for continuation
    */
-  virtual ostream &serialize(ostream &os, const string *ns, int indent) 
+  virtual ostream &serialize(ostream &os, const char *ns, int indent) 
     const = 0;
 
 #if USE_EXPERIMENTAL_UI
