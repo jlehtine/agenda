@@ -1,4 +1,4 @@
-// $Id: MainView.cc,v 1.8 2001-05-17 19:35:27 jle Exp $
+// $Id: MainView.cc,v 1.9 2001-05-18 13:16:54 jle Exp $
 
 #include <stdlib.h>
 #include <flpda/Widget_Factory.h>
@@ -138,7 +138,7 @@ void MainView::cb_tool(Fl_Widget *widget, void *data) {
 void MainView::cb_tool_select(Fl_Widget *widget, void *data) {
   MainView *view = reinterpret_cast<MainView *>(data);
   Tool *old_tool = view->active_tool;
-  view->active_tool = view->tools_choice->get_tool();
+  view->active_tool = (dynamic_cast<ToolsChoice *>(widget))->get_tool();
   if (view->active_tool != old_tool)
     view->editor->set_tool(view->active_tool);
 }
