@@ -1,6 +1,19 @@
 NPuzzle News
 ============
 
+v 0.2.1
+-------
+
+The version 0.2.1 is functionally equivalent with the version 0.2. I
+had to make few modifications to make the source code compile
+correctly with the latest Agenda Computing FLTK patches. Additionally,
+I added some kind of support for vrpbuild which can be used to build
+.vrp packages.
+
+
+v 0.2
+-----
+
 This is the first release of NPuzzle tested on actual Agenda VR3
 device. It was also heavily customized to match the VR3 look and feel.
 Functionality of the game is exactly the same as for the previous
