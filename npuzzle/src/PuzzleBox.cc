@@ -1,4 +1,4 @@
-// $Id: PuzzleBox.cc,v 1.4 2000-10-29 17:22:14 jle Exp $
+// $Id: PuzzleBox.cc,v 1.5 2000-10-29 17:59:41 jle Exp $
 
 #include <stdio.h>
 #include <FL/fl_draw.H>
@@ -93,6 +93,14 @@ int PuzzleBox::handle(int event) {
     fl_rectf(l.x_offset + old_pos[0]*l.edge, 
              l.y_offset + old_pos[1]*l.edge, 
              l.edge, l.edge);
+    
+    // Call callback if any
+    if (move_callback != NULL) {
+      move_callback();
+    }
+
+    // Check if solved
+    game->solved();
   }
   return 1;
 }

@@ -1,4 +1,4 @@
-// $Id: PuzzleBox.hpp,v 1.2 2000-10-29 15:58:33 jle Exp $
+// $Id: PuzzleBox.hpp,v 1.3 2000-10-29 17:59:41 jle Exp $
 
 #ifndef __PuzzleBox_hpp_INCLUDED__
 #define __PuzzleBox_hpp_INCLUDED__
@@ -31,7 +31,7 @@ struct TileLayout {
  * Box to render n-puzzle board.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 class PuzzleBox : public Fl_Box {
   
@@ -42,6 +42,9 @@ protected:
 
   /** Settings for displaying the board */
   SettingsWindow *settings;
+
+  /** Callback for moves */
+  void (*move_callback)();
 
   /**
    * Calculates the size of tiles and offsets of tile box according to
@@ -71,6 +74,7 @@ public:
     : Fl_Box(x, y, w, h, l) {
     game = NULL;
     settings = NULL;
+    move_callback = NULL;
   }
   
   /**
@@ -80,6 +84,7 @@ public:
     : Fl_Box(b, x, y, w, h, l) {
     game = NULL;
     settings = NULL;
+    move_callback = NULL;
   }
 
   /**
@@ -111,6 +116,15 @@ public:
   inline void set_game(PuzzleGame *game) {
     this->game = game;
     redraw();
+  }
+
+  /**
+   * Sets the callback function to be called when move is made.
+   *
+   * @param cb the callback function to call
+   */
+  inline void set_move_callback(void (*cb)()) {
+    move_callback = cb;
   }
 };
 
