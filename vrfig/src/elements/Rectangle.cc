@@ -1,4 +1,4 @@
-// $Id: Rectangle.cc,v 1.2 2001-05-22 21:26:06 jle Exp $
+// $Id: Rectangle.cc,v 1.3 2001-05-23 07:52:40 jle Exp $
 
 #include <FL/Enumerations.H>
 #include <FL/fl_draw.H>
@@ -24,8 +24,8 @@ struct DeserializeInfo {
  */
 static void start_handler(
   void *data, const XML_Char *name, const XML_Char **atts) {
-  static char *elem_position = VRF_DEFAULT_NAMESPACE "#position";
-  static char *elem_size = VRF_DEFAULT_NAMESPACE "#size";
+  static const char *elem_position = VRF_DEFAULT_NAMESPACE "#position";
+  static const char *elem_size = VRF_DEFAULT_NAMESPACE "#size";
   DeserializeInfo *info = reinterpret_cast<DeserializeInfo *>(data);
 
   if (info->depth == 0) {

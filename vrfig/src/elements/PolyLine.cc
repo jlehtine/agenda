@@ -1,4 +1,4 @@
-// $Id: PolyLine.cc,v 1.7 2001-05-22 19:49:44 jle Exp $
+// $Id: PolyLine.cc,v 1.8 2001-05-23 07:52:40 jle Exp $
 
 #include <vector.h>
 #include <stdio.h>
@@ -43,8 +43,8 @@ struct DeserializeInfo {
  */
 static void start_handler(
   void *data, const XML_Char *name, const XML_Char **atts) {
-  static char *points_name = VRF_DEFAULT_NAMESPACE "#points";
-  static char *point_name = VRF_DEFAULT_NAMESPACE "#point";
+  static const char *points_name = VRF_DEFAULT_NAMESPACE "#points";
+  static const char *point_name = VRF_DEFAULT_NAMESPACE "#point";
   DeserializeInfo *info = reinterpret_cast<DeserializeInfo *>(data);
   
   // Check if points section found
