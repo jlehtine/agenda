@@ -1,4 +1,4 @@
-// $Id: PolyLineTool.cc,v 1.6 2001-05-28 17:56:19 jle Exp $
+// $Id: PolyLineTool.cc,v 1.7 2001-05-28 18:34:05 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -27,6 +27,7 @@
 #include <FL/Fl_Window.H>
 #include <FL/fl_draw.H>
 #include "PolyLineTool.hpp"
+#include "Action.hpp"
 #include "icons/polyline_icon.xbm"
 #include "elements/PolyLine.hpp"
 #include "flext.hpp"
@@ -35,6 +36,99 @@
 
 static Fl_Bitmap polyline_bitmap
 (polyline_icon_bits, polyline_icon_width, polyline_icon_height);
+
+/**
+ * An action for undoing polyline operations.
+ */
+class PolyLineAction : public Action {
+
+protected:
+
+  /** The view used */
+  FigureView *view;
+
+  /** The primary polyline being modified */
+  PolyLine *polyline;
+
+  /** The type of action performed */
+  enum { NEW_VERTEX, CLOSED, CONNECT } type;
+
+  /** Whether the first or last vertex was extended (for NEW_VERTEX) */
+  bool extend_first;
+
+  /** Whether a new polyline was created (for NEW_VERTEX) */
+  bool new_polyline;
+
+  /** The old vertices of the primary polyline (for CONNECT) */
+  vector<fp16> old_vertices;
+
+  /** The other polyline (for CONNECT) */
+  PolyLine *sec_polyline;
+
+public:
+
+  inline PolyLineAction(FigureView *view, PolyLine *polyline, 
+                        bool extend_first, bool new_polyline):
+    view(view), polyline(polyline), type(NEW_VERTEX), 
+    extend_first(extend_first), new_polyline(new_polyline), old_vertices() {}
+    
+  inline PolyLineAction(FigureView *view, PolyLine *polyline):
+    view(view), polyline(polyline), type(CLOSED), old_vertices() {}
+
+  inline PolyLineAction(FigureView *view, PolyLine *polyline,
+                        vector<fp16> *_old_vertices, PolyLine *sec_polyline):
+    view(view), polyline(polyline), type(CONNECT), old_vertices(), 
+    sec_polyline(sec_polyline) {
+    old_vertices.resize(_old_vertices->size());
+    copy(_old_vertices->begin(), _old_vertices->end(), old_vertices.begin());
+  }
+
+  virtual void undo() {
+    switch (type) {
+
+    case NEW_VERTEX:
+      do {
+        if (new_polyline) {
+          view->get_figure()->remove_element(polyline);
+          delete polyline;
+        } else {
+          vector<fp16> *vertices = polyline->get_vertices();
+          if (extend_first) {
+            vector<fp16>::iterator i = vertices->begin();
+            i++;
+            i++;
+            vertices->erase(vertices->begin(), i);
+          } else {
+            vector<fp16>::iterator i = vertices->end();
+            i--;
+            i--;
+            vertices->erase(i, vertices->end());
+          }
+        }
+      } while (0);
+      break;
+    
+    case CLOSED:
+      polyline->set_closed(false);
+      break;
+
+    case CONNECT:
+      do {
+        vector<fp16> *vertices = polyline->get_vertices();
+        vertices->resize(old_vertices.size());
+        copy(old_vertices.begin(), old_vertices.end(), vertices->begin());
+        view->get_figure()->add_element(sec_polyline);
+      } while (0);
+      break;
+    }
+    view->redraw();
+  }
+
+  virtual void commit() {
+    if (type == CONNECT)
+      delete sec_polyline;
+  }
+};
 
 /**
  * Finds the polyline end closest to the specified point. Points more than
@@ -194,6 +288,9 @@ int PolyLineTool::handle(int event, FigureView *view) {
         fle_reset_mode(old_func);
         fl_color(FL_BLACK);
         fl_line(start_x, start_y, ox, oy);
+
+        view->get_action_buffer()->add_action(
+          new PolyLineAction(view, polyline));
       }
 
       // Check if connecting two polylines
@@ -214,8 +311,11 @@ int PolyLineTool::handle(int event, FigureView *view) {
         fl_color(FL_BLACK);
         fl_line(start_x, start_y, last_x, last_y);
 
-        // Combine the polylines
         vector<fp16> *vertices1 = polyline->get_vertices();
+        view->get_action_buffer()->add_action(
+          new PolyLineAction(view, polyline, vertices1, pl));
+
+        // Combine the polylines
         if (extend_first) {
 
           // Reverse the list
@@ -277,6 +377,9 @@ int PolyLineTool::handle(int event, FigureView *view) {
              view->get_origin_x(), view->get_origin_y(), view->get_scaling());
         Selectable::draw_select_helper(last_x, last_y);
         fle_reset_mode(old_func);
+
+        view->get_action_buffer()->add_action(
+          new PolyLineAction(view, polyline, extend_first, new_polyline));
       }
     } while (0);
     polyline = 0;
