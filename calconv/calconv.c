@@ -1,7 +1,7 @@
-/* $Id: calconv.c,v 1.1.1.1 2001-03-19 21:13:58 jle Exp $ */
+/* $Id: calconv.c,v 1.2 2001-03-26 18:40:06 jle Exp $ */
 
 /*-------------------------------------------------------------------------
- * calconv 0.1 - Agenda VR3 schedule database converter
+ * calconv - Agenda VR3 schedule database converter
  *                                                                         
  * Copyright (C) 2001 Johannes Lehtinen
  *
