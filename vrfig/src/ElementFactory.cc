@@ -1,4 +1,4 @@
-// $Id: ElementFactory.cc,v 1.7 2001-05-24 18:47:32 jle Exp $
+// $Id: ElementFactory.cc,v 1.8 2001-05-24 19:13:12 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -77,7 +77,6 @@ ElementFactory::ElementFactory(Figure *figure, istream &is):
   figure(figure), input_stream(is), depth(0), parsing_elements(false),
   error(false) {
   parser = XML_ParserCreateNS("UTF-8", '#');
-  parser_buffer = XML_GetBuffer(parser, PARSER_BUFFER_SIZE);
 }
 
 ElementFactory::~ElementFactory() {
@@ -92,6 +91,7 @@ bool ElementFactory::parse() {
 
   // Feed input to XML parser
   while (1) {
+    void *parser_buffer = XML_GetBuffer(parser, PARSER_BUFFER_SIZE);
     input_stream.read(parser_buffer, PARSER_BUFFER_SIZE);
     if (input_stream.bad()) {
       fl_alert("Error when reading input stream.");
@@ -168,7 +168,8 @@ void ElementFactory::end_handler(const XML_Char *name) {
 void ElementFactory::done(Element *element) {
   depth--;
   XML_SetElementHandler(parser, start_handler_static, end_handler_static);
-  figure->add_element(element);
+  if (element)
+    figure->add_element(element);
 }
 
 void ElementFactory::msg_warning(char *msg) {
