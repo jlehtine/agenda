@@ -1,4 +1,4 @@
-// $Id: PolyLine.cc,v 1.3 2001-05-20 12:13:10 jle Exp $
+// $Id: PolyLine.cc,v 1.4 2001-05-20 18:51:40 jle Exp $
 
 #include <vector.h>
 #include <stdio.h>
@@ -106,7 +106,9 @@ ostream &PolyLine::serialize(ostream &os, const string *ns, int indent) const {
   while (i < points.end()) {
     output_indent(os, indent+2);
     output_ns_name(os << "<", ns, &elem_point) <<
-      " x=\"" << (*i) << "\" y=\"" << *(i+1) << "\"/>\n";
+      " x=\"";
+    write_fp16(os, *i) << "\" y=\"";
+    write_fp16(os, *(i+1)) << "\"/>\n";
     i += 2;
   }
   output_indent(os, indent);
