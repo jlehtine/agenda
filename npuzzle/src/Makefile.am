@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.3 2000-10-16 18:47:37 jle Exp $
+## $Id: Makefile.am,v 1.4 2000-10-17 15:48:44 jle Exp $
 
 srcdir = @srcdir@
 VPATH = @srcdir@
@@ -8,10 +8,16 @@ FLUID = @FLUID@
 
 bin_PROGRAMS = npuzzle
 
-npuzzle_SOURCES = PuzzleGame.cc PuzzleGame.hpp MainWindow.cc MainWindow.hpp \
+npuzzle_SOURCES = PuzzleGame.cc PuzzleGame.hpp \
+	InstructionsWindow.cc InstructionsWindow.hpp \
+	AboutWindow.cc AboutWindow.hpp \
+	MainWindow.cc MainWindow.hpp \
 	main.cc
 
 EXTRA_DIST = MainWindow.cc MainWindow.hpp
+
+MainWindow.cc: InstructionsWindow.hpp AboutWindow.hpp
+MainWindow.hpp: InstructionsWindow.hpp AboutWindow.hpp
 
 %.hpp: %.fl
 	$(FLUID) -c $<
