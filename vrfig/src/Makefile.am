@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.15 2001-06-10 18:36:43 jle Exp $
+## $Id: Makefile.am,v 1.16 2001-06-10 19:26:56 jle Exp $
 
 srcdir = @srcdir@
 VPATH = @srcdir@
@@ -14,7 +14,7 @@ bin_PROGRAMS = vrfig
 vrfig_SOURCES = vrfig.hpp vrfig.cc \
 	mathutil.hpp mathutil.cc \
 	flext.hpp flext.cc \
-	Point.hpp Point.cc \
+	Point.hpp \
 	Element.hpp Element.cc \
 	Figure.hpp Figure.cc \
 	FigureView.hpp FigureView.cc \

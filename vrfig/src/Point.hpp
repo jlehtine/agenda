@@ -1,4 +1,4 @@
-// $Id: Point.hpp,v 1.1 2001-06-10 18:36:43 jle Exp $
+// $Id: Point.hpp,v 1.2 2001-06-10 19:26:56 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -75,8 +75,11 @@ public:
    * @param x the return value for x screen coordinate
    * @param y the return value for y screen coordinate
    */
-  void to_screen(fp16 origin_x, fp16 origin_y, fp16 scaling, int &sx, int &sy)
-    const;
+  inline void to_screen(fp16 origin_x, fp16 origin_y, fp16 scaling, 
+                        int &sx, int &sy) const {
+    sx = mul_fp16_fp16_int(x - origin_x, scaling);
+    sy = -mul_fp16_fp16_int(y - origin_y, scaling);
+  }
 
   /**
    * Transforms screen coordinates to point coordinates using the specified
@@ -102,7 +105,11 @@ public:
    * @param origin_y the origin of y screen coordinate axis
    * @param scaling the scaling for the screen coordinate axis
    */
-  void from_screen(int sx, int sy, fp16 origin_x, fp16 origin_y, fp16 scaling);
+  inline void from_screen(int sx, int sy, 
+                          fp16 origin_x, fp16 origin_y, fp16 scaling) {
+    x = div_int_fp16u_fp16(sx, scaling) + origin_x;
+    y = -div_int_fp16u_fp16(sy, scaling) + origin_y;
+  }
 };
 
 #endif
