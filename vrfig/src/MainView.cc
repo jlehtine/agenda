@@ -1,4 +1,4 @@
-// $Id: MainView.cc,v 1.14 2001-05-21 00:46:52 jle Exp $
+// $Id: MainView.cc,v 1.15 2001-05-22 13:46:56 jle Exp $
 
 #include <stdlib.h>
 #include <string.h>
@@ -98,7 +98,6 @@ static Fl_Menu_Item info_popup[] = {
 };
 
 MainView::MainView(): current_file("") {
-  current_file[0] = '\0';
 
   win = Widget_Factory::new_window("VRFig");
 
@@ -173,10 +172,10 @@ MainView::MainView(): current_file("") {
     if (stat(path.c_str(), &stat_info)) {
 
       // Create $HOME/figures if user accepts
-      if (fl_ask("$HOME/figures does not exist. Would you like to create it "
-                 "for VRFig figure files?")) {
+      if (fl_ask("Subdirectory 'figures' does not exist in your home "
+                 "directory. Would you like to create it for VRFig files?")) {
         if (mkdir(path.c_str(), 0777)) {
-          fl_alert("Could not create $HOME/figures.");
+          fl_alert("Could not create subdirectory 'figures'.");
           path.assign("");
         }
       } else
@@ -265,16 +264,19 @@ void MainView::cb_new(Fl_Widget *widget, void *data) {
   view->editor->set_figure(new Figure());
   if (fig)
     delete fig;
+  view->current_file.assign("");
 }
 
 void MainView::cb_load(Fl_Widget *widget, void *data) {
   MainView *view = reinterpret_cast<MainView *>(data);
   view->file_chooser_load->show();
+  view->file_chooser_load->rescan();
   while (view->file_chooser_load->visible())
     Fl::wait();
-  if (!(view->file_chooser_load->value()))
+  const char *path = view->file_chooser_load->value();
+  if (!path || path[0] == '\0')
     return;
-  view->current_file.assign(view->file_chooser_load->value());
+  view->current_file.assign(path);
   cb_revert(widget, data);
 }
 
@@ -287,7 +289,7 @@ void MainView::cb_revert(Fl_Widget *widget, void *data) {
 
   // Load figure from the specified file
   ifstream ifs(view->current_file.c_str());
-  if (ifs.fail()) {
+  if (ifs.bad()) {
     fl_alert("Could not open figure file.");
     return;
   }
@@ -305,28 +307,53 @@ void MainView::cb_save(Fl_Widget *widget, void *data) {
   MainView *view = reinterpret_cast<MainView *>(data);
   
   // Check if actually a Save As operation
-  if (view->current_file.length() == '\0')
+  if (view->current_file.length() == 0) {
     cb_save_as(widget, data);
+    return;
+  }
 
   // Save the figure to file
   ofstream ofs(view->current_file.c_str(), ios::out, 0666);
-  if (ofs.fail()) {
+  if (ofs.bad()) {
     fl_alert("Error when creating the save file.");
     return;
   }
   view->editor->get_figure()->serialize(ofs);
   ofs.close();
-  if (ofs.fail())
+  if (ofs.bad())
     fl_alert("Error when saving the figure.");
 }
 
 void MainView::cb_save_as(Fl_Widget *widget, void *data) {
   MainView *view = reinterpret_cast<MainView *>(data);
   view->file_chooser_save->show();
+  view->file_chooser_save->rescan();
   while (view->file_chooser_save->visible())
     Fl::wait();
-  if (!(view->file_chooser_save->value()))
+  const char *path = view->file_chooser_save->value();
+  if (!path || path[0] == '\0')
     return;
-  view->current_file.assign(view->file_chooser_save->value());
+  view->current_file.assign(path);
+  
+  // Add the trailing .vfg if nothing else specified
+  int i = view->current_file.length() - 1;
+  int c;
+  while (i >= 0) {
+    c = view->current_file[i];
+    if (c == '.' || c == '/')
+      break;
+    i--;
+  }
+  if (i < 0 || c == '/')
+    view->current_file.append(".vfg");
+
+  // Check if overwriting an existing file
+  struct stat stat_info;
+  if (!stat(view->current_file.c_str(), &stat_info)) {
+    if (!fl_ask("Are you sure you want to overwrite an existing file '%s'?",
+                view->current_file.c_str()))
+      return;
+  }
+  
   cb_save(widget, data);
 }
