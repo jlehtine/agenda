@@ -1,4 +1,4 @@
-// $Id: MainView.cc,v 1.2 2001-05-05 18:46:29 jle Exp $
+// $Id: MainView.cc,v 1.3 2001-05-06 22:12:45 jle Exp $
 
 #include <stdlib.h>
 #include <flpda/Widget_Factory.h>
@@ -10,6 +10,8 @@
 #include <FL/Fl_Menu_Item.H>
 #include <FL/Fl_Menu_Button.H>
 #include "MainView.hpp"
+#include "Editor.hpp"
+#include "DrawingTool.hpp"
 #include "icons/outline_icon.xbm"
 #include "icons/filled_icon.xbm"
 #include "icons/text_icon.xbm"
@@ -49,6 +51,9 @@ static Fl_Menu_Item tools_popup[] = {
   { "Move Figure" },
   { 0 }
 };
+
+enum tool_types { OUTLINE = 0, FILLED = 1, TEXT = 2, DELETE = 3, MOVE = 4,
+                  EDIT = 5, MOVEFIG = 6 };
 
 static Fl_Menu_Item file_popup[] = {
   { "New", 0, 0, 0, FL_MENU_DIVIDER },
@@ -105,6 +110,12 @@ MainView::MainView() {
                     Widget_Factory::buttonheight(), info_menu->h());
   toolbar->end();
   win->add_dockable(toolbar, 1);
+
+  // Create editor view
+  Editor *editor = new Editor(0, 0, win->w(), win->h() - toolbar->h());
+  win->contents()->add(editor);
+  win->contents()->resizable(editor);
+  editor->set_tool(new DrawingTool());
 
   win->end();
   win->show();

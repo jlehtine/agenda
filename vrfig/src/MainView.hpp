@@ -1,4 +1,4 @@
-// $Id: MainView.hpp,v 1.1.1.1 2001-05-05 18:42:21 jle Exp $
+// $Id: MainView.hpp,v 1.2 2001-05-06 22:12:46 jle Exp $
 
 #ifndef __MainWindow_hpp_INCLUDED__
 #define __MainWindow_hpp_INCLUDED__
@@ -12,6 +12,7 @@
  * a subclass of Fl_Window.
  *
  * @author Johannes Lehtinen <johannes.lehtinen@iki.fi>
+ * @version $Revision: 1.2 $
  */
 class MainView {
 
