@@ -1,5 +1,5 @@
 //
-// "$Id: FileBrowser.cxx,v 1.1 2001-05-19 19:12:39 jle Exp $"
+// "$Id: FileBrowser.cxx,v 1.2 2001-05-20 11:05:45 jle Exp $"
 //
 //   FileBrowser routines.
 //
@@ -29,6 +29,10 @@
 //   FileBrowser::load()        - Load a directory into the browser.
 //   FileBrowser::filter()      - Set the filename filter.
 //
+
+// Modification by Johannes Lehtinen:
+//   Changed the color of file icons (FL_YELLOW -> FL_WHITE,
+//   FL_LIGHT2 -> FL_BLACK).
 
 //
 // Include necessary header files...
@@ -254,8 +258,8 @@ FileBrowser::item_draw(void *p,		// I - List item data
     // Draw the icon if it is set...
     if (line->data)
       ((FileIcon *)line->data)->draw(x, y, iconsize_, iconsize_,
-                                     (line->flags & SELECTED) ? FL_YELLOW :
-				                                FL_LIGHT2,
+                                     (line->flags & SELECTED) ? FL_WHITE :
+				                                FL_BLACK,
 				     active_r());
 
     // Draw the text offset to the right...
@@ -514,5 +518,5 @@ FileBrowser::filter(const char *pattern)	// I - Pattern string
 
 
 //
-// End of "$Id: FileBrowser.cxx,v 1.1 2001-05-19 19:12:39 jle Exp $".
+// End of "$Id: FileBrowser.cxx,v 1.2 2001-05-20 11:05:45 jle Exp $".
 //
