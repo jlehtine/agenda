@@ -1,4 +1,4 @@
-// $Id: ToolFactory.cc,v 1.5 2001-05-22 19:50:37 jle Exp $
+// $Id: ToolFactory.cc,v 1.6 2001-05-22 21:08:25 jle Exp $
 
 #include "ToolFactory.hpp"
 #include "tools/DrawingTool.hpp"
@@ -7,6 +7,7 @@
 #include "tools/MoveTool.hpp"
 #include "tools/DeleteTool.hpp"
 #include "tools/EditTool.hpp"
+#include "tools/RectangleTool.hpp"
 
 vector<Tool *> *ToolFactory::create_tools() {
   vector<Tool *> *tools = new vector<Tool *>();
@@ -14,6 +15,7 @@ vector<Tool *> *ToolFactory::create_tools() {
   tools->insert(tools->end(), new DrawingTool());
 #endif
   tools->insert(tools->end(), new PolyLineTool());
+  tools->insert(tools->end(), new RectangleTool());
   tools->insert(tools->end(), new MoveTool());
   tools->insert(tools->end(), new EditTool());
   tools->insert(tools->end(), new DeleteTool());
