@@ -5,8 +5,6 @@ You can find the latest information and release at the URL
 
 	http://www.iki.fi/jle/agenda/vrfig/
 
-For contacting the author, see the file 'AUTHOR'.
-
 
 Description
 -----------
@@ -43,13 +41,7 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or (at
 your option) any later version. See the file 'COPYING' for details.
 
-The file chooser used in the VRFig is strongly based on the ESP Widget
-Set 2.0 by Easy Software Products. It has been just modified to match
-the VR3 look and feel (to use the flpda library). This code can be
-found in the subdirectory 'src/espws'. More information about the ESP
-Widget Set and the original source code can be obtained at the URL
-
-	http://www.easysw.com/~mike/espws/
+For information about the author see the file 'AUTHORS'.
 
 
 Status

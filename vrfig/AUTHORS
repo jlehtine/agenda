@@ -6,6 +6,14 @@ The VRFig was written and is being developed by
 	Johannes Lehtinen
 	<johannes.lehtinen@iki.fi>
 
+The file chooser used in the VRFig is strongly based on the ESP Widget
+Set 2.0 by Easy Software Products. It has been just modified to match
+the VR3 look and feel (to use the flpda library). This code can be
+found in the subdirectory 'src/espws'. More information about the ESP
+Widget Set and the original source code can be obtained at the URL
+
+	http://www.easysw.com/~mike/espws/
+
 
 However, the VRFig wouldn't exist without the available open source
 software and tools. The VRFig uses several external open source
@@ -35,7 +43,7 @@ missed some).
 
 
 Special thanks go to Bradley D. LaRonde for pushing the development of
-Linux and open source software based PDA products.
+Linux and open source based PDA products.
 
 If you would like to participate the development process by fixing
 bugs or adding features, please read the README file for instructions
