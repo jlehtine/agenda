@@ -14,15 +14,15 @@ class SettingsWindow {open
   Function {SettingsWindow()} {open
   } {
     Fl_Window win {
-      label settings open
-      private xywh {1074 553 160 200} color 7 modal visible
+      label Settings open selected
+      private xywh {1080 582 160 200} color 7 modal visible
     } {
       Fl_Group {} {
-        label settings open
+        label Settings open
         xywh {5 25 150 120} box BORDER_FRAME color 0
       } {
         Fl_Choice size_choice {
-          label {size:} open
+          label {Size:} open
           private xywh {60 35 85 25}
         } {
           menuitem {} {
@@ -39,7 +39,7 @@ class SettingsWindow {open
           }
         }
         Fl_Choice labels_choice {
-          label {labels:} open
+          label {Labels:} open
           private xywh {60 70 85 25}
         } {
           menuitem {} {
@@ -52,7 +52,7 @@ class SettingsWindow {open
           }
         }
         Fl_Choice moves_choice {
-          label {moves:} open
+          label {Moves:} open
           private xywh {60 105 85 25} deactivate
         } {
           menuitem {} {
@@ -66,7 +66,7 @@ class SettingsWindow {open
         }
       }
       Fl_Button {} {
-        label ok
+        label Ok
         callback {win->hide();
 cur_size = size_choice->value();
 cur_labels = labels_choice->value();
@@ -78,7 +78,7 @@ if (update_callback != NULL) {
         code0 {\#include <stdio.h>}
       }
       Fl_Button {} {
-        label cancel
+        label Cancel
         callback {win->hide();
 size_choice->value(cur_size);
 labels_choice->value(cur_labels);
@@ -109,7 +109,7 @@ cur_moves = moves_choice->value();} {}
   } {
     code {return cur_moves == 0;} {}
   }
-  Function {set_update_callback(void (*update_callback)())} {open selected return_type void
+  Function {set_update_callback(void (*update_callback)())} {open return_type void
   } {
     code {this->update_callback = update_callback;} {}
   }

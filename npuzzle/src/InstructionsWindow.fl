@@ -10,17 +10,17 @@ class InstructionsWindow {open
   Function {InstructionsWindow()} {open
   } {
     Fl_Window win {
-      label instructions open selected
-      private xywh {1088 445 160 200} color 7 modal visible
+      label Instructions open
+      private xywh {1094 474 160 200} color 7 modal visible
     } {
       Fl_Box instructions_text {
-        label instructions
+        label Instructions selected
         private xywh {10 20 140 145} box FLAT_BOX color 7 align 1
         code0 {\#include <FL/Fl_Multiline_Output.H>}
         class Fl_Multiline_Output
       }
       Fl_Button {} {
-        label close
+        label Close
         callback {win->hide();}
         xywh {50 170 60 25}
       }

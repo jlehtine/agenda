@@ -9,25 +9,26 @@ class AboutWindow {open
 } {
   Function {AboutWindow()} {open
   } {
-    Fl_Window win {open
-      private xywh {1104 472 160 200} color 7 modal visible
+    Fl_Window win {
+      label {About NPuzzle} open
+      private xywh {1110 501 160 200} color 7 modal visible
     } {
       Fl_Box {} {
-        label npuzzle
+        label NPuzzle
         xywh {15 25 130 30} labelfont 1 labelsize 18
       }
       Fl_Box {} {
         label {v 0.1}
         xywh {45 55 65 20}
       }
-      Fl_Box copyright {selected
+      Fl_Box copyright {
         private xywh {15 85 130 45} box FLAT_BOX color 7
         code0 {\#include <FL/Fl_Multiline_Output.H>}
         class Fl_Multiline_Output
       }
       Fl_Button {} {
-        label close
-        callback {win->hide();}
+        label Close
+        callback {win->hide();} selected
         xywh {50 155 65 25}
       }
     }
