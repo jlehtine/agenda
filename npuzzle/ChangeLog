@@ -1,7 +1,17 @@
+2001-04-28  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
+
+	* Support Agenda Computing FLTK patches (behaviour of
+	  Fl::add_timeout and Fl::repeat_timeout has changed in
+	  incompatible fashion).
+
+	* Added support for vrpbuild.
+
 2001-01-28  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
 
 	* Fixed couple of X library problems in configure script.
+	
 	* Ported game for Agenda VR3.
+	
 	* Adjusted user interface for VR3 look and feel.
 
 2000-10-30  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
