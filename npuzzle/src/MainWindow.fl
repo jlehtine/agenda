@@ -17,7 +17,7 @@ class MainWindow {open
   } {
     Fl_Window win {
       label npuzzle open
-      private xywh {1064 233 160 240} color 7 visible
+      private xywh {1070 262 160 240} color 7 visible
     } {
       Fl_Menu_Bar {} {open
         xywh {0 0 160 25}
@@ -32,7 +32,7 @@ class MainWindow {open
 game = new PuzzleGame(settings_win->get_size());
 puzzle_box->set_game(game);
 delete old;
-update_moves();} selected
+update_moves();}
             xywh {0 0 100 20}
             code0 {\#include "PuzzleGame.hpp"}
           }
@@ -135,8 +135,24 @@ sprintf(str, "%d", game->get_moves());
 moves_output->value(str);
 moves_output->redraw();} {}
   }
+  Function {settings_updated()} {open return_type void
+  } {
+    code {if (game->get_size() != settings_win->get_size()) {
+  PuzzleGame *old = game;
+  game = new PuzzleGame(settings_win->get_size());
+  puzzle_box->set_game(game);
+  delete old;
+}
+puzzle_box->redraw();
+update_moves();} {selected
+    }
+  }
   Function {set_move_callback(void (*cb)())} {open return_type void
   } {
     code {puzzle_box->set_move_callback(cb);} {}
+  }
+  Function {set_settings_callback(void (*cb)())} {open return_type void
+  } {
+    code {settings_win->set_update_callback(cb);} {}
   }
 } 
