@@ -1,10 +1,11 @@
 ## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.11 2001-05-22 19:50:02 jle Exp $
+## $Id: Makefile.am,v 1.12 2001-05-23 13:03:32 jle Exp $
 
 srcdir = @srcdir@
 VPATH = @srcdir@
 
 SUBDIRS = elements tools espws
+EXTRA_DIST = icons/*.xbm
 
 LDADD = tools/libtools.a elements/libelements.a espws/libespws-fc.a
 
