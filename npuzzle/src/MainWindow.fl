@@ -17,7 +17,7 @@ class MainWindow {open
   } {
     Fl_Window win {
       label npuzzle open
-      private xywh {1069 157 160 240} color 7 visible
+      private xywh {1058 204 160 240} color 7 visible
     } {
       Fl_Menu_Bar {} {open
         xywh {0 0 160 25}
@@ -28,12 +28,16 @@ class MainWindow {open
         } {
           menuitem {} {
             label new
+            callback {PuzzleGame *old = game;
+game = new PuzzleGame(settings_win->get_size());
+puzzle_box->set_game(game);
+delete old;}
             xywh {0 0 100 20}
             code0 {\#include "PuzzleGame.hpp"}
           }
           menuitem {} {
             label settings
-            callback {settings_win->show();} selected
+            callback {settings_win->show();}
             xywh {0 0 100 20} divider
             code0 {\#include "SettingsWindow.hpp"}
           }
@@ -66,11 +70,11 @@ class MainWindow {open
       } {
         Fl_Box {} {
           label npuzzle
-          xywh {15 45 125 30} labelfont 1 labelsize 18
+          xywh {15 30 125 30} labelfont 1 labelsize 18
         }
       }
       Fl_Group game_group {open
-        private xywh {0 25 160 215} hide
+        private xywh {0 60 160 180}
       } {
         Fl_Group {} {open
           xywh {0 210 160 30} box UP_BOX
@@ -90,12 +94,20 @@ class MainWindow {open
             xywh {105 215 45 20}
           }
         }
+        Fl_Box puzzle_box {
+          private xywh {10 60 140 140}
+          code0 {\#include "PuzzleBox.hpp"}
+          class PuzzleBox
+        }
       }
     }
     code {instr_win = new InstructionsWindow();
 about_win = new AboutWindow();
 settings_win = new SettingsWindow();} {}
-    code {game = NULL;} {}
+    code {puzzle_box->set_settings(settings_win);
+game = new PuzzleGame(settings_win->get_size());
+puzzle_box->set_game(game);} {selected
+    }
   }
   Function {show()} {open return_type void
   } {
