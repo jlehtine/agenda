@@ -1,0 +1,35 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0009 
+header_name {.hpp} 
+code_name {.cc} 
+gridx 5 
+gridy 5 
+snap 3
+class InstructionsWindow {open
+} {
+  Function {InstructionsWindow()} {open
+  } {
+    Fl_Window win {
+      label instructions open selected
+      private xywh {1088 445 160 200} color 7 modal visible
+    } {
+      Fl_Box instructions_text {
+        label instructions
+        private xywh {10 20 140 145} box FLAT_BOX color 7 align 1
+        code0 {\#include <FL/Fl_Multiline_Output.H>}
+        class Fl_Multiline_Output
+      }
+      Fl_Button {} {
+        label close
+        callback {win->hide();}
+        xywh {50 170 60 25}
+      }
+    }
+    code {instructions_text->value("\\n\\"15 puzzle\\" is a famous yet\\nvery simple game. It has\\nbeen used in AI research as\\na well defined test problem.\\n\\nThe idea is to order the\\nnumbered tiles by moving\\nthem one at a time. The\\nbottom right corner should\\nbe left empty.");
+instructions_text->textsize(10);} {}
+  }
+  Function {show()} {open return_type void
+  } {
+    code {win->show();} {}
+  }
+} 

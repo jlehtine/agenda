@@ -1,0 +1,40 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0009 
+header_name {.hpp} 
+code_name {.cc} 
+gridx 5 
+gridy 5 
+snap 3
+class AboutWindow {open
+} {
+  Function {AboutWindow()} {open
+  } {
+    Fl_Window win {open
+      private xywh {1104 472 160 200} color 7 modal visible
+    } {
+      Fl_Box {} {
+        label npuzzle
+        xywh {15 25 130 30} labelfont 1 labelsize 18
+      }
+      Fl_Box {} {
+        label {v 0.1}
+        xywh {45 55 65 20}
+      }
+      Fl_Box copyright {selected
+        private xywh {15 85 130 45} box FLAT_BOX color 7
+        code0 {\#include <FL/Fl_Multiline_Output.H>}
+        class Fl_Multiline_Output
+      }
+      Fl_Button {} {
+        label close
+        callback {win->hide();}
+        xywh {50 155 65 25}
+      }
+    }
+    code {copyright->value("Copyright (C) 2000\\nJohannes Lehtinen");} {}
+  }
+  Function {show()} {open return_type void
+  } {
+    code {win->show();} {}
+  }
+} 
