@@ -1,4 +1,4 @@
-// $Id: ElementFactory.cc,v 1.8 2001-05-24 19:13:12 jle Exp $
+// $Id: ElementFactory.cc,v 1.9 2001-05-25 22:31:18 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -27,6 +27,7 @@
 #include "elements/PolyLine.hpp"
 #include "elements/Rectangle.hpp"
 #include "elements/Ellipse.hpp"
+#include "elements/Label.hpp"
 
 #define PARSER_BUFFER_SIZE 1024
 
@@ -199,6 +200,9 @@ static void init_deserializers() {
   add_deserializer(Ellipse::get_namespace_static(),
                    Ellipse::get_name_static(),
                    Ellipse::deserialize);
+  add_deserializer(Label::get_namespace_static(),
+                   Label::get_name_static(),
+                   Label::deserialize);
 }
 
 static void add_deserializer(const char *ns, const char *name, 
