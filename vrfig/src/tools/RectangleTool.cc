@@ -1,4 +1,4 @@
-// $Id: RectangleTool.cc,v 1.2 2001-05-23 12:47:52 jle Exp $
+// $Id: RectangleTool.cc,v 1.3 2001-05-28 18:46:26 jle Exp $
 
 /*--------------------------------------------------------------------------
  * VRFig, a vector graphics editor for PDA environment
@@ -32,6 +32,30 @@
 
 static Fl_Bitmap rect_bitmap
 (rect_icon_bits, rect_icon_width, rect_icon_height);
+
+/**
+ * An action for undoing rectangles.
+ */
+class RectangleAction : public Action {
+
+protected:
+
+  /** The view */
+  FigureView *view;
+
+  /** The rectangle added */
+  Rectangle *element;
+
+public:
+
+  inline RectangleAction(FigureView *view, Rectangle *element):
+    view(view), element(element) {}
+
+  void undo() {
+    view->remove_element(element);
+    delete element;
+  }
+};
 
 const char *RectangleTool::get_name() const {
   static const char *name = "rectangle";
@@ -129,6 +153,9 @@ int RectangleTool::handle(int event, FigureView *view) {
       view->add_element(rect);
       view->redraw();
       drawing = false;
+
+      view->get_action_buffer()->add_action(
+        new RectangleAction(view, rect));
     } while (0);
     return 1;
 
