@@ -1,5 +1,5 @@
 ## Process this file with automake to produce Makefile.in
-## $Id: Makefile.am,v 1.6 2000-10-28 11:23:59 jle Exp $
+## $Id: Makefile.am,v 1.7 2000-10-29 17:21:56 jle Exp $
 
 srcdir = @srcdir@
 VPATH = @srcdir@
@@ -12,8 +12,9 @@ npuzzle_SOURCES = PuzzleGame.cc PuzzleGame.hpp \
 	InstructionsWindow.cc InstructionsWindow.hpp \
 	AboutWindow.cc AboutWindow.hpp \
 	SettingsWindow.cc SettingsWindow.hpp \
-	MainWindow.cc MainWindow.hpp \
 	PuzzleBox.cc PuzzleBox.hpp \
+	RightAlignedOutput.cc RightAlignedOutput.hpp \
+	MainWindow.cc MainWindow.hpp \
 	main.cc
 
 EXTRA_DIST = MainWindow.cc MainWindow.hpp \
