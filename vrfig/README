@@ -63,17 +63,49 @@ See the file 'NEWS' for news about the current release and the file
 Binary distributions
 --------------------
 
-The binary distribution for Agenda VR3 is named as
+The binary distributions for Agenda VR3 are named as
 'vrfig-vr3-VERSION.tar.gz' (no .vrp at this time, sorry). To install a
-binary distribution just extract the archive and move the binary file
-'vrfig' to your VR3 using rsync. You can place the file in
-'/usr/local/bin' or '/home/default/bin' for example. To make VRFig
-appear in the system menu you can manually create the necessary
-symbolic link from '/home/default/.wmx/Applications/VRFig' to the
-VRFig binary.
+binary distribution first extract the archive to get the basic
+documentation and two binary files: 'vrfig' and 'libexpat.so.0.0.1'.
+The latter one is an Expat XML Parser shared library which is being
+distributed separately since VRFig release 0.2 to enable sharing of
+the library among different applications. Most probably you need to
+install the library if you haven't previously installed a VRFig
+release 0.2 or later.
+
+To install the Expat library and the VRFig to your VR3, you have to
+first establish a PPP connection between your desktop workstation and
+your VR3. In the instructions below replace the '<VR3 IP>' by the IP
+address assigned to the VR3. For help about establishing the PPP
+connection and using rsync, see Andrej Cedilnik's great info page at
+
+	http://www.cs.umbc.edu/~acedil1/agenda/
+
+To install the Expat library, copy the 'libexpat.so.0.0.1' and the
+necessary symbolic links to your VR3 directory '/usr/local/lib' using
+rsync:
+
+  rsync -l libexpat.so.* <VR3 IP>::root/usr/local/lib/
+
+To install VRFig itself, copy the 'vrfig' binary to VR3. You could put
+it in '/usr/local/bin', for example:
+
+  rsync vrfig <VR3 IP>::root/usr/local/bin/
+
+To add the VRFig to startup menu, you can also copy the menu system
+link to the VR3:
+
+  rsync -l wmx_VRFig <VR3 IP>::default/.wmx/Applications/VRFig
+
+Before you can actually execute the VRFig, you have to reset the VR3
+(or if you know what you are doing, just run '/sbin/ldconfig' and
+start VRFig from the command line).
 
 There are no usage instructions at this point. Like I said, it is not
 yet ready for prime time, sorry :)
+
+Notice: You can not execute these binaries on your desktop computer.
+They are compiled for little-endian mips architecture.
 
 
 Source code distributions
@@ -115,8 +147,10 @@ XML parser library.
 	  http://developer.agendacomputing.com/
 
 	* Expat XML parser library (0.7.13)
-	  (you want to link with a static Expat library if you intend
-	  to run the resulting binary on VR3)
+	  (If you link the VRFig with a shared Expat library then you
+	  must install the shared library and the necessary links to
+	  '/usr/local/lib' directory of the VR3. To get a stand-alone
+	  VRFig binary link with a static Expat library.)
 
 	  http://expat.sourceforge.net/
 
@@ -136,9 +170,9 @@ please do so :) You can contribute by
 
 	* Sending bug reports
 
-	* Sending bug fixes
+	* Sending bug fixes (see 'TODO')
 
-	* Implementing new tools and elements
+	* Implementing new tools and elements (see 'TODO')
 
 	* Having new insights about how things should be and letting
           me know about them

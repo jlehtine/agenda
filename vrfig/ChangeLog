@@ -1,3 +1,24 @@
+2001-05-28  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
+
+	* Prepared documentation for the 0.2 release
+
+	* Undo support for polylines and rectangles
+
+	* Extended polyline tool to make it possible to connect separate
+	  polylines to create one combined polyline
+
+2001-05-26  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
+
+	* Undo support for delete, edit, ellipses and labels
+
+	* Confirm operations which would discard changes made to the
+	  current figure
+
+	* Added generic framework level support for undoing operations
+
+	* Splitted FileIcon.cxx of ESP Widget Set to avoid always linking
+	  icon loading code (not needed for VRFig)
+
 2001-05-25  Johannes Lehtinen  <johannes.lehtinen@iki.fi>
 
 	* Added framework for textual elements and a text label which

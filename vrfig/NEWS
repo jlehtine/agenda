@@ -2,6 +2,22 @@ NEWS
 ====
 
 
+2001-05-28, development release 0.2
+-----------------------------------
+
+The 0.2 release fixes few bugs found in the 0.1 release but it mainly
+adds new functionality. The new code has not been thoroughly tested so
+this should still be considered being very experimental code. However,
+I am happy with how the framework is forming and the drawing
+primitives seem to fit it quite nicely.
+
+The next step is to start testing the code more thoroughly and see
+whether the user interface could be improved. There are still few
+primitives that need to be added to make the VRFig really usable. I
+will be rather busy for the next couple of weeks so it might take some
+time to get the 0.3 release out. Blame my real job for that :)
+
+
 2001-05-23, development release 0.1
 -----------------------------------
 

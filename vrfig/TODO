@@ -1,0 +1,60 @@
+TODO
+====
+
+
+This file lists the planned tasks of VRFig development and the planned
+requirements for the next few releases. This is not an exhaustive list
+and things might change at any time. TODO entries of previous releases
+are not listed here. You can read the 'ChangeLog' to find information
+about the actual changes made.
+
+
+Requirements for the 0.3 release:
+---------------------------------
+
+	* Generic arrow support for the framework
+
+	* Arrow support for polyline ends
+
+	* Grouping and ungrouping of elements
+
+	* Simple usage documentation (off-line)
+
+
+Requirements for the 0.4 release:
+---------------------------------
+
+The 0.4 release could be the first wide beta release targeted to
+actual end users.
+
+	* On-line help for the available tools and elements
+
+	* Complete usage documentation (off-line)
+
+	* VRFig to XFig convertor (a command line tool)
+
+	* Easier way to draw boxes with text (for example,
+          automatically grouping a rectangle and a label)
+
+	* Good performance with realistical drawings
+
+
+Requirements for the 0.x (x>4) release:
+---------------------------------------
+
+	* XFig to VRFig lossy converter (for browsing VRFig drawings
+          on the road)
+
+	* Tool or setting for automatically moving connecting lines
+          when the connected elements are being moved
+
+
+To be done at some suitable moment:
+-----------------------------------
+
+	* Clean up the polyline code and make the vertex
+          representation more sensible
+
+
+--
+Johannes Lehtinen <johannes.lehtinen@iki.fi>
