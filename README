@@ -1,0 +1,31 @@
+Software projects for Agenda VR3, first Linux PDA
+=================================================
+
+This repository contains some of my old personal software projects for
+the Agenda VR3 Linux PDA by Agenda Computing, Inc. Agenda VR3 was the
+first Linux PDA (Personal Digital Assistant) [1].
+
+[1] https://en.wikipedia.org/wiki/Agenda_VR3
+
+See directory "www" for a copy of the old web site including instructions
+and screenshots as well as pre-compiled binaries for Agenda VR3.
+
+
+LICENSE
+-------
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+
+See the file COPYING for details.
