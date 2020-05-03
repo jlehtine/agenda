@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.0//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic10.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+  <head>
+    <meta name="author" content="Johannes Lehtinen" />
+    <meta name="copyright" content="Copyright 2001 Johannes Lehtinen" />
+    <meta name="keywords" content="vr3,agenda vr3,linux,handheld,software" />
+    <meta name="identifier" content="https://jlehtinen.net/agenda/index.en.html" />
+    <title>My Agenda VR3 Projects</title>
+    <link rel="Stylesheet" href="style.css" type="text/css" />
+  </head>
+  <body>
+    <div id="content">
+
+    <h1>My Agenda VR3 Projects</h1>
+
+    <p>
+      This page includes information about my earlier spare time software
+      projects targeted to
+      <a href="https://en.wikipedia.org/wiki/Agenda_VR3"><em>Agenda VR3</em></a> platform.
+      I have not used my VR3 for years so these projects have been dead for
+      some time (I still have my VR3 somewhere but I don't know if it
+      works anymore).
+    </p>
+
+    <p>Projects described here include:</p>
+    <ul>
+      <li><a href="#npuzzle"><em>NPuzzle</em></a></li>
+      <li><a href="#vrfig"><em>VRFig</em></a></li>
+    </ul>
+
+    <p>
+      <span class="signature">Johannes Lehtinen</span> &lt;<a href="mailto:johannes.lehtinen@iki.fi">johannes.lehtinen@iki.fi</a>&gt;
+    </p>
+
+    <div class="ruler"></div>
+
+    <h2><a id="npuzzle"></a>NPuzzle</h2>
+
+    <p>
+      <img src="npuzzle.png" alt="NPuzzle" width="172" height="275" class="float-right" />
+      <em>NPuzzle</em> is a simple implementation of <em>15-puzzle</em> (or
+      <em>8-puzzle</em> or <em>24-puzzle</em>) and I wrote it mostly to learn
+      how to work with <em>FLTK</em> user interface library. NPuzzle has been
+      tested on Agenda VR3 and I tried to give it the VR3 look and feel. The
+      development was done in an ordinary Linux/X environment and the VR3 port
+      was done simply by cross compiling the program for MIPS. NPuzzle is
+      distributed under the <em>GNU General Public License</em>.
+    </p>
+
+    <p>
+      To compile the source code distribution on standard Linux box, you
+      must have the following installed. For help on compiling the native
+      VR3 binary, see the end of INSTALL file in the source package.
+    </p>
+
+    <ul>
+      <li>C++ compiler (tested with <a href="http://gcc.gnu.org/">g++</a> 2.95.2)</li>
+      <li><a href="http://www.fltk.org/">FLTK</a> UI toolkit (tested with FLTK 1.0.9)</li>
+    </ul>
+
+    <p>
+      Use one of the links below to download a source code or binary
+      distribution.
+    </p>
+
+    <ul>
+      <li><a href="npuzzle-0.2.1.tar.gz">npuzzle-0.2.1.tar.gz</a> (46.2 kB)</li>
+      <li><a href="npuzzle-0.2.1.vrp">npuzzle-0.2.1.vrp</a> (20.0 kB)</li>
+      <li><a href="npuzzle-0.2.1">npuzzle-0.2.1</a> for Agenda VR3 (29.6 kB)</li>
+    </ul>
+
+    <p>
+      You need only the npuzzle binary to run the game. Just copy the binary
+      to a suitable place on a flash disk (using <code>rsync</code>, for
+      example) and make a symbolic link
+      <code>/home/default/.wmx/Games/NPuzzle</code> pointing to
+      the binary. Remember to make sure that the downloaded binary has execute
+      permissions (<code>chmod&nbsp;a+rx&nbsp;npuzzle</code>).
+    </p>
+
+    <div class="ruler"></div>
+
+    <h2><a id="vrfig"></a>VRFig</h2>
+
+    <p>
+      <em>VRFig</em> is a simple tool for drawing figures. It has been
+      developed for PDA use and especially for the genda Computing VR3 Linux
+      PDA. The goal is to be able to plan things and sketch technical
+      drawings on the road without always dragging a laptop computer around.
+      The intended ultimate use could be sketching or browsing a software
+      architecture diagram while sitting in a bus, for example.
+    </p>
+
+    <p>
+      For more information, go to <a href="vrfig/">VRFig page</a>.
+    </p>
+
+    <p class="footer">
+      Copyright 2000 Johannes Lehtinen<br />
+      Last updated on Mar 3 2007.
+    </p>
+
+    </div>
+  </body>
+</html>

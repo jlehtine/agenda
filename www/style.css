@@ -1,0 +1,16 @@
+@import "plain_style.css";
+span.signature {
+  font-style: italic;
+}
+div.ruler {
+  clear: both;
+  border-top-style: solid;
+  border-top-width: 1px;
+}
+img.float-right {
+  float: right;
+  margin: 0 0 2ex 2ex;
+}
+.center {
+    text-align: center;
+}

@@ -5,10 +5,12 @@ This repository contains some of my old personal software projects for
 the Agenda VR3 Linux PDA by Agenda Computing, Inc. Agenda VR3 was the
 first Linux PDA (Personal Digital Assistant) [1].
 
-[1] https://en.wikipedia.org/wiki/Agenda_VR3
+See the old project web site [2] for some more information, instructions,
+original distribution packages and pre-compiled binaries. The web site
+files have also been included under directory www.
 
-See directory "www" for a copy of the old web site including instructions
-and screenshots as well as pre-compiled binaries for Agenda VR3.
+[1] https://en.wikipedia.org/wiki/Agenda_VR3
+[2] https://jlehtinen.net/agenda/
 
 
 LICENSE

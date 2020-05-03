@@ -1,0 +1,21 @@
+@import "common_style.css";
+body {
+  background-color: #eff6fd;
+  margin: 0;
+  padding: 0;
+
+  /* For IE */
+  text-align: center;
+}
+#content {
+    text-align: justify;
+    background-color: white;
+    padding: 2ex 6ex 2ex 10ex;
+    margin: 0 auto;
+    background-image: url(img/pageborder.png);
+    background-position: 100% 0;
+    background-repeat: repeat-y;
+
+    /* Using width instead of max-width for IE */
+    width: 70ex;
+}

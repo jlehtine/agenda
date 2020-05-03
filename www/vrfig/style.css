@@ -1,0 +1,21 @@
+@import "../style.css";
+h1 {
+    text-align: center;
+}
+p.subtitle {
+    text-align: center;
+}
+p.screenshots {
+    text-align: center;
+}
+ul.shortcuts {
+    text-align: center;
+    margin-left: 0;
+    padding-left: 0;
+}
+ul.shortcuts li {
+    display: inline;
+}
+span.deadlink {
+    text-decoration: line-through;
+}
